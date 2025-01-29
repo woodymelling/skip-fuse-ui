@@ -3,14 +3,21 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
+import SkipBridge
+import SkipUI
 
 public protocol TupleView {
-//    var composeIntegratingViews: [ComposeIntegrating] { get }
+    var skipUIBridgingViews: [SkipUIBridging?] { get }
 }
 
+#if os(Android)
 extension TupleView {
-    // TODO: Make this implement ComposeBridging via skip.ui.VStack?
+    @MainActor public var Java_view: JavaObjectPointer? {
+        let javaViews = skipUIBridgingViews.map { $0?.Java_view }
+        return SkipUI.ComposeBuilder(anyViews: javaViews).toJavaObject(options: [])
+    }
 }
+#endif
 
 public struct Tuple2View<V0, V1>: View, TupleView where V0: View, V1: View {
     let content: (V0, V1)
@@ -21,10 +28,14 @@ public struct Tuple2View<V0, V1>: View, TupleView where V0: View, V1: View {
 
     public typealias Body = Never
 
-//    public var composeIntegratingViews: [any ComposeIntegrating] {
-//        return [content.0, content.1]
-//    }
+    public var skipUIBridgingViews: [SkipUIBridging?] {
+        return [content.0 as? SkipUIBridging, content.1 as? SkipUIBridging]
+    }
 }
+
+#if os(Android)
+extension Tuple2View: SkipUIBridging {}
+#endif
 
 public struct Tuple3View<V0, V1, V2>: View, TupleView where V0: View, V1: View, V2: View {
     let content: (V0, V1, V2)
@@ -34,11 +45,15 @@ public struct Tuple3View<V0, V1, V2>: View, TupleView where V0: View, V1: View, 
     }
 
     public typealias Body = Never
-//
-//    public var composeIntegratingViews: [any ComposeIntegrating] {
-//        return [content.0, content.1, content.2]
-//    }
+
+    public var skipUIBridgingViews: [SkipUIBridging?] {
+        return [content.0 as? SkipUIBridging, content.1 as? SkipUIBridging, content.2 as? SkipUIBridging]
+    }
 }
+
+#if os(Android)
+extension Tuple3View: SkipUIBridging {}
+#endif
 
 public struct Tuple4View<V0, V1, V2, V3>: View, TupleView where V0: View, V1: View, V2: View, V3: View {
     let content: (V0, V1, V2, V3)
@@ -49,10 +64,14 @@ public struct Tuple4View<V0, V1, V2, V3>: View, TupleView where V0: View, V1: Vi
 
     public typealias Body = Never
 
-//    public var composeIntegratingViews: [any ComposeIntegrating] {
-//        return [content.0, content.1, content.2, content.3]
-//    }
+    public var skipUIBridgingViews: [SkipUIBridging?] {
+        return [content.0 as? SkipUIBridging, content.1 as? SkipUIBridging, content.2 as? SkipUIBridging, content.3 as? SkipUIBridging]
+    }
 }
+
+#if os(Android)
+extension Tuple4View: SkipUIBridging {}
+#endif
 
 public struct Tuple5View<V0, V1, V2, V3, V4>: View, TupleView where V0: View, V1: View, V2: View, V3: View, V4: View {
     let content: (V0, V1, V2, V3, V4)
@@ -63,10 +82,14 @@ public struct Tuple5View<V0, V1, V2, V3, V4>: View, TupleView where V0: View, V1
 
     public typealias Body = Never
 
-//    public var composeIntegratingViews: [any ComposeIntegrating] {
-//        return [content.0, content.1, content.2, content.3, content.4]
-//    }
+    public var skipUIBridgingViews: [SkipUIBridging?] {
+        return [content.0 as? SkipUIBridging, content.1 as? SkipUIBridging, content.2 as? SkipUIBridging, content.3 as? SkipUIBridging, content.4 as? SkipUIBridging]
+    }
 }
+
+#if os(Android)
+extension Tuple5View: SkipUIBridging {}
+#endif
 
 public struct Tuple6View<V0, V1, V2, V3, V4, V5>: View, TupleView where V0: View, V1: View, V2: View, V3: View, V4: View, V5: View {
     let content: (V0, V1, V2, V3, V4, V5)
@@ -77,10 +100,14 @@ public struct Tuple6View<V0, V1, V2, V3, V4, V5>: View, TupleView where V0: View
 
     public typealias Body = Never
 
-//    public var composeIntegratingViews: [any ComposeIntegrating] {
-//        return [content.0, content.1, content.2, content.3, content.4, content.5]
-//    }
+    public var skipUIBridgingViews: [SkipUIBridging?] {
+        return [content.0 as? SkipUIBridging, content.1 as? SkipUIBridging, content.2 as? SkipUIBridging, content.3 as? SkipUIBridging, content.4 as? SkipUIBridging, content.5 as? SkipUIBridging]
+    }
 }
+
+#if os(Android)
+extension Tuple6View: SkipUIBridging {}
+#endif
 
 public struct Tuple7View<V0, V1, V2, V3, V4, V5, V6>: View, TupleView where V0: View, V1: View, V2: View, V3: View, V4: View, V5: View, V6: View {
     let content: (V0, V1, V2, V3, V4, V5, V6)
@@ -91,10 +118,14 @@ public struct Tuple7View<V0, V1, V2, V3, V4, V5, V6>: View, TupleView where V0: 
 
     public typealias Body = Never
 
-//    public var composeIntegratingViews: [any ComposeIntegrating] {
-//        return [content.0, content.1, content.2, content.3, content.4, content.5, content.6]
-//    }
+    public var skipUIBridgingViews: [SkipUIBridging?] {
+        return [content.0 as? SkipUIBridging, content.1 as? SkipUIBridging, content.2 as? SkipUIBridging, content.3 as? SkipUIBridging, content.4 as? SkipUIBridging, content.5 as? SkipUIBridging, content.6 as? SkipUIBridging]
+    }
 }
+
+#if os(Android)
+extension Tuple7View: SkipUIBridging {}
+#endif
 
 public struct Tuple8View<V0, V1, V2, V3, V4, V5, V6, V7>: View, TupleView where V0: View, V1: View, V2: View, V3: View, V4: View, V5: View, V6: View, V7: View {
     let content: (V0, V1, V2, V3, V4, V5, V6, V7)
@@ -105,10 +136,14 @@ public struct Tuple8View<V0, V1, V2, V3, V4, V5, V6, V7>: View, TupleView where 
 
     public typealias Body = Never
 
-//    public var composeIntegratingViews: [any ComposeIntegrating] {
-//        return [content.0, content.1, content.2, content.3, content.4, content.5, content.6, content.7]
-//    }
+    public var skipUIBridgingViews: [SkipUIBridging?] {
+        return [content.0 as? SkipUIBridging, content.1 as? SkipUIBridging, content.2 as? SkipUIBridging, content.3 as? SkipUIBridging, content.4 as? SkipUIBridging, content.5 as? SkipUIBridging, content.6 as? SkipUIBridging, content.7 as? SkipUIBridging]
+    }
 }
+
+#if os(Android)
+extension Tuple8View: SkipUIBridging {}
+#endif
 
 public struct Tuple9View<V0, V1, V2, V3, V4, V5, V6, V7, V8>: View, TupleView where V0: View, V1: View, V2: View, V3: View, V4: View, V5: View, V6: View, V7: View, V8: View {
     let content: (V0, V1, V2, V3, V4, V5, V6, V7, V8)
@@ -119,7 +154,11 @@ public struct Tuple9View<V0, V1, V2, V3, V4, V5, V6, V7, V8>: View, TupleView wh
 
     public typealias Body = Never
 
-//    public var composeIntegratingViews: [any ComposeIntegrating] {
-//        return [content.0, content.1, content.2, content.3, content.4, content.5, content.6, content.7, content.8]
-//    }
+    public var skipUIBridgingViews: [SkipUIBridging?] {
+        return [content.0 as? SkipUIBridging, content.1 as? SkipUIBridging, content.2 as? SkipUIBridging, content.3 as? SkipUIBridging, content.4 as? SkipUIBridging, content.5 as? SkipUIBridging, content.6 as? SkipUIBridging, content.7 as? SkipUIBridging, content.8 as? SkipUIBridging]
+    }
 }
+
+#if os(Android)
+extension Tuple9View: SkipUIBridging {}
+#endif

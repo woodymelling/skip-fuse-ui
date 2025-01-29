@@ -4,6 +4,9 @@
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
 import SkipBridge
+import SkipFuse
+
+let logger: Logger = Logger(subsystem: "SkipFuseUI", category: "SkipFuseUI")
 
 public protocol View {
     associatedtype Body: View
@@ -24,21 +27,25 @@ extension Optional: View where Wrapped: View {
     }
 }
 
-extension Optional: ComposeBridging where Wrapped: View {
-    public var Java_composable: JavaObjectPointer? {
+#if os(Android)
+extension Optional: SkipUIBridging where Wrapped: View {
+    public var Java_view: JavaObjectPointer? {
         guard let self else {
             return nil
         }
-        return (self as? ComposeBridging)?.Java_composable
+        return (self as? SkipUIBridging)?.Java_view
     }
 }
+#endif
 
 extension Never: View {
     public typealias Body = Never
 }
 
-extension Never: ComposeBridging {
-    public var Java_composable: JavaObjectPointer? {
+#if os(Android)
+extension Never: SkipUIBridging {
+    public var Java_view: JavaObjectPointer? {
         return nil
     }
 }
+#endif

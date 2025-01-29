@@ -4,6 +4,7 @@
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
 import SkipBridge
+import SkipUI
 
 public struct EmptyView: View {
     public init() {
@@ -15,11 +16,10 @@ public struct EmptyView: View {
 extension EmptyView: Sendable {
 }
 
-extension EmptyView: ComposeBridging {
-    public var Java_composable: JavaObjectPointer? {
-        return try! Self.Java_class.create(ctor: Self.Java_constructor, options: [], args: [])
+#if os(Android)
+extension EmptyView: SkipUIBridging {
+    public var Java_view: JavaObjectPointer? {
+        return SkipUI.EmptyView().toJavaObject(options: [])
     }
-
-    private static let Java_class = try! JClass(name: "skip.ui.EmptyView")
-    private static let Java_constructor = Java_class.getMethodID(name: "<init>", sig: "()V")!
 }
+#endif

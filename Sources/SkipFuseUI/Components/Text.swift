@@ -4,26 +4,26 @@
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
 import SkipBridge
+import SkipUI
 
 // TODO: Actual implementation
 public struct Text: View {
     private let text: String
 
-    public init(_ text: String) {
-        self.text = text
+    public init<S>(_ text: S) where S: StringProtocol {
+        self.text = String(text)
     }
 
     public typealias Body = Never
 }
 
-extension Text: ComposeBridging {
-    public var Java_composable: JavaObjectPointer? {
-        return try! Self.Java_class.create(ctor: Self.Java_constructor, options: [], args: [text.toJavaParameter(options: [])])
+#if os(Android)
+extension Text: SkipUIBridging {
+    public var Java_view: JavaObjectPointer? {
+        return SkipUI.Text(verbatim: text).toJavaObject(options: [])
     }
-
-    private static let Java_class = try! JClass(name: "skip.ui.Text")
-    private static let Java_constructor = Java_class.getMethodID(name: "<init>", sig: "(Ljava/lang/String;)V")!
 }
+#endif
 
 //~~~
 /*
