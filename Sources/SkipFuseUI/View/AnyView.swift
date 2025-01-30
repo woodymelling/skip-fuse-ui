@@ -19,8 +19,10 @@ public struct AnyView: View {
     public typealias Body = Never
 }
 
-extension AnyView: ComposeBridging {
-    public var Java_composable: JavaObjectPointer? {
-        return (view as? ComposeBridging)?.Java_composable
+#if os(Android)
+extension AnyView: SkipUIBridging {
+    public var Java_view: JavaObjectPointer? {
+        return (view as? SkipUIBridging)?.Java_view
     }
 }
+#endif

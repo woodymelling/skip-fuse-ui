@@ -6,12 +6,12 @@
 import SkipBridge
 import SkipUI
 
-public struct VStack<Content>: View where Content: View {
-    private let alignment: HorizontalAlignment
+public struct HStack<Content>: View where Content: View {
+    private let alignment: VerticalAlignment
     private let spacing: CGFloat?
     private let content: any View
 
-    public init(alignment: HorizontalAlignment = .center, spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
+    public init(alignment: VerticalAlignment = .center, spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
         self.alignment = alignment
         self.spacing = spacing
         self.content = content()
@@ -21,9 +21,10 @@ public struct VStack<Content>: View where Content: View {
 }
 
 #if os(Android)
-extension VStack: SkipUIBridging {
+extension HStack: SkipUIBridging {
     public var Java_view: JavaObjectPointer? {
-        return SkipUI.VStack(alignmentKey: alignment.key, spacing: spacing, anyContent: (content as? SkipUIBridging)?.Java_view).toJavaObject(options: [])
+        return SkipUI.HStack(alignmentKey: alignment.key, spacing: spacing, anyContent: (content as? SkipUIBridging)?.Java_view).toJavaObject(options: [])
     }
 }
 #endif
+
