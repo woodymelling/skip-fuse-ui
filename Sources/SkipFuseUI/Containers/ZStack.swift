@@ -21,7 +21,7 @@ public struct ZStack<Content>: View where Content: View {
 #if os(Android)
 extension ZStack: SkipUIBridging {
     public var Java_view: JavaObjectPointer? {
-        return SkipUI.ZStack(horizontalAlignmentKey: alignment.horizontal.key, verticalAlignmentKey: alignment.vertical.key, anyContent: (content as? SkipUIBridging)?.Java_view).toJavaObject(options: [])
+        return SkipUI.ZStack(horizontalAlignmentKey: alignment.horizontal.key, verticalAlignmentKey: alignment.vertical.key, bridgedContent: (content as? SkipUIBridging)?.Java_view).toJavaObject(options: [])
     }
 }
 #endif

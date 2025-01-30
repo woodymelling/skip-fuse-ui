@@ -6,7 +6,7 @@
 import SkipBridge
 import SkipUI
 
-// TODO: Actual implementation
+// TODO: Full implementation
 public struct Text: View {
     private let text: String
 

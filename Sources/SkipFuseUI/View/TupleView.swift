@@ -14,7 +14,7 @@ public protocol TupleView {
 extension TupleView {
     @MainActor public var Java_view: JavaObjectPointer? {
         let javaViews = skipUIBridgingViews.map { $0?.Java_view }
-        return SkipUI.ComposeBuilder(anyViews: javaViews).toJavaObject(options: [])
+        return SkipUI.ComposeBuilder(bridgedViews: javaViews).toJavaObject(options: [])
     }
 }
 #endif

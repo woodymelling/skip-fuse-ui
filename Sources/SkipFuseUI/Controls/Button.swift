@@ -6,6 +6,7 @@
 import SkipBridge
 import SkipUI
 
+// TODO: Full implementation
 public struct Button<Label>: View where Label: View {
     private let label: Label
     private let action: @MainActor () -> Void
@@ -28,7 +29,7 @@ extension Button where Label == Text {
 #if os(Android)
 extension Button: SkipUIBridging {
     public var Java_view: JavaObjectPointer? {
-        return SkipUI.Button(anyLabel: (label as? SkipUIBridging)?.Java_view, action: action).toJavaObject(options: [])
+        return SkipUI.Button(bridgedLabel: (label as? SkipUIBridging)?.Java_view, action: action).toJavaObject(options: [])
     }
 }
 #endif

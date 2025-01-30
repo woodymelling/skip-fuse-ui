@@ -23,7 +23,7 @@ public struct HStack<Content>: View where Content: View {
 #if os(Android)
 extension HStack: SkipUIBridging {
     public var Java_view: JavaObjectPointer? {
-        return SkipUI.HStack(alignmentKey: alignment.key, spacing: spacing, anyContent: (content as? SkipUIBridging)?.Java_view).toJavaObject(options: [])
+        return SkipUI.HStack(alignmentKey: alignment.key, spacing: spacing, bridgedContent: (content as? SkipUIBridging)?.Java_view).toJavaObject(options: [])
     }
 }
 #endif
