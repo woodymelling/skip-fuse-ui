@@ -5,7 +5,7 @@
 // as published by the Free Software Foundation https://fsf.org
 import SkipUI
 
-public protocol ShapeStyle: Sendable {
+public protocol ShapeStyle : Sendable {
     var spec: @Sendable () -> ShapeStyleSpec { get }
 
 //    /// The type of shape style this will resolve to.
@@ -20,7 +20,7 @@ public protocol ShapeStyle: Sendable {
 //    func resolve(in environment: EnvironmentValues) -> Self.Resolved
 }
 
-public struct HierarchicalShapeStyle: ShapeStyle {
+public struct HierarchicalShapeStyle : ShapeStyle {
     public let spec: @Sendable () -> ShapeStyleSpec
 
     public init(spec: @Sendable @escaping () -> ShapeStyleSpec) {

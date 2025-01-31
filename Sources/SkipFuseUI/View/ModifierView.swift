@@ -5,7 +5,7 @@
 // as published by the Free Software Foundation https://fsf.org
 import SkipBridge
 
-struct ModifierView<Target>: View where Target: View {
+struct ModifierView<Target> : View where Target : View {
     private let target: Target
     private let modifier: @MainActor (Target) -> JavaObjectPointer?
 
@@ -18,7 +18,7 @@ struct ModifierView<Target>: View where Target: View {
 }
 
 #if os(Android)
-extension ModifierView: SkipUIBridging {
+extension ModifierView : SkipUIBridging {
     public var Java_view: JavaObjectPointer? {
         return modifier(target)
     }

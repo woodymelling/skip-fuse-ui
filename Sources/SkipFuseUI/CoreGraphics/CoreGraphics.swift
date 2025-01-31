@@ -11,7 +11,7 @@ import Android
 
 public typealias CGFloat = Double
 
-public struct CGPoint: Hashable {
+public struct CGPoint : Hashable {
     public static let zero = CGPoint()
     public var x: Double
     public var y: Double
@@ -28,7 +28,7 @@ public struct CGPoint: Hashable {
     }
 }
 
-public struct CGSize: Hashable {
+public struct CGSize : Hashable {
     public static let zero = CGSize()
     public var width: Double
     public var height: Double
@@ -45,7 +45,7 @@ public struct CGSize: Hashable {
     }
 }
 
-public struct CGRect: Hashable {
+public struct CGRect : Hashable {
     public static let zero = CGRect()
     public static let null = CGRect(x: .infinity, y: .infinity, width: 0.0, height: 0.0)
     public static let infinite = CGRect(x: -Double.infinity / 2.0, y: -Double.infinity / 2.0, width: Double.infinity, height: Double.infinity)
@@ -204,7 +204,7 @@ public struct CGRect: Hashable {
     }
 }
 
-public struct CGAffineTransform: Codable, Equatable {
+public struct CGAffineTransform : Codable, Equatable {
     public var a = 1.0
     public var b = 0.0
     public var c = 0.0

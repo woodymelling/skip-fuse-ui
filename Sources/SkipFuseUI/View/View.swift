@@ -3,7 +3,9 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
+#if os(Android)
 import SkipBridge
+#endif
 import SkipFuse
 
 let logger: Logger = Logger(subsystem: "SkipFuseUI", category: "SkipFuseUI")
@@ -17,7 +19,7 @@ public extension View where Body == Never {
     var body: Never { fatalError("Never") }
 }
 
-extension Optional: View where Wrapped: View {
+extension Optional : View where Wrapped : View {
     public var body: some View {
         if let self {
             return AnyView(erasing: self.body)
@@ -28,7 +30,7 @@ extension Optional: View where Wrapped: View {
 }
 
 #if os(Android)
-extension Optional: SkipUIBridging where Wrapped: View {
+extension Optional : SkipUIBridging where Wrapped : View {
     public var Java_view: JavaObjectPointer? {
         guard let self else {
             return nil
@@ -38,12 +40,12 @@ extension Optional: SkipUIBridging where Wrapped: View {
 }
 #endif
 
-extension Never: View {
+extension Never : View {
     public typealias Body = Never
 }
 
 #if os(Android)
-extension Never: SkipUIBridging {
+extension Never : SkipUIBridging {
     public var Java_view: JavaObjectPointer? {
         return nil
     }

@@ -7,7 +7,7 @@ import SkipBridge
 import SkipUI
 
 extension View {
-    nonisolated public func border<S>(_ content: S, width: CGFloat = 1) -> some View where S: ShapeStyle {
+    nonisolated public func border<S>(_ content: S, width: CGFloat = 1) -> some View where S : ShapeStyle {
         return ModifierView(target: self) {
             let view = ($0 as? SkipUIBridging)?.Java_view
             let modified = borderViewModifier(bridgedTarget: view, styleSpec: content.spec(), width: width)
@@ -23,7 +23,7 @@ extension View {
         }
     }
 
-    nonisolated public func foregroundStyle<S>(_ style: S) -> some View where S: ShapeStyle {
+    nonisolated public func foregroundStyle<S>(_ style: S) -> some View where S : ShapeStyle {
         return ModifierView(target: self) {
             let view = ($0 as? SkipUIBridging)?.Java_view
             let modified = foregroundStyleViewModifier(bridgedTarget: view, styleSpec: style.spec())
