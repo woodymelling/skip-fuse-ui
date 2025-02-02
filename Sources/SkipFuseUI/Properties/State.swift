@@ -3,30 +3,23 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
-@preconcurrency import SkipBridge
+//#if os(Android)
+import SkipUI
+//#endif
 
 @propertyWrapper public struct State<Value> : DynamicProperty {
-    private let value: StateBox<Value>
-    private let comparator: @Sendable (Value, Value) -> Bool
-
     public init(wrappedValue value: Value) where Value : Equatable {
-        self.value = StateBox(value)
-        self.comparator = { $0 == $1 }
-        #if os(Android)
-        self.Java_state = Java_initState()
-        #endif
+        self.valueBox = BridgedStateBox(value, comparator: { $0 == $1 })
     }
 
     public init(wrappedValue value: Value) {
-        self.value = StateBox(value)
+        let comparator: (Value, Value) -> Bool
         if Value.self is AnyObject.Type {
-            self.comparator = { ($0 as AnyObject) === ($1 as AnyObject) }
+            comparator = { ($0 as AnyObject) === ($1 as AnyObject) }
         } else {
-            self.comparator = { _, _ in false }
+            comparator = { _, _ in false }
         }
-        #if os(Android)
-        self.Java_state = Java_initState()
-        #endif
+        self.valueBox = BridgedStateBox(value, comparator: comparator)
     }
 
     public init(initialValue value: Value) where Value : Equatable {
@@ -37,59 +30,22 @@
         self.init(wrappedValue: value)
     }
 
+    /// Accessible to generated bridging code.
+    public let valueBox: BridgedStateBox<Value>
+
     public var wrappedValue: Value {
         get {
-            #if os(Android)
-            Java_access()
-            #endif
-            return value.value
+            return valueBox.value
         }
         nonmutating set {
-            #if os(Android)
-            let isUpdate = !comparator(value.value, newValue)
-            #endif
-            value.value = newValue
-            #if os(Android)
-            if isUpdate {
-                Java_update()
-            }
-            #endif
+            valueBox.value = newValue
         }
     }
 
     public var projectedValue: Binding<Value> {
         return Binding(get: { wrappedValue }, set: { wrappedValue = $0 })
     }
-
-    #if os(Android)
-    private let Java_state: JObject
-
-    private func Java_access() {
-        jniContext {
-            try! Java_state.call(method: Java_state_access_methodID, options: [], args: [])
-        }
-    }
-
-    private func Java_update() {
-        jniContext {
-            try! Java_state.call(method: Java_state_update_methodID, options: [], args: [])
-        }
-    }
-    #endif
 }
-
-#if os(Android)
-private let Java_stateClass = try! JClass(name: "skip/model/MutableStateBox")
-private let Java_state_init_methodID = Java_stateClass.getMethodID(name: "<init>", sig: "()V")!
-private let Java_state_access_methodID = Java_stateClass.getMethodID(name: "access", sig: "()V")!
-private let Java_state_update_methodID = Java_stateClass.getMethodID(name: "update", sig: "()V")!
-
-private func Java_initState() -> JObject {
-    return jniContext {
-        return try! JObject(Java_stateClass.create(ctor: Java_state_init_methodID, options: [], args: []))
-    }
-}
-#endif
 
 extension State : Sendable where Value : Sendable {
 }
@@ -99,4 +55,3 @@ extension State where Value : ExpressibleByNilLiteral {
         self.init(wrappedValue: nil)
     }
 }
-
