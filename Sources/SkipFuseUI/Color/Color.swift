@@ -6,7 +6,7 @@
 import SkipUI
 
 // TODO: Actual implementation
-public struct Color: ShapeStyle {
+public struct Color : ShapeStyle {
     public let spec: @Sendable () -> ShapeStyleSpec
 
     public init(spec: @Sendable @escaping () -> ShapeStyleSpec) {

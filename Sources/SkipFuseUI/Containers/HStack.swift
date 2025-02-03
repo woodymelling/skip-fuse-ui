@@ -3,10 +3,12 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
+#if os(Android)
 import SkipBridge
 import SkipUI
+#endif
 
-public struct HStack<Content>: View where Content: View {
+public struct HStack<Content> : View where Content : View {
     private let alignment: VerticalAlignment
     private let spacing: CGFloat?
     private let content: any View
@@ -21,7 +23,7 @@ public struct HStack<Content>: View where Content: View {
 }
 
 #if os(Android)
-extension HStack: SkipUIBridging {
+extension HStack : SkipUIBridging {
     public var Java_view: JavaObjectPointer? {
         return SkipUI.HStack(alignmentKey: alignment.key, spacing: spacing, bridgedContent: (content as? SkipUIBridging)?.Java_view).toJavaObject(options: [])
     }

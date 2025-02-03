@@ -3,11 +3,13 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
+#if os(Android)
 import SkipBridge
 import SkipUI
+#endif
 
 // TODO: Full implementation
-public struct Button<Label>: View where Label: View {
+public struct Button<Label> : View where Label : View {
     private let label: Label
     private let action: @MainActor () -> Void
 
@@ -27,7 +29,7 @@ extension Button where Label == Text {
 }
 
 #if os(Android)
-extension Button: SkipUIBridging {
+extension Button : SkipUIBridging {
     public var Java_view: JavaObjectPointer? {
         return SkipUI.Button(bridgedLabel: (label as? SkipUIBridging)?.Java_view, action: action).toJavaObject(options: [])
     }

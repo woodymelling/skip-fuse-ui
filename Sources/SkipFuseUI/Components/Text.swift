@@ -3,14 +3,16 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
+#if os(Android)
 import SkipBridge
 import SkipUI
+#endif
 
-// TODO: Full implementation
-public struct Text: View {
+// TODO: Actual implementation
+public struct Text : View {
     private let text: String
 
-    public init<S>(_ text: S) where S: StringProtocol {
+    public init<S>(_ text: S) where S : StringProtocol {
         self.text = String(text)
     }
 
@@ -18,7 +20,7 @@ public struct Text: View {
 }
 
 #if os(Android)
-extension Text: SkipUIBridging {
+extension Text : SkipUIBridging {
     public var Java_view: JavaObjectPointer? {
         return SkipUI.Text(verbatim: text).toJavaObject(options: [])
     }

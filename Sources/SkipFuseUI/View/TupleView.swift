@@ -3,8 +3,10 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
+#if os(Android)
 import SkipBridge
 import SkipUI
+#endif
 
 public protocol TupleView {
     var skipUIBridgingViews: [SkipUIBridging?] { get }
@@ -19,7 +21,7 @@ extension TupleView {
 }
 #endif
 
-public struct Tuple2View<V0, V1>: View, TupleView where V0: View, V1: View {
+public struct Tuple2View<V0, V1> : View, TupleView where V0 : View, V1 : View {
     let content: (V0, V1)
 
     public init(_ content: (V0, V1)) {
@@ -34,10 +36,10 @@ public struct Tuple2View<V0, V1>: View, TupleView where V0: View, V1: View {
 }
 
 #if os(Android)
-extension Tuple2View: SkipUIBridging {}
+extension Tuple2View : SkipUIBridging {}
 #endif
 
-public struct Tuple3View<V0, V1, V2>: View, TupleView where V0: View, V1: View, V2: View {
+public struct Tuple3View<V0, V1, V2> : View, TupleView where V0 : View, V1 : View, V2 : View {
     let content: (V0, V1, V2)
 
     public init(_ content: (V0, V1, V2)) {
@@ -52,10 +54,10 @@ public struct Tuple3View<V0, V1, V2>: View, TupleView where V0: View, V1: View, 
 }
 
 #if os(Android)
-extension Tuple3View: SkipUIBridging {}
+extension Tuple3View : SkipUIBridging {}
 #endif
 
-public struct Tuple4View<V0, V1, V2, V3>: View, TupleView where V0: View, V1: View, V2: View, V3: View {
+public struct Tuple4View<V0, V1, V2, V3> : View, TupleView where V0 : View, V1 : View, V2 : View, V3 : View {
     let content: (V0, V1, V2, V3)
 
     public init(_ content: (V0, V1, V2, V3)) {
@@ -70,10 +72,10 @@ public struct Tuple4View<V0, V1, V2, V3>: View, TupleView where V0: View, V1: Vi
 }
 
 #if os(Android)
-extension Tuple4View: SkipUIBridging {}
+extension Tuple4View : SkipUIBridging {}
 #endif
 
-public struct Tuple5View<V0, V1, V2, V3, V4>: View, TupleView where V0: View, V1: View, V2: View, V3: View, V4: View {
+public struct Tuple5View<V0, V1, V2, V3, V4> : View, TupleView where V0 : View, V1 : View, V2 : View, V3 : View, V4 : View {
     let content: (V0, V1, V2, V3, V4)
 
     public init(_ content: (V0, V1, V2, V3, V4)) {
@@ -88,10 +90,10 @@ public struct Tuple5View<V0, V1, V2, V3, V4>: View, TupleView where V0: View, V1
 }
 
 #if os(Android)
-extension Tuple5View: SkipUIBridging {}
+extension Tuple5View : SkipUIBridging {}
 #endif
 
-public struct Tuple6View<V0, V1, V2, V3, V4, V5>: View, TupleView where V0: View, V1: View, V2: View, V3: View, V4: View, V5: View {
+public struct Tuple6View<V0, V1, V2, V3, V4, V5> : View, TupleView where V0 : View, V1 : View, V2 : View, V3 : View, V4 : View, V5 : View {
     let content: (V0, V1, V2, V3, V4, V5)
 
     public init(_ content: (V0, V1, V2, V3, V4, V5)) {
@@ -106,10 +108,10 @@ public struct Tuple6View<V0, V1, V2, V3, V4, V5>: View, TupleView where V0: View
 }
 
 #if os(Android)
-extension Tuple6View: SkipUIBridging {}
+extension Tuple6View : SkipUIBridging {}
 #endif
 
-public struct Tuple7View<V0, V1, V2, V3, V4, V5, V6>: View, TupleView where V0: View, V1: View, V2: View, V3: View, V4: View, V5: View, V6: View {
+public struct Tuple7View<V0, V1, V2, V3, V4, V5, V6> : View, TupleView where V0 : View, V1 : View, V2 : View, V3 : View, V4 : View, V5 : View, V6 : View {
     let content: (V0, V1, V2, V3, V4, V5, V6)
 
     public init(_ content: (V0, V1, V2, V3, V4, V5, V6)) {
@@ -124,10 +126,10 @@ public struct Tuple7View<V0, V1, V2, V3, V4, V5, V6>: View, TupleView where V0: 
 }
 
 #if os(Android)
-extension Tuple7View: SkipUIBridging {}
+extension Tuple7View : SkipUIBridging {}
 #endif
 
-public struct Tuple8View<V0, V1, V2, V3, V4, V5, V6, V7>: View, TupleView where V0: View, V1: View, V2: View, V3: View, V4: View, V5: View, V6: View, V7: View {
+public struct Tuple8View<V0, V1, V2, V3, V4, V5, V6, V7> : View, TupleView where V0 : View, V1 : View, V2 : View, V3 : View, V4 : View, V5 : View, V6 : View, V7 : View {
     let content: (V0, V1, V2, V3, V4, V5, V6, V7)
 
     public init(_ content: (V0, V1, V2, V3, V4, V5, V6, V7)) {
@@ -142,10 +144,10 @@ public struct Tuple8View<V0, V1, V2, V3, V4, V5, V6, V7>: View, TupleView where 
 }
 
 #if os(Android)
-extension Tuple8View: SkipUIBridging {}
+extension Tuple8View : SkipUIBridging {}
 #endif
 
-public struct Tuple9View<V0, V1, V2, V3, V4, V5, V6, V7, V8>: View, TupleView where V0: View, V1: View, V2: View, V3: View, V4: View, V5: View, V6: View, V7: View, V8: View {
+public struct Tuple9View<V0, V1, V2, V3, V4, V5, V6, V7, V8> : View, TupleView where V0 : View, V1 : View, V2 : View, V3 : View, V4 : View, V5 : View, V6 : View, V7 : View, V8 : View {
     let content: (V0, V1, V2, V3, V4, V5, V6, V7, V8)
 
     public init(_ content: (V0, V1, V2, V3, V4, V5, V6, V7, V8)) {
@@ -160,5 +162,5 @@ public struct Tuple9View<V0, V1, V2, V3, V4, V5, V6, V7, V8>: View, TupleView wh
 }
 
 #if os(Android)
-extension Tuple9View: SkipUIBridging {}
+extension Tuple9View : SkipUIBridging {}
 #endif
