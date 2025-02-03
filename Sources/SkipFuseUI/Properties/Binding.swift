@@ -8,7 +8,8 @@
     private let get: () -> Value
     private let set: (Value) -> Void
 
-    @preconcurrency public init(get: @escaping @isolated(any) @Sendable () -> Value, set: @escaping @isolated(any) @Sendable (Value) -> Void) {
+    @preconcurrency public init(valueBox: BridgedStateBox<Value>? = nil, get: @escaping @isolated(any) @Sendable () -> Value, set: @escaping @isolated(any) @Sendable (Value) -> Void) {
+        self.valueBox = valueBox
         self.get = get
         self.set = set
     }
@@ -16,6 +17,12 @@
     public static func constant(_ value: Value) -> Binding<Value> {
         return Binding(get: { value }, set: { _ in })
     }
+
+    /// The bound `@State's` bridged value box.
+    ///
+    /// This is exposed to generated code here rather than on the `State` because the property wrapper itself is considered
+    /// private, but its projection is accessible to callers.
+    public let valueBox: BridgedStateBox<Value>?
 
     public var wrappedValue: Value {
         get {

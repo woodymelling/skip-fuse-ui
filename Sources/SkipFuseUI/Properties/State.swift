@@ -8,6 +8,8 @@ import SkipUI
 //#endif
 
 @propertyWrapper public struct State<Value> : DynamicProperty {
+    private let valueBox: BridgedStateBox<Value>
+
     public init(wrappedValue value: Value) where Value : Equatable {
         self.valueBox = BridgedStateBox(value, comparator: { $0 == $1 })
     }
@@ -30,9 +32,6 @@ import SkipUI
         self.init(wrappedValue: value)
     }
 
-    /// Accessible to generated bridging code.
-    public let valueBox: BridgedStateBox<Value>
-
     public var wrappedValue: Value {
         get {
             return valueBox.value
@@ -43,7 +42,7 @@ import SkipUI
     }
 
     public var projectedValue: Binding<Value> {
-        return Binding(get: { wrappedValue }, set: { wrappedValue = $0 })
+        return Binding(valueBox: valueBox, get: { wrappedValue }, set: { wrappedValue = $0 })
     }
 }
 
