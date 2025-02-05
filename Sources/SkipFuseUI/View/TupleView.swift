@@ -3,23 +3,18 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
-#if os(Android)
-import SkipBridge
 import SkipUI
-#endif
 
 public protocol TupleView {
     var skipUIBridgingViews: [SkipUIBridging?] { get }
 }
 
-#if os(Android)
 extension TupleView {
-    @MainActor public var Java_view: JavaObjectPointer? {
-        let javaViews = skipUIBridgingViews.map { $0?.Java_view }
-        return SkipUI.ComposeBuilder(bridgedViews: javaViews).toJavaObject(options: [])
+    @MainActor public var Java_view: any SkipUI.View {
+        let javaViews = skipUIBridgingViews.compactMap { $0?.Java_view }
+        return SkipUI.ComposeBuilder(bridgedViews: javaViews)
     }
 }
-#endif
 
 public struct Tuple2View<V0, V1> : View, TupleView where V0 : View, V1 : View {
     let content: (V0, V1)
