@@ -3,9 +3,7 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
-#if os(Android)
-import SkipBridge
-#endif
+import SkipUI
 
 public struct AnyView : View {
     private let view: any View
@@ -21,10 +19,8 @@ public struct AnyView : View {
     public typealias Body = Never
 }
 
-#if os(Android)
 extension AnyView : SkipUIBridging {
-    public var Java_view: JavaObjectPointer? {
-        return (view as? SkipUIBridging)?.Java_view
+    public var Java_view: any SkipUI.View {
+        return (view as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
     }
 }
-#endif
