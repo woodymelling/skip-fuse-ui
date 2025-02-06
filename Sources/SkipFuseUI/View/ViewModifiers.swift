@@ -34,4 +34,11 @@ extension View {
             return view.foregroundStyle(styleSpec: style.spec())
         }
     }
+
+    nonisolated public func tag<V>(_ tag: V, includeOptional: Bool = true) -> some View where V : Hashable {
+        return ModifierView(target: self) {
+            let view = ($0 as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+            return view.tag(SwiftHashable(tag)) // Tag with bridgable wrapper
+        }
+    }
 }

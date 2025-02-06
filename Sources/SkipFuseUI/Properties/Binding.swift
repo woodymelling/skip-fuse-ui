@@ -5,8 +5,8 @@
 // as published by the Free Software Foundation https://fsf.org
 
 @propertyWrapper @dynamicMemberLookup public struct Binding<Value> {
-    private let get: () -> Value
-    private let set: (Value) -> Void
+    let get: () -> Value
+    let set: (Value) -> Void
 
     @preconcurrency public init(valueBox: BridgedStateBox<Value>? = nil, get: @escaping @isolated(any) @Sendable () -> Value, set: @escaping @isolated(any) @Sendable (Value) -> Void) {
         self.valueBox = valueBox
