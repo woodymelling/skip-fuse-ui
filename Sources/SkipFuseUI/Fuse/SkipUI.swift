@@ -4,6 +4,7 @@
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
 @_exported import struct SkipUI.EmptyView
+@_exported import class SkipUI.EnvironmentSupport
 @_exported import class SkipUI.StateSupport
 @_exported import protocol SkipUI.View
 
