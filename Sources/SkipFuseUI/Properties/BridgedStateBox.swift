@@ -45,14 +45,6 @@ public final class BridgedStateBox<Value> {
         _value.value = box.value
         Java_stateSupport = support
     }
-
-    private final class Box<V> {
-        var value: V
-
-        init(_ value: V) {
-            self.value = value
-        }
-    }
 }
 
 extension BridgedStateBox : @unchecked Sendable where Value : Sendable {
