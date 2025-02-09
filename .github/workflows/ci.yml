@@ -15,4 +15,4 @@ jobs:
   call-workflow:
     uses: skiptools/actions/.github/workflows/skip-framework.yml@main
     with:
-      - runs-on: 'macos-15'
+      runs-on: 'macos-15'
