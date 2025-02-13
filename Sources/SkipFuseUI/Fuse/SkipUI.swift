@@ -20,3 +20,14 @@ extension View {
         return (self as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
     }
 }
+
+/// - Seealso `SkipUI.composeBundleString(for:)`
+func Java_composeBundleString(for value: Any?) -> String {
+    if let identifiable = value as? any Identifiable {
+        return String(describing: identifiable.id)
+    } else if let rawRepresentable = value as? any RawRepresentable {
+        return String(describing: rawRepresentable.rawValue)
+    } else {
+        return String(describing: value)
+    }
+}
