@@ -85,7 +85,7 @@ extension View {
             guard key.hasPrefix("userkey:") else {
                 fatalError("Set via .\(key) View modifier")
             }
-            let view = ($0 as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+            let view = $0.Java_viewOrEmpty
             let ptr = SwiftObjectPointer.pointer(to: Box(value), retain: true)
             let value = EnvironmentSupport(valueHolder: ptr, finalizer: { ptr in
                 ptr.release(as: Box<V>.self)
@@ -98,7 +98,7 @@ extension View {
     @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
     nonisolated public func environment<T>(_ object: T?) -> some View where T : AnyObject, T : Observable {
         return ModifierView(target: self) {
-            let view = ($0 as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+            let view = $0.Java_viewOrEmpty
             let key = EnvironmentValues.key(for: T.self)
             if let object {
                 let ptr = SwiftObjectPointer.pointer(to: Box(object), retain: true)

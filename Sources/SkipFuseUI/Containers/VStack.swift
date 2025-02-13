@@ -21,6 +21,6 @@ public struct VStack<Content> : View where Content : View {
 
 extension VStack : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.VStack(alignmentKey: alignment.key, spacing: spacing, bridgedContent: (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())
+        return SkipUI.VStack(alignmentKey: alignment.key, spacing: spacing, bridgedContent: content.Java_viewOrEmpty)
     }
 }

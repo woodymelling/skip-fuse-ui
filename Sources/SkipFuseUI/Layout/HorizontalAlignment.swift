@@ -4,7 +4,7 @@
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
 
-public struct HorizontalAlignment : Equatable, Sendable {
+public struct HorizontalAlignment : Equatable /*, Sendable */ {
     let key: String
 
     init(key: String) {

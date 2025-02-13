@@ -19,6 +19,6 @@ public struct ZStack<Content> : View where Content : View {
 
 extension ZStack : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.ZStack(horizontalAlignmentKey: alignment.horizontal.key, verticalAlignmentKey: alignment.vertical.key, bridgedContent: (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())
+        return SkipUI.ZStack(horizontalAlignmentKey: alignment.horizontal.key, verticalAlignmentKey: alignment.vertical.key, bridgedContent: content.Java_viewOrEmpty)
     }
 }

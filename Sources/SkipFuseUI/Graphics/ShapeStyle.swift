@@ -5,8 +5,8 @@
 // as published by the Free Software Foundation https://fsf.org
 import SkipUI
 
-public protocol ShapeStyle : Sendable {
-    var spec: @Sendable () -> ShapeStyleSpec { get }
+public protocol ShapeStyle /* : Sendable */ {
+    var spec: /* @Sendable */ () -> ShapeStyleSpec { get }
 
 //    /// The type of shape style this will resolve to.
 //    ///
@@ -21,9 +21,9 @@ public protocol ShapeStyle : Sendable {
 }
 
 public struct HierarchicalShapeStyle : ShapeStyle {
-    public let spec: @Sendable () -> ShapeStyleSpec
+    public let spec: /* @Sendable */ () -> ShapeStyleSpec
 
-    public init(spec: @Sendable @escaping () -> ShapeStyleSpec) {
+    public init(spec: /* @Sendable */ @escaping () -> ShapeStyleSpec) {
         self.spec = spec
     }
 

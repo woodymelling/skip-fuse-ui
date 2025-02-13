@@ -21,6 +21,6 @@ public struct AnyView : View {
 
 extension AnyView : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return (view as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+        return view.Java_viewOrEmpty
     }
 }

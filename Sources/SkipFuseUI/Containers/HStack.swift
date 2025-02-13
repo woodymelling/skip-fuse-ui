@@ -21,7 +21,7 @@ public struct HStack<Content> : View where Content : View {
 
 extension HStack : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.HStack(alignmentKey: alignment.key, spacing: spacing, bridgedContent: (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())
+        return SkipUI.HStack(alignmentKey: alignment.key, spacing: spacing, bridgedContent: content.Java_viewOrEmpty)
     }
 }
 
