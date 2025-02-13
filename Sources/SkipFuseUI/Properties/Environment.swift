@@ -27,7 +27,8 @@ import SkipUI
 
     public func Java_syncEnvironmentSupport(_ support: EnvironmentSupport?) {
         if let support {
-            if let valueHolder = support.valueHolder {
+            let valueHolder = support.valueHolder
+            if valueHolder != SwiftObjectNil {
                 valueBox.value = valueHolder.pointee()!
             } else {
                 valueBox.value = Box(EnvironmentValues.builtin(key: key, bridgedValue: support.builtinValue) as! Value)
@@ -52,4 +53,10 @@ extension Environment {
         self.key = EnvironmentValues.key(for: objectType)
         self.defaultValue = { EnvironmentValues.shared[objectType] }
     }
+}
+
+@_cdecl("Java_skip_ui_EnvironmentSupport_Swift_1release")
+public func EnvironmentSupport_Swift_release(_ Java_env: JNIEnvPointer, _ Java_target: JavaObjectPointer, _ Swift_valueHolder: SwiftObjectPointer) -> SwiftObjectPointer {
+    Swift_valueHolder.release(as: Box<Any>.self)
+    return SwiftObjectNil
 }

@@ -33,10 +33,7 @@ public final class BridgedStateBox<Value> {
 
     public func Java_initStateSupport() -> StateSupport {
         let ptr = SwiftObjectPointer.pointer(to: _value, retain: true)
-        Java_stateSupport = StateSupport(valueHolder: ptr, finalizer: { ptr in
-            ptr.release(as: Box<Value>.self)
-            return SwiftObjectNil
-        })
+        Java_stateSupport = StateSupport(valueHolder: ptr)
         return Java_stateSupport!
     }
 

@@ -87,10 +87,7 @@ extension View {
             }
             let view = $0.Java_viewOrEmpty
             let ptr = SwiftObjectPointer.pointer(to: Box(value), retain: true)
-            let value = EnvironmentSupport(valueHolder: ptr, finalizer: { ptr in
-                ptr.release(as: Box<V>.self)
-                return SwiftObjectNil
-            })
+            let value = EnvironmentSupport(valueHolder: ptr)
             return view.environment(bridgedKey: key, value: value)
         }
     }
@@ -102,10 +99,7 @@ extension View {
             let key = EnvironmentValues.key(for: T.self)
             if let object {
                 let ptr = SwiftObjectPointer.pointer(to: Box(object), retain: true)
-                let value = EnvironmentSupport(valueHolder: ptr, finalizer: { ptr in
-                    ptr.release(as: Box<T>.self)
-                    return SwiftObjectNil
-                })
+                let value = EnvironmentSupport(valueHolder: ptr)
                 return view.environment(bridgedKey: key, value: value)
             } else {
                 return view.environment(bridgedKey: key, value: nil)

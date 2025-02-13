@@ -3,6 +3,7 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
+import SkipBridge
 
 @propertyWrapper public struct State<Value> : DynamicProperty {
     private let valueBox: BridgedStateBox<Value>
@@ -50,4 +51,10 @@ extension State where Value : ExpressibleByNilLiteral {
     public init() {
         self.init(wrappedValue: nil)
     }
+}
+
+@_cdecl("Java_skip_ui_StateSupport_Swift_1release")
+public func StateSupport_Swift_release(_ Java_env: JNIEnvPointer, _ Java_target: JavaObjectPointer, _ Swift_valueHolder: SwiftObjectPointer) -> SwiftObjectPointer {
+    Swift_valueHolder.release(as: Box<Any>.self)
+    return SwiftObjectNil
 }
