@@ -47,5 +47,5 @@ public final class BridgedStateBox<Value> {
     }
 }
 
-extension BridgedStateBox : @unchecked Sendable where Value : Sendable {
-}
+//extension BridgedStateBox : @unchecked Sendable where Value : Sendable {
+//}

@@ -6,7 +6,7 @@
 import SkipBridge
 import SkipUI
 
-@MainActor @preconcurrency public struct TabView<SelectionValue, Content> : View where SelectionValue : Hashable, Content : View {
+@MainActor /* @preconcurrency */ public struct TabView<SelectionValue, Content> : View where SelectionValue : Hashable, Content : View {
     private let selection: Binding<SelectionValue>?
     private let content: Content
 
@@ -31,7 +31,7 @@ extension TabView : SkipUIBridging {
             selectionGet = nil
             selectionSet = nil
         }
-        return SkipUI.TabView(selectionGet: selectionGet, selectionSet: selectionSet, bridgedContent: (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())
+        return SkipUI.TabView(selectionGet: selectionGet, selectionSet: selectionSet, bridgedContent: content.Java_viewOrEmpty)
     }
 }
 
@@ -49,8 +49,7 @@ extension View {
     nonisolated public func tabItem<V>(@ViewBuilder _ label: () -> V) -> some View where V : View {
         let label = label()
         return ModifierView(target: self) {
-            let view = ($0 as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
-            return view.tabItem(bridgedLabel: (label as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())
+            return $0.Java_viewOrEmpty.tabItem(bridgedLabel: label.Java_viewOrEmpty)
         }
     }
 }

@@ -12,5 +12,5 @@ final class Box<Value> {
     }
 }
 
-extension Box : @unchecked Sendable where Value : Sendable {
-}
+//extension Box : @unchecked Sendable where Value : Sendable {
+//}

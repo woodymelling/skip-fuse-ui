@@ -6,7 +6,7 @@
 import SkipUI
 
 // TODO: Actual implementation
-@MainActor @preconcurrency public struct NavigationStack<Data, Root> : View where Root : View {
+@MainActor /* @preconcurrency */ public struct NavigationStack<Data, Root> : View where Root : View {
     private let root: Root
 
     /* nonisolated */ public init(@ViewBuilder root: () -> Root) where Data == NavigationPath {
@@ -26,7 +26,7 @@ import SkipUI
 
 extension NavigationStack : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.NavigationStack(bridgedRoot: (root as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())
+        return SkipUI.NavigationStack(bridgedRoot: root.Java_viewOrEmpty)
     }
 }
 
@@ -48,7 +48,7 @@ extension NavigationStack : SkipUIBridging {
 
 extension NavigationLink : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.NavigationLink(bridgedDestination: (destination as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView(), bridgedLabel: (label as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())
+        return SkipUI.NavigationLink(bridgedDestination: destination.Java_viewOrEmpty, bridgedLabel: label.Java_viewOrEmpty)
     }
 }
 

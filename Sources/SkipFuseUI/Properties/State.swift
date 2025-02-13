@@ -43,8 +43,8 @@
     }
 }
 
-extension State : Sendable where Value : Sendable {
-}
+//extension State : Sendable where Value : Sendable {
+//}
 
 extension State where Value : ExpressibleByNilLiteral {
     public init() {

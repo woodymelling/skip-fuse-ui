@@ -13,3 +13,10 @@ public protocol SkipUIBridging {
     /// The composable SkipUI version of this view.
     @MainActor var Java_view: any SkipUI.View { get }
 }
+
+extension View {
+    /// Return the bridging view if this view is `SkipUIBridging`, else `SkipUI.EmptyView`.
+    @MainActor var Java_viewOrEmpty: any SkipUI.View {
+        return (self as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+    }
+}

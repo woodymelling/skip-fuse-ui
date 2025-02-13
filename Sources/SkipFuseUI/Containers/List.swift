@@ -5,7 +5,7 @@
 // as published by the Free Software Foundation https://fsf.org
 import SkipUI
 
-@MainActor @preconcurrency public struct List<SelectionValue, Content> : View where SelectionValue : Hashable, Content : View {
+@MainActor /* @preconcurrency */ public struct List<SelectionValue, Content> : View where SelectionValue : Hashable, Content : View {
     private let content: Content
 
     @available(*, unavailable)
@@ -23,7 +23,7 @@ import SkipUI
 
 extension List : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.List(bridgedContent: (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())
+        return SkipUI.List(bridgedContent: content.Java_viewOrEmpty)
     }
 }
 
