@@ -3,6 +3,7 @@
 // This is free software: you can redistribute and/or modify it
 // under the terms of the GNU Lesser General Public License 3.0
 // as published by the Free Software Foundation https://fsf.org
+import SkipBridge
 
 @propertyWrapper @dynamicMemberLookup public struct Binding<Value> {
     let get: () -> Value
@@ -45,39 +46,17 @@
         return Binding<Subject>(get: { wrappedValue[keyPath: keyPath] }, set: { wrappedValue[keyPath: keyPath] = $0 })
     }
 
-//    /// Creates a binding with a closure that reads from the binding value, and
-//    /// a closure that applies a transaction when writing to the binding value.
-//    ///
-//    /// A binding conforms to Sendable only if its wrapped value type also
-//    /// conforms to Sendable. It is always safe to pass a sendable binding
-//    /// between different concurrency domains. However, reading from or writing
-//    /// to a binding's wrapped value from a different concurrency domain may or
-//    /// may not be safe, depending on how the binding was created. SwiftUI will
-//    /// issue a warning at runtime if it detects a binding being used in a way
-//    /// that may compromise data safety.
-//    ///
-//    /// For a "computed" binding created using get and set closure parameters,
-//    /// the safety of accessing its wrapped value from a different concurrency
-//    /// domain depends on whether those closure arguments are isolated to
-//    /// a specific actor. For example, a computed binding with closure arguments
-//    /// that are known (or inferred) to be isolated to the main actor must only
-//    /// ever access its wrapped value on the main actor as well, even if the
-//    /// binding is also sendable.
-//    ///
-//    /// - Parameters:
-//    ///   - get: A closure to retrieve the binding value. The closure has no
-//    ///     parameters, and returns a value.
-//    ///   - set: A closure to set the binding value. The closure has the
-//    ///     following parameters:
-//    ///       - newValue: The new value of the binding value.
-//    ///       - transaction: The transaction to apply when setting a new value.
 //    @preconcurrency public init(get: @escaping @isolated(any) @Sendable () -> Value, set: @escaping @isolated(any) @Sendable (Value, Transaction) -> Void)
-//
-//    /// The binding's transaction.
-//    ///
-//    /// The transaction captures the information needed to update the view when
-//    /// the binding value changes.
-//    public var transaction: Transaction
+
+    @available(*, unavailable)
+    public var transaction: Any /* Transaction */ {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
 }
 
 extension Binding {
@@ -162,21 +141,35 @@ extension Binding : BidirectionalCollection where Value : BidirectionalCollectio
 extension Binding : RandomAccessCollection where Value : MutableCollection, Value : RandomAccessCollection {
 }
 
-//@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-//extension Binding {
-//
-//    /// Specifies a transaction for the binding.
-//    ///
-//    /// - Parameter transaction  : An instance of a ``Transaction``.
-//    ///
-//    /// - Returns: A new binding.
-//    public func transaction(_ transaction: Transaction) -> Binding<Value>
-//
-//    /// Specifies an animation to perform when the binding value changes.
-//    ///
-//    /// - Parameter animation: An animation sequence performed when the binding
-//    ///   value changes.
-//    ///
-//    /// - Returns: A new binding.
-//    public func animation(_ animation: Animation? = .default) -> Binding<Value>
-//}
+extension Binding {
+    @available(*, unavailable)
+    public func transaction(_ transaction: Any /* Transaction */) -> Binding<Value> {
+        fatalError()
+    }
+
+    @available(*, unavailable)
+    public func animation(_ animation: Any? = nil /* Animation? = .default */) -> Binding<Value> {
+        fatalError()
+    }
+}
+
+extension Binding : JConvertible, JObjectProtocol {
+    public static func fromJavaObject(_ ptr: JavaObjectPointer?, options: JConvertibleOptions) -> Self {
+        let get_java: JavaObjectPointer = try! ptr!.call(method: Java_SkipUIBinding_get_methodID, options: options, args: [])
+        let set_java: JavaObjectPointer = try! ptr!.call(method: Java_SkipUIBinding_set_methodID, options: options, args: [])
+        let get_swift: () -> Value = SwiftClosure0.closure(forJavaObject: get_java, options: options)!
+        let set_swift: (Value) -> Void = SwiftClosure1.closure(forJavaObject: set_java, options: options)!
+        return Binding(get: get_swift, set: set_swift)
+    }
+    
+    public func toJavaObject(options: JConvertibleOptions) -> JavaObjectPointer? {
+        let get_java = SwiftClosure0.javaObject(for: self.get, options: options)!.toJavaParameter(options: options)
+        let set_java = SwiftClosure1.javaObject(for: self.set, options: options)!.toJavaParameter(options: options)
+        return try! Java_SkipUIBinding.create(ctor: Java_SkipUIBinding_constructor_methodID, options: options, args: [get_java, set_java])
+    }
+}
+
+private let Java_SkipUIBinding = try! JClass(name: "skip/ui/Binding")
+private let Java_SkipUIBinding_constructor_methodID = Java_SkipUIBinding.getMethodID(name: "<init>", sig: "(Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)V")!
+private let Java_SkipUIBinding_get_methodID = Java_SkipUIBinding.getMethodID(name: "getGet", sig: "()Lkotlin/jvm/functions/Function0;")!
+private let Java_SkipUIBinding_set_methodID = Java_SkipUIBinding.getMethodID(name: "getSet", sig: "()Lkotlin/jvm/functions/Function1;")!
