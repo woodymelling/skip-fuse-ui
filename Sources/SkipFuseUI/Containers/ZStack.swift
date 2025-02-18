@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-public struct ZStack<Content> : View where Content : View {
+@MainActor @frozen /* @preconcurrency */ public struct ZStack<Content> : View where Content : View {
     private let alignment: Alignment
     private let content: any View
 
-    public init(alignment: Alignment = .center, @ViewBuilder content: () -> Content) {
+    /* @inlinable nonisolated */ public init(alignment: Alignment = .center, @ViewBuilder content: () -> Content) {
         self.alignment = alignment
         self.content = content()
     }

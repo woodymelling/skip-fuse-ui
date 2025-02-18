@@ -3,7 +3,7 @@
 import SkipUI
 
 public protocol ShapeStyle /* : Sendable */ {
-    var spec: /* @Sendable */ () -> ShapeStyleSpec { get }
+    var spec: /* @Sendable */ () -> ShapeStyleBridgeSpec { get }
 
 //    /// The type of shape style this will resolve to.
 //    ///
@@ -17,10 +17,10 @@ public protocol ShapeStyle /* : Sendable */ {
 //    func resolve(in environment: EnvironmentValues) -> Self.Resolved
 }
 
-public struct HierarchicalShapeStyle : ShapeStyle {
-    public let spec: /* @Sendable */ () -> ShapeStyleSpec
+@frozen public struct HierarchicalShapeStyle : ShapeStyle {
+    public let spec: /* @Sendable */ () -> ShapeStyleBridgeSpec
 
-    public init(spec: /* @Sendable */ @escaping () -> ShapeStyleSpec) {
+    public init(spec: /* @Sendable */ @escaping () -> ShapeStyleBridgeSpec) {
         self.spec = spec
     }
 
@@ -43,6 +43,7 @@ extension ShapeStyle where Self == HierarchicalShapeStyle {
     public static var quaternary: HierarchicalShapeStyle { fatalError() }
 }
 
+// TODO: Incorporate
 //@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 //extension ShapeStyle where Self == LinearGradient {
 //

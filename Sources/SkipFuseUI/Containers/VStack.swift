@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-public struct VStack<Content> : View where Content : View {
+@MainActor @frozen /* @preconcurrency */ public struct VStack<Content> : View where Content : View {
     private let alignment: HorizontalAlignment
     private let spacing: CGFloat?
     private let content: any View
 
-    public init(alignment: HorizontalAlignment = .center, spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
+    /* @inlinable nonisolated */ public init(alignment: HorizontalAlignment = .center, spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
         self.alignment = alignment
         self.spacing = spacing
         self.content = content()

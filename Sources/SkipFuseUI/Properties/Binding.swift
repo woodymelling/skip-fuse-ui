@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipBridge
 
-@propertyWrapper @dynamicMemberLookup public struct Binding<Value> {
+@frozen @propertyWrapper @dynamicMemberLookup public struct Binding<Value> {
     let get: () -> Value
     let set: (Value) -> Void
 

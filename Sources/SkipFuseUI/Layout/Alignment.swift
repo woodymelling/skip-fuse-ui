@@ -1,6 +1,7 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
-public struct Alignment : Equatable /*, Sendable */ {
+
+@frozen public struct Alignment : Equatable /*, Sendable */ {
     public var horizontal: HorizontalAlignment
     public var vertical: VerticalAlignment
 
