@@ -50,3 +50,50 @@ extension View {
         }
     }
 }
+
+@MainActor /* @preconcurrency */ public protocol TabViewStyle {
+}
+
+@MainActor /* @preconcurrency */ public struct SidebarAdaptableTabViewStyle : TabViewStyle {
+    nonisolated public init() {
+    }
+}
+
+extension TabViewStyle where Self == SidebarAdaptableTabViewStyle {
+    @MainActor /* @preconcurrency */ public static var sidebarAdaptable: SidebarAdaptableTabViewStyle {
+        return SidebarAdaptableTabViewStyle()
+    }
+}
+
+@MainActor /* @preconcurrency */ public struct TabBarOnlyTabViewStyle : TabViewStyle {
+    nonisolated public init() {
+    }
+}
+
+extension TabViewStyle where Self == TabBarOnlyTabViewStyle {
+    @MainActor /* @preconcurrency */ public static var tabBarOnly: TabBarOnlyTabViewStyle {
+        return TabBarOnlyTabViewStyle()
+    }
+}
+
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+extension TabViewStyle where Self == DefaultTabViewStyle {
+
+    /// The default tab view style.
+    @MainActor @preconcurrency public static var automatic: DefaultTabViewStyle { get }
+}
+
+@available(macOS 15.0, *)
+@available(iOS, unavailable)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
+@available(visionOS, unavailable)
+extension TabViewStyle where Self == GroupedTabViewStyle {
+
+    /// A tab view style that displays a tab bar that groups its
+    /// tabs together.
+    ///
+    /// To apply this style to a tab view, or to a view that contains tab views, use
+    /// the ``View/tabViewStyle(_:)`` modifier.
+    @MainActor @preconcurrency public static var grouped: GroupedTabViewStyle { get }
+}
