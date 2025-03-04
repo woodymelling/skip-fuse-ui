@@ -1,13 +1,10 @@
 // Copyright 2025 Skip
-//
-// This is free software: you can redistribute and/or modify it
-// under the terms of the GNU Lesser General Public License 3.0
-// as published by the Free Software Foundation https://fsf.org
+// SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import Foundation
 import SkipAndroidBridge
 import SkipUI
 
-/* @MainActor */ open class UIApplication /* : UIResponder */ {
+/* @MainActor */ open class UIApplication : NSObject /*, UIResponder */ {
     open class var shared: UIApplication {
         return _shared
     }
@@ -15,7 +12,7 @@ import SkipUI
 
     private let application: SkipUI.UIApplication
 
-    private init() {
+    private override init() {
         self.application = SkipUI.UIApplication.shared
     }
 

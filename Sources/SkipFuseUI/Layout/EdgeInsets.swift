@@ -1,7 +1,10 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
 
-@frozen public struct EdgeInsets : Equatable {
+@frozen public struct EdgeInsets : Equatable, BitwiseCopyable /*, Sendable */ {
     public var top: CGFloat = 0.0
     public var leading: CGFloat = 0.0
     public var bottom: CGFloat = 0.0
@@ -21,10 +24,4 @@
 extension EdgeInsets : Animatable {
 //    public typealias AnimatableData = AnimatablePair<CGFloat, AnimatablePair<CGFloat, AnimatablePair<CGFloat, CGFloat>>>
 //    public var animatableData: EdgeInsets.AnimatableData
-}
-
-//extension EdgeInsets : Sendable {
-//}
-
-extension EdgeInsets : BitwiseCopyable {
 }

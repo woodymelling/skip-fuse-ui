@@ -36,11 +36,11 @@ import Foundation
             values.append(string)
         }
 
-        public mutating func appendInterpolation<Subject>(_ subject: Subject, formatter: Formatter? = nil) where Subject : ReferenceConvertible {
+        public mutating func appendInterpolation<Subject>(_ subject: Subject, formatter: Formatter? = nil) where Subject : AnyObject /* ReferenceConvertible // Causes compiler crash */ {
             if let formatter {
                 appendInterpolation(formatter.string(for: subject) ?? "nil")
             } else {
-                appendInterpolation(subject.description)
+                appendInterpolation(String(describing: subject))
             }
         }
 
@@ -61,7 +61,7 @@ import Foundation
             fatalError()
         }
 
-        public mutating func appendInterpolation<T>(_ value: T) where T : _FormatSpecifiable {
+        public mutating func appendInterpolation<T>(_ value: T) /* where T : _FormatSpecifiable */ {
             if T.self == Double.self {
                 appendInterpolation(value, specifier: "%lf")
             } else if T.self == Float.self {
@@ -91,15 +91,20 @@ import Foundation
             }
         }
 
-        public mutating func appendInterpolation<T>(_ value: T, specifier: String) where T : _FormatSpecifiable {
+        public mutating func appendInterpolation<T>(_ value: T, specifier: String) /* where T : _FormatSpecifiable */ {
             pattern += specifier
             values.append(value)
         }
 
         public mutating func appendInterpolation(_ text: Text) {
-            let interpolation = text.localizedStringKey.interpolation
-            pattern += interpolation.pattern
-            values += interpolation.values
+            if let verbatim = text.spec.verbatim {
+                appendInterpolation(verbatim)
+            } else if let key = text.spec.key {
+                let interpolation = key.interpolation
+                pattern += interpolation.pattern
+                values += interpolation.values
+                // TODO: spec.bundle, spec.tableName
+            }
         }
 
         @available(*, unavailable)
@@ -130,12 +135,12 @@ import Foundation
     public typealias UnicodeScalarLiteralType = String
 }
 
-extension LocalizedStringKey.StringInterpolation {
-    @available(*, unavailable)
-    public mutating func appendInterpolation(_ resource: LocalizedStringResource) {
-        fatalError()
-    }
-}
+//extension LocalizedStringKey.StringInterpolation {
+//    @available(*, unavailable)
+//    public mutating func appendInterpolation(_ resource: LocalizedStringResource) {
+//        fatalError()
+//    }
+//}
 
 extension LocalizedStringKey.StringInterpolation {
     @available(*, unavailable)
@@ -146,10 +151,8 @@ extension LocalizedStringKey.StringInterpolation {
 
 extension LocalizedStringKey.StringInterpolation {
     public mutating func appendInterpolation(_ image: Image) {
-        if let label = image.spec.label {
+        if case .named(_, _, let label) = image.spec.type, let label {
             appendInterpolation(label)
-        } else {
-            appendLiteral("?")
         }
     }
 }

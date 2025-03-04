@@ -1,7 +1,9 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
 import Foundation
-import SkipAndroidBridge
 import SkipUI
 
 /* @frozen */ public struct Image : Equatable /*, Sendable */ {
@@ -18,12 +20,20 @@ import SkipUI
 
 /// Define an image.
 struct ImageSpec : Equatable {
-    var name: String
-    var bundle: AndroidBundle?
-    var label: Text?
-    var system = false
-    var decorative = false
+    let type: ImageType
     var resizingMode: Image.ResizingMode?
+
+    init(_ type: ImageType, resizingMode: Image.ResizingMode? = nil) {
+        self.type = type
+        self.resizingMode = resizingMode
+    }
+}
+
+enum ImageType : Equatable {
+    case named(String, Bundle?, Text?)
+    case system(String)
+    case decorative(String, Bundle?)
+    case uiImage(UIImage)
 }
 
 extension Image : View {
@@ -32,7 +42,21 @@ extension Image : View {
 
 extension Image : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        //~~~
+        let image: SkipUI.Image
+        switch spec.type {
+        case .named(let name, let bundle, let label):
+            image = SkipUI.Image(name: name, isSystem: false, isDecorative: false, bridgedBundle: bundle, label: label?.Java_view as? SkipUI.Text)
+        case .system(let name):
+            image = SkipUI.Image(name: name, isSystem: true, isDecorative: false, bridgedBundle: nil, label: nil)
+        case .decorative(let name, let bundle):
+            image = SkipUI.Image(name: name, isSystem: false, isDecorative: true, bridgedBundle: bundle, label: nil)
+        case .uiImage(let uiImage):
+            image = SkipUI.Image(uiImage: uiImage.uiImage)
+        }
+        guard spec.resizingMode != nil else {
+            return image
+        }
+        return image.resizable()
     }
 }
 
@@ -117,20 +141,20 @@ extension Image {
 }
 
 extension Image {
-    public init(_ name: String, bundle: AndroidBundle? = nil) {
-        self.init(spec: ImageSpec(name: name, bundle: bundle))
+    public init(_ name: String, bundle: Bundle? = nil) {
+        self.init(spec: .init(.named(name, bundle, nil)))
     }
 
-    public init(_ name: String, bundle: AndroidBundle? = nil, label: Text) {
-        self.init(spec: ImageSpec(name: name, bundle: bundle, label: label))
+    public init(_ name: String, bundle: Bundle? = nil, label: Text) {
+        self.init(spec: .init(.named(name, bundle, label)))
     }
 
-    public init(decorative name: String, bundle: AndroidBundle? = nil) {
-        self.init(spec: ImageSpec(name: name, bundle: bundle, decorative: true))
+    public init(decorative name: String, bundle: Bundle? = nil) {
+        self.init(spec: .init(.decorative(name, bundle)))
     }
 
     public init(systemName: String) {
-        self.init(spec: ImageSpec(name: systemName, system: true))
+        self.init(spec: .init(.system(systemName)))
     }
 }
 
@@ -141,17 +165,17 @@ extension Image {
     }
 
     @available(*, unavailable)
-    public init(_ name: String, variableValue: Double?, bundle: AndroidBundle? = nil) {
+    public init(_ name: String, variableValue: Double?, bundle: Bundle? = nil) {
         fatalError()
     }
 
     @available(*, unavailable)
-    public init(_ name: String, variableValue: Double?, bundle: AndroidBundle? = nil, label: Text) {
+    public init(_ name: String, variableValue: Double?, bundle: Bundle? = nil, label: Text) {
         fatalError()
     }
 
     @available(*, unavailable)
-    public init(decorative name: String, variableValue: Double?, bundle: AndroidBundle? = nil) {
+    public init(decorative name: String, variableValue: Double?, bundle: Bundle? = nil) {
         fatalError()
     }
 }
@@ -190,5 +214,11 @@ extension Image {
         case small
         case medium
         case large
+    }
+}
+
+extension Image {
+    public init(uiImage: UIImage) {
+        self.init(spec: .init(.uiImage(uiImage)))
     }
 }

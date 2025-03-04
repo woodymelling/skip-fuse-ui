@@ -1,6 +1,9 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
-import SkipAndroidBridge
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+import Foundation
 import SkipUI
 
 /* @frozen */ public struct Text : Equatable /*, Sendable */ {
@@ -29,7 +32,7 @@ struct TextSpec : Equatable {
     var verbatim: String?
     var key: LocalizedStringKey?
     var tableName: String?
-    var bundle: AndroidBundle?
+    var bundle: Bundle?
 }
 
 extension Text : View {
@@ -50,7 +53,7 @@ extension Text : SkipUIBridging {
             return SkipUI.Text(verbatim: verbatim)
         } else if let key = spec.key {
             let values = key.interpolation.values.isEmpty ? nil : key.interpolation.values
-            return SkipUI.Text(keyPattern: key.interpolation.pattern, keyValues: values, tableName: spec.tableName, bundle: spec.bundle)
+            return SkipUI.Text(keyPattern: key.interpolation.pattern, keyValues: values, tableName: spec.tableName, bridgedBundle: spec.bundle)
         } else {
             return SkipUI.Text(verbatim: "")
         }
@@ -65,17 +68,17 @@ extension Text {
 }
 
 extension Text {
-    public init(_ key: LocalizedStringKey, tableName: String? = nil, bundle: AndroidBundle? = nil, comment: StaticString? = nil) {
+    public init(_ key: LocalizedStringKey, tableName: String? = nil, bundle: Bundle? = nil, comment: StaticString? = nil) {
         self.init(spec: TextSpec(key: key, tableName: tableName, bundle: bundle))
     }
 }
 
-extension Text {
-    @available(*, unavailable)
-    public init(_ resource: LocalizedStringResource) {
-        fatalError()
-    }
-}
+//extension Text {
+//    @available(*, unavailable)
+//    public init(_ resource: LocalizedStringResource) {
+//        fatalError()
+//    }
+//}
 
 extension Text {
     public struct LineStyle : Hashable /* , Sendable */ {
@@ -95,7 +98,7 @@ extension Text {
 }
 
 extension Text {
-    public init<Subject>(_ subject: Subject, formatter: Formatter) where Subject : ReferenceConvertible {
+    public init<Subject>(_ subject: Subject, formatter: Formatter) where Subject : AnyObject /* ReferenceConvertible // Causes a compiler crash in LocalizedStringKey */ {
         var interpolation = LocalizedStringKey.StringInterpolation(literalCapacity: 0, interpolationCount: 0)
         interpolation.appendInterpolation(subject, formatter: formatter)
         self.init(LocalizedStringKey(stringInterpolation: interpolation))
@@ -148,25 +151,23 @@ extension Text {
             }
         }()
 
-        public static let relative: DateStyle = {
-            let formatter = RelativeDateTimeFormatter()
-            return DateStyle(identifier: 3) {
-                return formatter.localizedString(for: $0, relativeTo: .now)
-            }
-        }()
-
         @available(*, unavailable)
-        public static var offset: Text.DateStyle {
+        public static var relative: DateStyle {
             fatalError()
         }
 
         @available(*, unavailable)
-        public static var timer: Text.DateStyle {
+        public static var offset: DateStyle {
+            fatalError()
+        }
+
+        @available(*, unavailable)
+        public static var timer: DateStyle {
             fatalError()
         }
 
         private let identifier: Int
-        fileprivate let format: (Date) -> String
+        let format: (Date) -> String
 
         private init(identifier: Int, format: @escaping (Date) -> String) {
             self.identifier = identifier
@@ -365,72 +366,83 @@ extension Text {
 }
 
 extension View {
-    public func font(_ font: Font?) -> Text {
-        //~~~
+    public func font(_ font: Font?) -> some View {
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.font(font?.spec.Java_font)
+        }
     }
 
-    public func fontWeight(_ weight: Font.Weight?) -> Text {
-        //~~~
+    public func fontWeight(_ weight: Font.Weight?) -> some View {
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.fontWeight(bridgedWeight: weight?.value)
+        }
     }
 
     @available(*, unavailable)
-    nonisolated public func fontWidth(_ width: Font.Width?) -> Text {
+    nonisolated public func fontWidth(_ width: Font.Width?) -> some View {
         fatalError()
     }
 
-    nonisolated public func bold() -> Text {
+    nonisolated public func bold() -> some View {
         return bold(true)
     }
 
-    nonisolated public func bold(_ isActive: Bool) -> Text {
-        //~~~
+    nonisolated public func bold(_ isActive: Bool) -> some View {
+        return fontWeight(isActive ? Font.Weight.bold : nil)
     }
 
-    nonisolated public func italic() -> Text {
+    nonisolated public func italic() -> some View {
         return italic(true)
     }
 
-    nonisolated public func italic(_ isActive: Bool) -> Text {
-        //~~~
+    nonisolated public func italic(_ isActive: Bool) -> some View {
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.italic(isActive)
+        }
     }
 
-    nonisolated public func monospaced(_ isActive: Bool = true) -> Text {
-        //~~~
+    nonisolated public func monospaced(_ isActive: Bool = true) -> some View {
+        return fontDesign(.monospaced)
     }
 
-    nonisolated public func fontDesign(_ design: Font.Design?) -> Text {
-        //~~~
-    }
-
-    @available(*, unavailable)
-    nonisolated public func monospacedDigit() -> Text {
-        fatalError()
-    }
-
-    nonisolated public func strikethrough(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> Text {
-        //~~~
-    }
-
-    nonisolated public func underline(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> Text {
-        //~~~
+    nonisolated public func fontDesign(_ design: Font.Design?) -> some View {
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.fontDesign(bridgedDesign: design?.rawValue)
+        }
     }
 
     @available(*, unavailable)
-    nonisolated public func kerning(_ kerning: CGFloat) -> Text {
+    nonisolated public func monospacedDigit() -> some View {
+        fatalError()
+    }
+
+    nonisolated public func strikethrough(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.bridgedStrikethrough(isActive)
+        }
+    }
+
+    nonisolated public func underline(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.bridgedUnderline(isActive)
+        }
+    }
+
+    @available(*, unavailable)
+    nonisolated public func kerning(_ kerning: CGFloat) -> some View {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public func tracking(_ tracking: CGFloat) -> Text {
+    nonisolated public func tracking(_ tracking: CGFloat) -> some View {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public func baselineOffset(_ baselineOffset: CGFloat) -> Text {
+    nonisolated public func baselineOffset(_ baselineOffset: CGFloat) -> some View {
         fatalError()
     }
 
-    //~~~
     @available(*, unavailable)
     public func allowsTightening(_ flag: Bool) -> some View {
         fatalError()
@@ -452,7 +464,9 @@ extension View {
     }
 
     public func lineLimit(_ number: Int?) -> some View {
-        //~~~
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.lineLimit(number)
+        }
     }
 
     @available(*, unavailable)
@@ -476,15 +490,20 @@ extension View {
     }
 
     public func multilineTextAlignment(_ alignment: TextAlignment) -> some View {
-        //~~~
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.multilineTextAlignment(bridgedAlignment: alignment.rawValue)
+        }
     }
 
+    @available(*, unavailable)
     public func privacySensitive(_ sensitive: Bool = true) -> some View {
         fatalError()
     }
 
     public func redacted(reason: RedactionReasons) -> some View {
-        //~~~
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.redacted(bridgedReason: reason.rawValue)
+        }
     }
 
     @available(*, unavailable)
@@ -524,11 +543,6 @@ extension View {
     }
 
     @available(*, unavailable)
-    public func tracking(_ tracking: CGFloat) -> some View {
-        return self
-    }
-
-    @available(*, unavailable)
     public func truncationMode(_ mode: Text.TruncationMode) -> some View {
         fatalError()
     }
@@ -553,10 +567,10 @@ extension Text {
     }
 }
 
-@frozen public enum TextAlignment : Hashable, CaseIterable, /* Sendable, */ BitwiseCopyable {
-    case leading
-    case center
-    case trailing
+@frozen public enum TextAlignment : Int, Hashable, CaseIterable, /* Sendable, */ BitwiseCopyable {
+    case leading = 0 // For bridging
+    case center = 1 // For bridging
+    case trailing = 2 // For bridging
 }
 
 extension Text {
@@ -1314,7 +1328,7 @@ public protocol TextAttribute : Hashable {
 
 @available(*, unavailable)
 public struct TextProxy {
-    public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
+    public func sizeThatFits(_ proposal: Any /* ProposedViewSize */) -> CGSize {
         fatalError()
     }
 }
