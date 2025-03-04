@@ -14,5 +14,7 @@ permissions:
 jobs:
   call-workflow:
     uses: skiptools/actions/.github/workflows/skip-framework.yml@v1
-    #with:
+    with:
       #runs-on: "['macos-15']"
+      # disable export until we get it working on CI machines
+      run-export: false
