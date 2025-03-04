@@ -63,7 +63,7 @@ extension ShapeStyle where Self == AnyShapeStyle {
     }
 }
 
-@frozen public struct BackgroundStyle : ShapeStyle, BitwiseCopyable {
+@frozen public struct BackgroundStyle : ShapeStyle /*, BitwiseCopyable */ {
     @inlinable public init() {
     }
 
@@ -86,7 +86,7 @@ extension ShapeStyle where Self == ForegroundStyle {
     }
 }
 
-@frozen public struct ForegroundStyle : ShapeStyle, BitwiseCopyable {
+@frozen public struct ForegroundStyle : ShapeStyle /*, BitwiseCopyable */ {
     @inlinable public init() {
     }
 

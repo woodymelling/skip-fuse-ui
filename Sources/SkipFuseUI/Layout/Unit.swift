@@ -4,7 +4,7 @@
 import CoreGraphics
 #endif
 
-@frozen public struct UnitPoint : Hashable, BitwiseCopyable /*, Sendable */ {
+@frozen public struct UnitPoint : Hashable /*, BitwiseCopyable, Sendable */ {
     public var x: CGFloat
     public var y: CGFloat
 

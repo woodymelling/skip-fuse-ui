@@ -149,7 +149,7 @@ extension Font {
         fatalError()
     }
 
-    @frozen public struct Weight : Hashable, BitwiseCopyable /*, Sendable */ {
+    @frozen public struct Weight : Hashable /*, BitwiseCopyable, Sendable */ {
         let value: Int
 
         public static let ultraLight = Weight(value: -3) // For bridging

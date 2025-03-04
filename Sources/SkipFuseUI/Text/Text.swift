@@ -567,7 +567,7 @@ extension Text {
     }
 }
 
-@frozen public enum TextAlignment : Int, Hashable, CaseIterable, /* Sendable, */ BitwiseCopyable {
+@frozen public enum TextAlignment : Int, Hashable, CaseIterable /*, BitwiseCopyable, Sendable */ {
     case leading = 0 // For bridging
     case center = 1 // For bridging
     case trailing = 2 // For bridging

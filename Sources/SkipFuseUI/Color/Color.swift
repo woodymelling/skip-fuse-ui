@@ -143,7 +143,7 @@ extension Color {
 }
 
 extension Color {
-    @frozen public struct Resolved : Hashable, BitwiseCopyable {
+    @frozen public struct Resolved : Hashable /*, BitwiseCopyable */ {
         public var linearRed: Float
         public var linearGreen: Float
         public var linearBlue: Float
