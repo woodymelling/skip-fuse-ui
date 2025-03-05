@@ -10,9 +10,7 @@ import SkipUI
         self.spec = spec
     }
 
-//    public init<T>(_ color: T) where T : Hashable, T : ShapeStyle, T.Resolved == Color.Resolved {
-//        fatalError()
-//    }
+//    public init<T>(_ color: T) where T : Hashable, T : ShapeStyle, T.Resolved == Color.Resolved
 
     @available(*, unavailable)
     public func resolve(in environment: EnvironmentValues) -> Color.Resolved {
@@ -206,9 +204,7 @@ extension Color {
 }
 
 //extension Color {
-//    public init(_ cgColor: CGColor) {
-//        fatalError()
-//    }
+//    public init(_ cgColor: CGColor)
 //}
 
 extension Color {

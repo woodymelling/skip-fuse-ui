@@ -44,22 +44,27 @@ extension ShapeStyle {
 
 extension ShapeStyle {
     @available(*, unavailable)
-    @inlinable public func blendMode(_ mode: BlendMode) -> some ShapeStyle {
+    /* @inlinable */ public func blendMode(_ mode: BlendMode) -> some ShapeStyle {
         fatalError()
     }
+}
+
+//~~~ test
+func _fatalError() -> Never {
+    fatalError()
 }
 
 extension ShapeStyle where Self == AnyShapeStyle {
     @available(*, unavailable)
     public static func blendMode(_ mode: BlendMode) -> some ShapeStyle {
-        fatalError()
+        _fatalError()
     }
 }
 
 extension ShapeStyle where Self == AnyShapeStyle {
     @available(*, unavailable)
     public static func opacity(_ opacity: Double) -> some ShapeStyle {
-        fatalError()
+        _fatalError()
     }
 }
 
@@ -151,6 +156,9 @@ extension ShapeStyle where Self == TintShapeStyle {
     public static var tint: TintShapeStyle {
         return TintShapeStyle()
     }
+}
+
+extension Never : ShapeStyle {
 }
 
 //@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)

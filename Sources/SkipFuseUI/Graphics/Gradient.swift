@@ -306,6 +306,3 @@ extension ShapeStyle where Self == AngularGradient {
         fatalError()
     }
 }
-
-extension Never : ShapeStyle {
-}
