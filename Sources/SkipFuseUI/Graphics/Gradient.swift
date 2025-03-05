@@ -298,11 +298,11 @@ extension ShapeStyle where Self == AngularGradient {
 extension ShapeStyle where Self == AngularGradient {
     @available(*, unavailable)
     public static func angularGradient(_ gradient: AnyGradient, center: UnitPoint = .center, startAngle: Angle, endAngle: Angle) -> some ShapeStyle {
-        fatalError()
+        stubShapeStyle()
     }
 
     @available(*, unavailable)
     public static func conicGradient(_ gradient: AnyGradient, center: UnitPoint = .center, angle: Angle = .zero) -> some ShapeStyle {
-        fatalError()
+        stubShapeStyle()
     }
 }

@@ -10,6 +10,10 @@ public protocol ShapeStyle : SkipUIBridging /*, Sendable */ {
 //    func resolve(in environment: EnvironmentValues) -> Self.Resolved
 }
 
+func stubShapeStyle() -> Color {
+    return Color.clear
+}
+
 extension ShapeStyle {
     public var secondary: some ShapeStyle {
         return self
@@ -45,26 +49,21 @@ extension ShapeStyle {
 extension ShapeStyle {
     @available(*, unavailable)
     /* @inlinable */ public func blendMode(_ mode: BlendMode) -> some ShapeStyle {
-        fatalError()
+        stubShapeStyle()
     }
-}
-
-//~~~ test
-func _fatalError() -> Never {
-    fatalError()
 }
 
 extension ShapeStyle where Self == AnyShapeStyle {
     @available(*, unavailable)
     public static func blendMode(_ mode: BlendMode) -> some ShapeStyle {
-        _fatalError()
+        stubShapeStyle()
     }
 }
 
 extension ShapeStyle where Self == AnyShapeStyle {
     @available(*, unavailable)
     public static func opacity(_ opacity: Double) -> some ShapeStyle {
-        _fatalError()
+        stubShapeStyle()
     }
 }
 

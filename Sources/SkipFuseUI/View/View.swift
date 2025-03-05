@@ -10,6 +10,10 @@ public protocol View {
     @ViewBuilder @MainActor var body: Body { get }
 }
 
+func stubView() -> EmptyView {
+    return EmptyView()
+}
+
 public extension View where Body == Never {
     var body: Never { fatalError("Never") }
 }

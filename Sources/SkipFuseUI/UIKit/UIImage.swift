@@ -349,10 +349,7 @@ open class UIImage : NSObject /*, NSSecureCoding, @unchecked Sendable */ {
 }
 
 //extension UIImage {
-//    @available(*, unavailable)
-//    required public convenience init(imageLiteralResourceName name: String) {
-//        fatalError()
-//    }
+//    required public convenience init(imageLiteralResourceName name: String)
 //}
 
 extension UIImage {

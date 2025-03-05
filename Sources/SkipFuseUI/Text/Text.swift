@@ -63,7 +63,7 @@ extension Text : SkipUIBridging {
 extension Text {
     @available(*, unavailable)
     public func textVariant/* <V> */(_ preference: Any /* V */) -> some View /* where V : TextVariantPreference */ {
-        fatalError()
+        stubView()
     }
 }
 
@@ -74,10 +74,7 @@ extension Text {
 }
 
 //extension Text {
-//    @available(*, unavailable)
-//    public init(_ resource: LocalizedStringResource) {
-//        fatalError()
-//    }
+//    public init(_ resource: LocalizedStringResource)
 //}
 
 extension Text {
@@ -380,7 +377,7 @@ extension View {
 
     @available(*, unavailable)
     nonisolated public func fontWidth(_ width: Font.Width?) -> some View {
-        fatalError()
+        stubView()
     }
 
     nonisolated public func bold() -> some View {
@@ -413,7 +410,7 @@ extension View {
 
     @available(*, unavailable)
     nonisolated public func monospacedDigit() -> some View {
-        fatalError()
+        stubView()
     }
 
     nonisolated public func strikethrough(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
@@ -430,37 +427,37 @@ extension View {
 
     @available(*, unavailable)
     nonisolated public func kerning(_ kerning: CGFloat) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     nonisolated public func tracking(_ tracking: CGFloat) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     nonisolated public func baselineOffset(_ baselineOffset: CGFloat) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func allowsTightening(_ flag: Bool) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func dynamicTypeSize(_ size: DynamicTypeSize) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func dynamicTypeSize(_ range: Range<DynamicTypeSize>) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func invalidatableContent(_ invalidatable: Bool = true) -> some View {
-        fatalError()
+        stubView()
     }
 
     public func lineLimit(_ number: Int?) -> some View {
@@ -471,22 +468,22 @@ extension View {
 
     @available(*, unavailable)
     public func lineLimit(_ limit: Range<Int>) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func lineLimit(_ limit: Int, reservesSpace: Bool) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func lineSpacing(_ lineSpacing: CGFloat) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func minimumScaleFactor(_ factor: CGFloat) -> some View {
-        fatalError()
+        stubView()
     }
 
     public func multilineTextAlignment(_ alignment: TextAlignment) -> some View {
@@ -497,7 +494,7 @@ extension View {
 
     @available(*, unavailable)
     public func privacySensitive(_ sensitive: Bool = true) -> some View {
-        fatalError()
+        stubView()
     }
 
     public func redacted(reason: RedactionReasons) -> some View {
@@ -508,22 +505,22 @@ extension View {
 
     @available(*, unavailable)
     public func speechAlwaysIncludesPunctuation(_ value: Bool = true) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func speechSpellsOutCharacters(_ value: Bool = true) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func speechAdjustedPitch(_ value: Double) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func speechAnnouncementsQueued(_ value: Bool = true) -> some View {
-        fatalError()
+        stubView()
     }
 
     public func textCase(_ textCase: Text.Case?) -> some View {
@@ -534,22 +531,22 @@ extension View {
 
     @available(*, unavailable)
     public func textScale(_ scale: Text.Scale, isEnabled: Bool = true) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func textSelection(_ selectability: TextSelectability) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func truncationMode(_ mode: Text.TruncationMode) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     public func unredacted() -> some View {
-        fatalError()
+        stubView()
     }
 }
 

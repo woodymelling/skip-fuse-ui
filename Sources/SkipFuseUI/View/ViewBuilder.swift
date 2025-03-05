@@ -14,9 +14,7 @@
         return content
     }
 
-//    public static func buildBlock<each Content>(_ content: repeat each Content) -> TupleView<(repeat each Content)> where repeat each Content: View {
-//        fatalError()
-//    }
+//    public static func buildBlock<each Content>(_ content: repeat each Content) -> TupleView<(repeat each Content)> where repeat each Content: View
 }
 
 extension ViewBuilder {
