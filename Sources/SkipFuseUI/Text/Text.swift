@@ -573,17 +573,12 @@ extension Text {
     case trailing = 2 // For bridging
 }
 
-extension Text {
-    @available(*, unavailable)
-    public init</* V, */F>(_ source: Any /* TimeDataSource<V> */, format: F) where /* V == F.FormatInput, */ F : DiscreteFormatStyle, F.FormatOutput == AttributedString {
-        fatalError()
-    }
-
-    @available(*, unavailable)
-    public init</* V, */F>(_ source: Any /* TimeDataSource<V> */, format: F) where /* V == F.FormatInput, */ F : DiscreteFormatStyle, F.FormatOutput == String {
-        fatalError()
-    }
-}
+//extension Text {
+//    @available(*, unavailable)
+//    public init<V, F>(_ source: TimeDataSource<V>, format: F) where V == F.FormatInput, */ F : DiscreteFormatStyle, F.FormatOutput == AttributedString
+//
+//    public init<V, F>(_ source: TimeDataSource<V>, format: F) where V == F.FormatInput, F : DiscreteFormatStyle, F.FormatOutput == String
+//}
 
 extension Text {
     @available(*, unavailable)

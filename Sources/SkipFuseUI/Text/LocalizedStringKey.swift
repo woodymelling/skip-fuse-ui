@@ -180,7 +180,7 @@ extension LocalizedStringKey.StringInterpolation {
     }
 }
 
-extension LocalizedStringKey.StringInterpolation {
+//extension LocalizedStringKey.StringInterpolation {
 //    @available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
 //    public mutating func appendInterpolation<V, F>(_ source: TimeDataSource<V>, format: F) where V == F.FormatInput, F : DiscreteFormatStyle, F.FormatOutput == AttributedString {
 //        fatalError()
@@ -188,4 +188,4 @@ extension LocalizedStringKey.StringInterpolation {
 
 //    @available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
 //    public mutating func appendInterpolation<V, F>(_ source: TimeDataSource<V>, format: F) where V == F.FormatInput, F : DiscreteFormatStyle, F.FormatOutput == String
-}
+//}
