@@ -3,16 +3,16 @@
 import SkipBridge
 import SkipUI
 
-@propertyWrapper public struct Environment<Value> : DynamicProperty {
+/* @frozen */ @propertyWrapper public struct Environment<Value> : DynamicProperty {
     private let defaultValue: @Sendable () -> Value
     private let valueBox: Box<Box<Value>?> = Box(nil)
 
-    public init(_ keyPath: KeyPath<EnvironmentValues, Value>) {
+    /* @inlinable */ public init(_ keyPath: KeyPath<EnvironmentValues, Value>) {
         self.key = EnvironmentValues.key(for: keyPath)
         self.defaultValue = { EnvironmentValues.shared[keyPath: keyPath] }
     }
 
-    public var wrappedValue: Value {
+    /* @inlinable */ public var wrappedValue: Value {
         return valueBox.value!.value
     }
 

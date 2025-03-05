@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-public struct AnyView : View {
+/* @MainActor */ @frozen /* @preconcurrency */ public struct AnyView : View {
     private let view: any View
 
-    public init<V>(_ view: V) where V : View {
+    /* nonisolated */ public init<V>(_ view: V) where V : View {
         self.init(erasing: view)
     }
 
-    public init<V>(erasing view: V) where V : View {
+    /* nonisolated */ public init<V>(erasing view: V) where V : View {
         self.view = view
     }
 

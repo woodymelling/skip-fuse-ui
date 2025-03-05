@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-// TODO: Full implementation
+// TODO: Actual implementation
 public struct Button<Label> : View where Label : View {
     private let label: Label
     private let action: @MainActor () -> Void

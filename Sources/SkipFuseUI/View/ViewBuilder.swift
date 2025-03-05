@@ -1,5 +1,6 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
+
 @resultBuilder public struct ViewBuilder {
     public static func buildBlock() -> EmptyView {
         return EmptyView()
@@ -13,9 +14,7 @@
         return content
     }
 
-//    public static func buildBlock<each Content>(_ content: repeat each Content) -> TupleView<(repeat each Content)> where repeat each Content: View {
-//        fatalError()
-//    }
+//    public static func buildBlock<each Content>(_ content: repeat each Content) -> TupleView<(repeat each Content)> where repeat each Content: View
 }
 
 extension ViewBuilder {

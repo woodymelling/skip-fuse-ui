@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipBridge
 
-@propertyWrapper public struct State<Value> : DynamicProperty {
+@frozen @propertyWrapper public struct State<Value> : DynamicProperty {
     private let valueBox: BridgedStateBox<Value>
 
     public init(wrappedValue value: Value) where Value : Equatable {
