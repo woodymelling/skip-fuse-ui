@@ -4,9 +4,9 @@ import SkipUI
 
 struct ModifierView<Target> : View where Target : View {
     private let target: Target
-    private let modifier: @MainActor (Target) -> any SkipUI.View
+    private let modifier: (Target) -> any SkipUI.View
 
-    init(target: Target, modifier: @MainActor @escaping (Target) -> any SkipUI.View) {
+    init(target: Target, modifier: @escaping (Target) -> any SkipUI.View) {
         self.target = target
         self.modifier = modifier
     }

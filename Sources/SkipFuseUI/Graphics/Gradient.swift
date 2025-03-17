@@ -217,34 +217,34 @@ extension ShapeStyle where Self == EllipticalGradient {
     }
 }
 
-@MainActor @frozen /* @preconcurrency */ public struct AngularGradient : ShapeStyle, View /*, Sendable */ {
+/* @MainActor */ @frozen /* @preconcurrency */ public struct AngularGradient : ShapeStyle, View /*, Sendable */ {
     @available(*, unavailable)
-    nonisolated public init(gradient: Gradient, center: UnitPoint, startAngle: Angle = .zero, endAngle: Angle = .zero) {
+    /* nonisolated */ public init(gradient: Gradient, center: UnitPoint, startAngle: Angle = .zero, endAngle: Angle = .zero) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(colors: [Color], center: UnitPoint, startAngle: Angle, endAngle: Angle) {
+    /* nonisolated */ public init(colors: [Color], center: UnitPoint, startAngle: Angle, endAngle: Angle) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(stops: [Gradient.Stop], center: UnitPoint, startAngle: Angle, endAngle: Angle) {
+    /* nonisolated */ public init(stops: [Gradient.Stop], center: UnitPoint, startAngle: Angle, endAngle: Angle) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(gradient: Gradient, center: UnitPoint, angle: Angle = .zero) {
+    /* nonisolated */ public init(gradient: Gradient, center: UnitPoint, angle: Angle = .zero) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(colors: [Color], center: UnitPoint, angle: Angle = .zero) {
+    /* nonisolated */ public init(colors: [Color], center: UnitPoint, angle: Angle = .zero) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(stops: [Gradient.Stop], center: UnitPoint, angle: Angle = .zero) {
+    /* nonisolated */ public init(stops: [Gradient.Stop], center: UnitPoint, angle: Angle = .zero) {
         fatalError()
     }
 

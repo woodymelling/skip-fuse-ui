@@ -3,7 +3,7 @@
 import SkipBridge
 import SkipUI
 
-@MainActor /* @preconcurrency */ public struct TabView<SelectionValue, Content> : View where SelectionValue : Hashable, Content : View {
+/* @MainActor @preconcurrency */ public struct TabView<SelectionValue, Content> : View where SelectionValue : Hashable, Content : View {
     private let selection: Binding<SelectionValue>?
     private let content: Content
 
@@ -23,7 +23,7 @@ extension TabView : SkipUIBridging {
         let selectionSet: ((Any) -> Void)?
         if let selection {
             selectionGet = { SwiftHashable(selection.get()) }
-            selectionSet = { selection.set(($0 as! SwiftHashable).value as! SelectionValue) }
+            selectionSet = { selection.set(($0 as! SwiftHashable).base as! SelectionValue) }
         } else {
             selectionGet = nil
             selectionSet = nil
@@ -43,14 +43,14 @@ extension TabView where SelectionValue == Int {
 //}
 
 extension View {
-    nonisolated public func tabItem<V>(@ViewBuilder _ label: () -> V) -> some View where V : View {
+    /* nonisolated */ public func tabItem<V>(@ViewBuilder _ label: () -> V) -> some View where V : View {
         let label = label()
         return ModifierView(target: self) {
             return $0.Java_viewOrEmpty.tabItem(bridgedLabel: label.Java_viewOrEmpty)
         }
     }
 
-    nonisolated public func tabViewStyle<S>(_ style: S) -> some View where S : TabViewStyle {
+    /* nonisolated */ public func tabViewStyle<S>(_ style: S) -> some View where S : TabViewStyle {
         return ModifierView(target: self) {
             let displayMode = (style as? PageTabViewStyle)?.indexDisplayMode.rawValue
             return $0.Java_viewOrEmpty.tabViewStyle(bridgedStyle: style.identifier, bridgedDisplayMode: displayMode)
@@ -58,7 +58,7 @@ extension View {
     }
 }
 
-@MainActor /* @preconcurrency */ public protocol TabViewStyle {
+/* @MainActor @preconcurrency */ public protocol TabViewStyle {
     var identifier: Int { get } // For bridging
 }
 
@@ -66,59 +66,59 @@ extension TabViewStyle {
     public var identifier: Int { -1 }
 }
 
-@MainActor /* @preconcurrency */ public struct SidebarAdaptableTabViewStyle : TabViewStyle {
+/* @MainActor @preconcurrency */ public struct SidebarAdaptableTabViewStyle : TabViewStyle {
     @available(*, unavailable)
-    nonisolated public init() {
+    /* nonisolated */ public init() {
     }
 }
 
 extension TabViewStyle where Self == SidebarAdaptableTabViewStyle {
     @available(*, unavailable)
-    @MainActor /* @preconcurrency */ public static var sidebarAdaptable: SidebarAdaptableTabViewStyle {
+    /* @MainActor @preconcurrency */ public static var sidebarAdaptable: SidebarAdaptableTabViewStyle {
         fatalError()
     }
 }
 
-@MainActor /* @preconcurrency */ public struct TabBarOnlyTabViewStyle : TabViewStyle {
-    nonisolated public init() {
+/* @MainActor @preconcurrency */ public struct TabBarOnlyTabViewStyle : TabViewStyle {
+    /* nonisolated */ public init() {
     }
 
     public let identifier = 1 // For bridging
 }
 
 extension TabViewStyle where Self == TabBarOnlyTabViewStyle {
-    @MainActor /* @preconcurrency */ public static var tabBarOnly: TabBarOnlyTabViewStyle {
+    /* @MainActor @preconcurrency */ public static var tabBarOnly: TabBarOnlyTabViewStyle {
         return TabBarOnlyTabViewStyle()
     }
 }
 
-@MainActor /* @preconcurrency */ public struct DefaultTabViewStyle : TabViewStyle {
-    nonisolated public init() {
+/* @MainActor @preconcurrency */ public struct DefaultTabViewStyle : TabViewStyle {
+    /* nonisolated */ public init() {
     }
 
     public let identifier = 0 // For bridging
 }
 
 extension TabViewStyle where Self == DefaultTabViewStyle {
-    @MainActor /* @preconcurrency */ public static var automatic: DefaultTabViewStyle {
+    /* @MainActor @preconcurrency */ public static var automatic: DefaultTabViewStyle {
         return DefaultTabViewStyle()
     }
 }
 
-@MainActor /* @preconcurrency */ public struct GroupedTabViewStyle : TabViewStyle {
+/* @MainActor @preconcurrency */ public struct GroupedTabViewStyle : TabViewStyle {
     @available(*, unavailable)
-    nonisolated public init() {
+    /* nonisolated */ public init() {
     }
 }
 
 extension TabViewStyle where Self == GroupedTabViewStyle {
     @available(*, unavailable)
-    @MainActor /* @preconcurrency */ public static var grouped: GroupedTabViewStyle {
+    /* @MainActor @preconcurrency */ public static var grouped: GroupedTabViewStyle {
         fatalError()
     }
 }
 
-@MainActor /* @preconcurrency */ public struct PageTabViewStyle: TabViewStyle {
+/* @MainActor @preconcurrency */ public struct PageTabViewStyle: TabViewStyle {
     public let indexDisplayMode: PageTabViewStyle.IndexDisplayMode
 
     public struct IndexDisplayMode : RawRepresentable, Equatable {
@@ -141,11 +141,11 @@ extension TabViewStyle where Self == GroupedTabViewStyle {
 }
 
 extension TabViewStyle where Self == PageTabViewStyle {
-    @MainActor /* @preconcurrency */ public static var page: PageTabViewStyle {
+    /* @MainActor @preconcurrency */ public static var page: PageTabViewStyle {
         return PageTabViewStyle()
     }
 
-    @MainActor /* @preconcurrency */ public static func page(indexDisplayMode: PageTabViewStyle.IndexDisplayMode) -> PageTabViewStyle {
+    /* @MainActor @preconcurrency */ public static func page(indexDisplayMode: PageTabViewStyle.IndexDisplayMode) -> PageTabViewStyle {
         return PageTabViewStyle(indexDisplayMode: indexDisplayMode)
     }
 }

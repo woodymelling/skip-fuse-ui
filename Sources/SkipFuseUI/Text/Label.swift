@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-@MainActor /* @preconcurrency */ public struct Label<Title, Icon> : View where Title : View, Icon : View {
+/* @MainActor @preconcurrency */ public struct Label<Title, Icon> : View where Title : View, Icon : View {
     private let title: Title
     private let icon: Icon
 
@@ -50,12 +50,12 @@ extension Label where Title == Text, Icon == Image {
 
 extension Label where Title == LabelStyleConfiguration.Title, Icon == LabelStyleConfiguration.Icon {
     @available(*, unavailable)
-    nonisolated public init(_ configuration: LabelStyleConfiguration) {
+    /* nonisolated */ public init(_ configuration: LabelStyleConfiguration) {
         fatalError()
     }
 }
 
-@MainActor /* @preconcurrency */ public protocol LabelStyle {
+/* @MainActor @preconcurrency */ public protocol LabelStyle {
     associatedtype Body : View
 
     @ViewBuilder @MainActor /* @preconcurrency */ func makeBody(configuration: Self.Configuration) -> Self.Body
@@ -64,7 +64,7 @@ extension Label where Title == LabelStyleConfiguration.Title, Icon == LabelStyle
 }
 
 /* @MainActor @preconcurrency */ public struct DefaultLabelStyle : LabelStyle {
-    @MainActor /* @preconcurrency */ public init() {
+    /* @MainActor @preconcurrency */ public init() {
     }
 
     @MainActor /* @preconcurrency */ public func makeBody(configuration: DefaultLabelStyle.Configuration) -> some View {
@@ -81,13 +81,13 @@ extension DefaultLabelStyle : RawRepresentable {
 }
 
 extension LabelStyle where Self == DefaultLabelStyle {
-    @MainActor /* @preconcurrency */ public static var automatic: DefaultLabelStyle {
+    /* @MainActor @preconcurrency */ public static var automatic: DefaultLabelStyle {
         return DefaultLabelStyle()
     }
 }
 
 /* @MainActor @preconcurrency */ public struct IconOnlyLabelStyle : LabelStyle {
-    @MainActor /* @preconcurrency */ public init() {
+    /* @MainActor @preconcurrency */ public init() {
     }
 
     @MainActor /* @preconcurrency */ public func makeBody(configuration: IconOnlyLabelStyle.Configuration) -> some View {
@@ -104,13 +104,13 @@ extension IconOnlyLabelStyle : RawRepresentable {
 }
 
 extension LabelStyle where Self == IconOnlyLabelStyle {
-    @MainActor /* @preconcurrency */ public static var iconOnly: IconOnlyLabelStyle {
+    /* @MainActor @preconcurrency */ public static var iconOnly: IconOnlyLabelStyle {
         return IconOnlyLabelStyle()
     }
 }
 
 /* @MainActor @preconcurrency */ public struct TitleAndIconLabelStyle : LabelStyle {
-    @MainActor /* @preconcurrency */ public init() {
+    /* @MainActor @preconcurrency */ public init() {
     }
 
     @MainActor /* @preconcurrency */ public func makeBody(configuration: TitleAndIconLabelStyle.Configuration) -> some View {
@@ -127,13 +127,13 @@ extension TitleAndIconLabelStyle : RawRepresentable {
 }
 
 extension LabelStyle where Self == TitleAndIconLabelStyle {
-    @MainActor /* @preconcurrency */ public static var titleAndIcon: TitleAndIconLabelStyle {
+    /* @MainActor @preconcurrency */ public static var titleAndIcon: TitleAndIconLabelStyle {
         return TitleAndIconLabelStyle()
     }
 }
 
 /* @MainActor @preconcurrency */ public struct TitleOnlyLabelStyle : LabelStyle {
-    @MainActor /* @preconcurrency */ public init() {
+    /* @MainActor @preconcurrency */ public init() {
     }
 
     @MainActor /* @preconcurrency */ public func makeBody(configuration: TitleOnlyLabelStyle.Configuration) -> some View {
@@ -150,7 +150,7 @@ extension TitleOnlyLabelStyle : RawRepresentable {
 }
 
 extension LabelStyle where Self == TitleOnlyLabelStyle {
-    @MainActor /* @preconcurrency */ public static var titleOnly: TitleOnlyLabelStyle {
+    /* @MainActor @preconcurrency */ public static var titleOnly: TitleOnlyLabelStyle {
         return TitleOnlyLabelStyle()
     }
 }
@@ -174,7 +174,7 @@ public struct LabelStyleConfiguration {
 }
 
 extension View {
-    nonisolated public func labelStyle<S>(_ style: S) -> some View where S : LabelStyle {
+    /* nonisolated */ public func labelStyle<S>(_ style: S) -> some View where S : LabelStyle {
         let rawValue = (style as? any RawRepresentable)?.rawValue as? Int ?? 0
         return ModifierView(target: self) {
             return $0.Java_viewOrEmpty.labelStyle(bridgedStyle: rawValue)
