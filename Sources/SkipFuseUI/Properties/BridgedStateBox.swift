@@ -36,7 +36,7 @@ public final class BridgedStateBox<Value> {
 
     public func Java_syncStateSupport(_ support: StateSupport) {
         let box: Box<Value> = support.valueHolder.pointee()!
-        _value.value = box.value
+        _value = box
         Java_stateSupport = support
     }
 }
