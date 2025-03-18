@@ -283,6 +283,8 @@ public struct ScrollTarget : Hashable {
     public var rect: CGRect
     public var anchor: UnitPoint?
 
+    // Manually implement `Hashable` because CGRect does not conform on our CI Swift version
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(anchor)
         hasher.combine(rect.origin.x)
@@ -516,27 +518,27 @@ public struct PinnedScrollableViews : OptionSet /*, Sendable */ {
 extension View {
     @available(*, unavailable)
     /* nonisolated */ public func contentMargins(_ edges: Edge.Set = .all, _ insets: EdgeInsets, for placement: ContentMarginPlacement = .automatic) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     /* nonisolated */ public func contentMargins(_ edges: Edge.Set = .all, _ length: CGFloat?, for placement: ContentMarginPlacement = .automatic) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     /* nonisolated */ public func contentMargins(_ length: CGFloat, for placement: ContentMarginPlacement = .automatic) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     /* nonisolated */ public func scrollBounceBehavior(_ behavior: ScrollBounceBehavior, axes: Axis.Set = [.vertical]) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     /* nonisolated */ public func scrollClipDisabled(_ disabled: Bool = true) -> some View {
-        fatalError()
+        stubView()
     }
 
     /* nonisolated */ public func scrollContentBackground(_ visibility: Visibility) -> some View {
@@ -547,37 +549,37 @@ extension View {
 
     @available(*, unavailable)
     /* nonisolated */ public func scrollDismissesKeyboard(_ mode: ScrollDismissesKeyboardMode) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     /* nonisolated */ public func scrollDisabled(_ disabled: Bool) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     /* nonisolated */ public func scrollIndicators(_ visibility: ScrollIndicatorVisibility, axes: Axis.Set = [.vertical, .horizontal]) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     /* nonisolated */ public func scrollIndicatorsFlash(trigger value: some Equatable) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     /* nonisolated */ public func scrollIndicatorsFlash(onAppear: Bool) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     /* nonisolated */ public func scrollPosition(_ position: Binding<ScrollPosition>, anchor: UnitPoint? = nil) -> some View {
-        fatalError()
+        stubView()
     }
 
     @available(*, unavailable)
     /* nonisolated */ public func scrollPosition(id: Binding<(some Hashable)?>, anchor: UnitPoint? = nil) -> some View {
-        fatalError()
+        stubView()
     }
 
     /* nonisolated */ public func scrollTargetBehavior(_ behavior: some ScrollTargetBehavior) -> some View {
