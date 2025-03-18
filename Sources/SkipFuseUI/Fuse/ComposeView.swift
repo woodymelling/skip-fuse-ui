@@ -12,7 +12,7 @@ public struct ComposeView : View {
         self.content = content()
     }
 
-    public typealias body = Never
+    public typealias Body = Never
 }
 
 extension ComposeView : SkipUIBridging {
