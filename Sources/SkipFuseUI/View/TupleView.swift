@@ -7,7 +7,7 @@ public protocol TupleView {
 }
 
 extension TupleView {
-    @MainActor public var Java_view: any SkipUI.View {
+    public var Java_view: any SkipUI.View {
         let javaViews = skipUIBridgingViews.compactMap { $0?.Java_view }
         return SkipUI.ComposeBuilder(bridgedViews: javaViews)
     }

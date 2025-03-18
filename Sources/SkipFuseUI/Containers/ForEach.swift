@@ -12,7 +12,7 @@ extension ForEach : SkipUIBridging {
 }
 
 extension ForEach where Data == Range<Int>  {
-    @MainActor public var Java_view: any SkipUI.View {
+    public var Java_view: any SkipUI.View {
         return SkipUI.ForEach(startIndex: data.startIndex, endIndex: data.endIndex, identifier: id, bridgedContent: {
             let view = content($0)
             return (view as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
@@ -21,7 +21,7 @@ extension ForEach where Data == Range<Int>  {
 }
 
 extension ForEach {
-    @MainActor public var Java_view: any SkipUI.View {
+    public var Java_view: any SkipUI.View {
         let indexedIdentifier: (Int) -> String = { Java_composeBundleString(for: id(data[$0 as! Data.Index])) }
         return SkipUI.ForEach(startIndex: 0, endIndex: data.count, identifier: indexedIdentifier, bridgedContent: {
             let view = content(data[$0 as! Data.Index])

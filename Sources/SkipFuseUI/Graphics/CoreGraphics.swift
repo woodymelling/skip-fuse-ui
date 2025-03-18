@@ -296,4 +296,9 @@ public struct CGAffineTransform : Codable, Equatable {
     }
 }
 
+public struct CGVector : Equatable {
+    public var dx = 0.0
+    public var dy = 0.0
+}
+
 #endif

@@ -24,6 +24,11 @@ extension Button where Label == Text {
 
 extension Button : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.Button(bridgedLabel: label.Java_viewOrEmpty, action: action)
+        #if compiler(>=6.0)
+        let isolatedAction = { MainActor.assumeIsolated { action() } }
+        #else
+        let isolatedAction = action
+        #endif
+        return SkipUI.Button(bridgedLabel: label.Java_viewOrEmpty, action: isolatedAction)
     }
 }
