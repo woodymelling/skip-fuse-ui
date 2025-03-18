@@ -28,9 +28,14 @@ extension Optional : View where Wrapped : View {
     }
 }
 
-extension Optional : SkipUIBridging where Wrapped : View {
+extension Optional : SkipUIBridging where Wrapped : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return (self as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+        switch self {
+        case .none:
+            return SkipUI.EmptyView()
+        case .some(let view):
+            return view.Java_view
+        }
     }
 }
 
