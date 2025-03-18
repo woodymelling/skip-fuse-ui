@@ -131,7 +131,7 @@ extension NavigationLink where Label == Text {
 extension NavigationLink {
     @available(*, unavailable)
     /* @MainActor @preconcurrency */ public func isDetailLink(_ isDetailLink: Bool) -> some View {
-        fatalError()
+        stubView()
     }
 }
 
@@ -367,7 +367,7 @@ extension View {
     }
 
     @MainActor /* @preconcurrency */ public func makeBody(configuration: AutomaticNavigationSplitViewStyle.Configuration) -> some View {
-        fatalError()
+        stubView()
     }
 }
 
@@ -383,7 +383,7 @@ extension NavigationSplitViewStyle where Self == AutomaticNavigationSplitViewSty
     }
 
     @MainActor /* @preconcurrency */ public func makeBody(configuration: AutomaticNavigationSplitViewStyle.Configuration) -> some View {
-        fatalError()
+        stubView()
     }
 }
 
@@ -399,7 +399,7 @@ extension NavigationSplitViewStyle where Self == BalancedNavigationSplitViewStyl
     }
 
     @MainActor /* @preconcurrency */ public func makeBody(configuration: AutomaticNavigationSplitViewStyle.Configuration) -> some View {
-        fatalError()
+        stubView()
     }
 }
 
