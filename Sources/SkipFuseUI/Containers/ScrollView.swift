@@ -282,6 +282,18 @@ extension ScrollPosition {
 public struct ScrollTarget : Hashable {
     public var rect: CGRect
     public var anchor: UnitPoint?
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(anchor)
+        hasher.combine(rect.origin.x)
+        hasher.combine(rect.origin.y)
+        hasher.combine(rect.size.width)
+        hasher.combine(rect.size.height)
+    }
+
+    public static func ==(lhs: ScrollTarget, rhs: ScrollTarget) -> Bool {
+        return lhs.anchor == rhs.anchor && lhs.rect.origin.x == rhs.rect.origin.x && lhs.rect.origin.y == rhs.rect.origin.y && lhs.rect.size.width == rhs.rect.size.width && lhs.rect.size.height == rhs.rect.size.height
+    }
 }
 
 public protocol ScrollTargetBehavior {
