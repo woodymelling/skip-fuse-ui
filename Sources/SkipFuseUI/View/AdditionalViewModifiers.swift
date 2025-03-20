@@ -75,6 +75,14 @@ extension View {
 }
 
 extension View {
+    /* @inlinable nonisolated */ public func disabled(_ disabled: Bool) -> some View {
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.disabled(disabled)
+        }
+    }
+}
+
+extension View {
     /* nonisolated */ public func foregroundColor(_ color: Color?) -> some View {
         return ModifierView(target: self) {
             return $0.Java_viewOrEmpty.foregroundColor(color?.Java_view as? SkipUI.Color)
@@ -141,6 +149,19 @@ extension View {
     /* nonisolated */ public func tag<V>(_ tag: V, includeOptional: Bool = true) -> some View where V : Hashable {
         return ModifierView(target: self) {
             return $0.Java_viewOrEmpty.tag(SwiftHashable(tag)) // Tag with bridgable wrapper
+        }
+    }
+}
+
+extension View {
+    @available(*, unavailable)
+    /* @inlinable nonisolated */ public func tint<S>(_ tint: S?) -> some View where S : ShapeStyle {
+        stubView()
+    }
+
+    /* @inlinable nonisolated */ public func tint(_ tint: Color?) -> some View {
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.tint(tint?.Java_view as? SkipUI.Color)
         }
     }
 }
