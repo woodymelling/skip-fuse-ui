@@ -52,6 +52,8 @@ extension EnvironmentValues {
             return ColorScheme(rawValue: bridgedValue as! Int)
         case "dismiss":
             return DismissAction(action: (bridgedValue as! SkipUI.DismissAction).action)
+        case "layoutDirection":
+            return LayoutDirection(rawValue: bridgedValue as! Int)
         default:
             return nil
         }
@@ -62,6 +64,7 @@ extension EnvironmentValues {
         // Initialize builtins
         keys[\EnvironmentValues.colorScheme] = "colorScheme"
         keys[\EnvironmentValues.dismiss] = "dismiss"
+        keys[\EnvironmentValues.layoutDirection] = "layoutDirection"
         return keys
     }()
 
@@ -114,8 +117,7 @@ extension View {
 // TODO: Bridge supported keys to SkipUI
 
 extension EnvironmentValues {
-    @available(*, unavailable)
-    public var layoutDirection: Any /* LayoutDirection */ {
+    public var layoutDirection: LayoutDirection {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
     }

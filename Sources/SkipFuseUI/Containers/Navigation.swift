@@ -99,7 +99,7 @@ extension NavigationLink where Destination == Never {
         self.init(value: value, label: { Text(titleKey) })
     }
 
-    /* nonisolated */ public init<S, P>(_ title: S, value: P?) where Label == Text, S : StringProtocol, P : Hashable {
+    @_disfavoredOverload /* nonisolated */ public init<S, P>(_ title: S, value: P?) where Label == Text, S : StringProtocol, P : Hashable {
         self.init(value: value, label: { Text(title) })
     }
 
@@ -115,7 +115,7 @@ extension NavigationLink where Label == Text {
         self.init(destination: destination, label: { Text(titleKey) })
     }
 
-    /* nonisolated */ public init<S>(_ title: S, @ViewBuilder destination: () -> Destination) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, @ViewBuilder destination: () -> Destination) where S : StringProtocol {
         self.init(destination: destination, label: { Text(title) })
     }
 
@@ -123,7 +123,7 @@ extension NavigationLink where Label == Text {
         self.init(destination: { destination }, label: { Text(titleKey) })
     }
 
-    /* nonisolated */ public init<S>(_ title: S, destination: Destination) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, destination: Destination) where S : StringProtocol {
         self.init(title, destination: { destination })
     }
 }
@@ -245,7 +245,7 @@ extension View {
         return navigationTitle(Text(titleKey))
     }
 
-    /* nonisolated */ public func navigationTitle<S>(_ title: S) -> some View where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public func navigationTitle<S>(_ title: S) -> some View where S : StringProtocol {
         return navigationTitle(Text(title))
     }
 }
@@ -505,7 +505,7 @@ extension View {
         return navigationTitle(titleKey)
     }
 
-    /* nonisolated */ public func navigationBarTitle<S>(_ title: S) -> some View where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public func navigationBarTitle<S>(_ title: S) -> some View where S : StringProtocol {
         return navigationTitle(title)
     }
 
@@ -517,7 +517,7 @@ extension View {
         return navigationBarTitle(Text(titleKey), displayMode: displayMode)
     }
 
-    /* nonisolated */ public func navigationBarTitle<S>(_ title: S, displayMode: NavigationBarItem.TitleDisplayMode) -> some View where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public func navigationBarTitle<S>(_ title: S, displayMode: NavigationBarItem.TitleDisplayMode) -> some View where S : StringProtocol {
         return navigationBarTitle(Text(title), displayMode: displayMode)
     }
 

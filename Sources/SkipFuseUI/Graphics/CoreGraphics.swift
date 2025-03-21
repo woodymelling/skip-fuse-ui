@@ -301,4 +301,17 @@ public struct CGVector : Equatable {
     public var dy = 0.0
 }
 
+public enum CGLineCap : Int {
+    case butt = 0 // For bridging
+    case round = 1 // For bridging
+    case square = 2 // For bridging
+
+}
+
+public enum CGLineJoin : Int {
+    case miter = 0 // For bridging
+    case round = 1 // For bridging
+    case bevel = 2 // For bridging
+}
+
 #endif

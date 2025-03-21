@@ -26,7 +26,7 @@ extension Link where Label == Text {
         self.init(destination: destination, label: { Text(titleKey) })
     }
 
-    /* nonisolated */ public init<S>(_ title: S, destination: URL) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, destination: URL) where S : StringProtocol {
         self.init(destination: destination, label: { Text(title) })
     }
 }

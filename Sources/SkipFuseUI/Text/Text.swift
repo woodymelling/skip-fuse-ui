@@ -18,7 +18,7 @@ import SkipUI
         self.init(spec: TextSpec(verbatim: content))
     }
 
-    public init<S>(_ content: S) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ content: S) where S : StringProtocol {
         self.init(spec: TextSpec(key: LocalizedStringKey(String(content))))
     }
 
@@ -363,80 +363,80 @@ extension Text {
 }
 
 extension View {
-    public func font(_ font: Font?) -> some View {
+    @_disfavoredOverload public func font(_ font: Font?) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.font(font?.spec.Java_font)
         }
     }
 
-    public func fontWeight(_ weight: Font.Weight?) -> some View {
+    @_disfavoredOverload public func fontWeight(_ weight: Font.Weight?) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.fontWeight(bridgedWeight: weight?.value)
         }
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func fontWidth(_ width: Font.Width?) -> some View {
+    @_disfavoredOverload /* nonisolated */ public func fontWidth(_ width: Font.Width?) -> some View {
         stubView()
     }
 
-    /* nonisolated */ public func bold() -> some View {
+    @_disfavoredOverload /* nonisolated */ public func bold() -> some View {
         return bold(true)
     }
 
-    /* nonisolated */ public func bold(_ isActive: Bool) -> some View {
+    @_disfavoredOverload /* nonisolated */ public func bold(_ isActive: Bool) -> some View {
         return fontWeight(isActive ? Font.Weight.bold : nil)
     }
 
-    /* nonisolated */ public func italic() -> some View {
+    @_disfavoredOverload /* nonisolated */ public func italic() -> some View {
         return italic(true)
     }
 
-    /* nonisolated */ public func italic(_ isActive: Bool) -> some View {
+    @_disfavoredOverload /* nonisolated */ public func italic(_ isActive: Bool) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.italic(isActive)
         }
     }
 
-    /* nonisolated */ public func monospaced(_ isActive: Bool = true) -> some View {
+    @_disfavoredOverload /* nonisolated */ public func monospaced(_ isActive: Bool = true) -> some View {
         return fontDesign(.monospaced)
     }
 
-    /* nonisolated */ public func fontDesign(_ design: Font.Design?) -> some View {
+    @_disfavoredOverload /* nonisolated */ public func fontDesign(_ design: Font.Design?) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.fontDesign(bridgedDesign: design?.rawValue)
         }
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func monospacedDigit() -> some View {
+    @_disfavoredOverload /* nonisolated */ public func monospacedDigit() -> some View {
         stubView()
     }
 
-    /* nonisolated */ public func strikethrough(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
+    @_disfavoredOverload /* nonisolated */ public func strikethrough(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.bridgedStrikethrough(isActive)
         }
     }
 
-    /* nonisolated */ public func underline(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
+    @_disfavoredOverload /* nonisolated */ public func underline(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.bridgedUnderline(isActive)
         }
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func kerning(_ kerning: CGFloat) -> some View {
+    @_disfavoredOverload /* nonisolated */ public func kerning(_ kerning: CGFloat) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func tracking(_ tracking: CGFloat) -> some View {
+    @_disfavoredOverload /* nonisolated */ public func tracking(_ tracking: CGFloat) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func baselineOffset(_ baselineOffset: CGFloat) -> some View {
+    @_disfavoredOverload /* nonisolated */ public func baselineOffset(_ baselineOffset: CGFloat) -> some View {
         stubView()
     }
 

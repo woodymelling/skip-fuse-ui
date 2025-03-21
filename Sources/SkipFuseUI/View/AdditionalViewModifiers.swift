@@ -7,7 +7,7 @@ import SkipBridge
 import SkipUI
 
 extension View {
-    @inlinable /* nonisolated */ public func background<Background>(_ background: Background, alignment: Alignment = .center) -> some View where Background : View {
+    @_disfavoredOverload @inlinable /* nonisolated */ public func background<Background>(_ background: Background, alignment: Alignment = .center) -> some View where Background : View {
         return self.background(alignment: alignment, content: { background })
     }
 
@@ -32,22 +32,25 @@ extension View {
         }
     }
 
-    //~~~ TODO: Shape
-//    @inlinable nonisolated public func background<S>(in shape: S, fillStyle: FillStyle = FillStyle()) -> some View where S : Shape {
-//
-//    }
-//
-//    @inlinable nonisolated public func background<S, T>(_ style: S, in shape: T, fillStyle: FillStyle = FillStyle()) -> some View where S : ShapeStyle, T : Shape {
-//
-//    }
-//
-//    @inlinable nonisolated public func background<S>(in shape: S, fillStyle: FillStyle = FillStyle()) -> some View where S : InsettableShape {
-//        return background(BackgroundStyle(), in: shape, fillStyle: fillStyle)
-//    }
-//
-//    @inlinable nonisolated public func background<S, T>(_ style: S, in shape: T, fillStyle: FillStyle = FillStyle()) -> some View where S : ShapeStyle, T : InsettableShape {
-//
-//    }
+    @inlinable nonisolated public func background<S>(in shape: S, fillStyle: FillStyle = FillStyle()) -> some View where S : Shape {
+        return background(BackgroundStyle(), in: shape, fillStyle: fillStyle)
+    }
+
+    /* @inlinable nonisolated */ public func background<S, T>(_ style: S, in shape: T, fillStyle: FillStyle = FillStyle()) -> some View where S : ShapeStyle, T : Shape {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.background(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.BackgroundStyle(), in: shape.Java_shape, eoFill: fillStyle.isEOFilled, antialiased: fillStyle.isAntialiased)
+        }
+    }
+
+    @inlinable nonisolated public func background<S>(in shape: S, fillStyle: FillStyle = FillStyle()) -> some View where S : InsettableShape {
+        return background(BackgroundStyle(), in: shape, fillStyle: fillStyle)
+    }
+
+    /* @inlinable nonisolated */ public func background<S, T>(_ style: S, in shape: T, fillStyle: FillStyle = FillStyle()) -> some View where S : ShapeStyle, T : InsettableShape {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.background(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.BackgroundStyle(), in: shape.Java_shape, eoFill: fillStyle.isEOFilled, antialiased: fillStyle.isAntialiased)
+        }
+    }
 }
 
 extension View {
@@ -136,6 +139,43 @@ extension View {
 }
 
 extension View {
+    @inlinable nonisolated public func offset(_ offset: CGSize) -> some View {
+        return self.offset(x: offset.width, y: offset.height)
+    }
+
+    /* @inlinable nonisolated */ public func offset(x: CGFloat = 0, y: CGFloat = 0) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.offset(x: x, y: y)
+        }
+    }
+
+}
+
+extension View {
+    /* @inlinable nonisolated */ public func onAppear(perform action: (() -> Void)? = nil) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.onAppear(perform: action)
+        }
+    }
+
+
+    /* @inlinable nonisolated */ public func onDisappear(perform action: (() -> Void)? = nil) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.onDisappear(perform: action)
+        }
+    }
+
+}
+
+extension View {
+    /* @inlinable nonisolated */ public func opacity(_ opacity: Double) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.opacity(opacity)
+        }
+    }
+}
+
+extension View {
     /* @inlinable nonisolated */ public func padding(_ insets: EdgeInsets) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.padding(top: insets.top, leading: insets.leading, bottom: insets.bottom, trailing: insets.trailing)
@@ -164,6 +204,39 @@ extension View {
         return padding(.all, length)
     }
 }
+
+extension View {
+    /* @inlinable nonisolated */ public func rotationEffect(_ angle: Angle, anchor: UnitPoint = .center) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.rotationEffect(bridgedAngle: angle.radians, anchorX: anchor.x, anchorY: anchor.y)
+        }
+    }
+}
+
+extension View {
+    /* @inlinable nonisolated */ public func rotation3DEffect(_ angle: Angle, axis: (x: CGFloat, y: CGFloat, z: CGFloat), anchor: UnitPoint = .center, anchorZ: CGFloat = 0, perspective: CGFloat = 1) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.rotation3DEffect(bridgedAngle: angle.radians, axis: axis, anchorX: anchor.x, anchorY: anchor.y, anchorZ: anchorZ, perspective: perspective)
+        }
+    }
+}
+
+extension View {
+    @inlinable /* nonisolated */ public func scaleEffect(_ scale: CGSize, anchor: UnitPoint = .center) -> some View {
+        return scaleEffect(x: scale.width, y: scale.height, anchor: anchor)
+    }
+
+    @inlinable /* nonisolated */ public func scaleEffect(_ s: CGFloat, anchor: UnitPoint = .center) -> some View {
+        return scaleEffect(x: s, y: s, anchor: anchor)
+    }
+
+    /* @inlinable nonisolated */ public func scaleEffect(x: CGFloat = 1.0, y: CGFloat = 1.0, anchor: UnitPoint = .center) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.scaleEffect(x: x, y: y, anchorX: anchor.x, anchorY: anchor.y)
+        }
+    }
+}
+
 
 extension View {
     /* nonisolated */ public func tag<V>(_ tag: V, includeOptional: Bool = true) -> some View where V : Hashable {

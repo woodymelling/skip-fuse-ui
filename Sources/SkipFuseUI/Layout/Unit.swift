@@ -66,8 +66,8 @@ extension UnitCurve {
     }
 
     @inlinable public init(x: CGFloat, y: CGFloat) {
-        self.x = 0
-        self.y = 0
+        self.x = x
+        self.y = y
     }
 
     public static let zero = UnitPoint(x: 0.0, y: 0.0)

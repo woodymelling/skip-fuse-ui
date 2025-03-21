@@ -31,12 +31,12 @@ extension Label where Title == Text, Icon == Image {
         self.icon = Image(systemName: name)
     }
 
-    /* nonisolated */ public init<S>(_ title: S, image name: String) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, image name: String) where S : StringProtocol {
         self.title = Text(title)
         self.icon = Image(name, bundle: .main)
     }
 
-    /* nonisolated */ public init<S>(_ title: S, systemImage name: String) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, systemImage name: String) where S : StringProtocol {
         self.title = Text(title)
         self.icon = Image(systemName: name)
     }

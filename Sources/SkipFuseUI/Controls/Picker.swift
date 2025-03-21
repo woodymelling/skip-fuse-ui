@@ -42,12 +42,12 @@ extension Picker where Label == Text {
         fatalError()
     }
 
-    /* nonisolated */ public init<S>(_ title: S, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) where S : StringProtocol {
         self.init(selection: selection, content: content, label: { Text(title) })
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<C, S>(_ title: S, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<C, S>(_ title: S, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, S : StringProtocol {
         fatalError()
     }
 }
@@ -62,24 +62,24 @@ extension Picker where Label == SkipFuseUI.Label<Text, Image> {
         fatalError()
     }
 
-    /* nonisolated */ public init<S>(_ title: S, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) where S : StringProtocol {
         self.init(selection: selection, content: content, label: { SkipFuseUI.Label(title, systemImage: systemImage) })
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<C, S>(_ title: S, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, S : StringProtocol, C.Element == Binding<SelectionValue> {
+    @_disfavoredOverload /* nonisolated */ public init<C, S>(_ title: S, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, S : StringProtocol, C.Element == Binding<SelectionValue> {
         fatalError()
     }
 }
 
 //extension Picker where Label == Label<Text, Image> {
-//    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, image: ImageResource, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content)
+//    nonisolated public init(_ titleKey: LocalizedStringKey, image: ImageResource, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content)
 //
-//    /* nonisolated */ public init<C>(_ titleKey: LocalizedStringKey, image: ImageResource, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, C.Element == Binding<SelectionValue>
+//    nonisolated public init<C>(_ titleKey: LocalizedStringKey, image: ImageResource, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, C.Element == Binding<SelectionValue>
 //
-//    /* nonisolated */ public init<S>(_ title: S, image: ImageResource, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) where S : StringProtocol
+//    nonisolated public init<S>(_ title: S, image: ImageResource, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) where S : StringProtocol
 //
-//    /* nonisolated */ public init<C, S>(_ title: S, image: ImageResource, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, S : StringProtocol, C.Element == Binding<SelectionValue>
+//    nonisolated public init<C, S>(_ title: S, image: ImageResource, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, S : StringProtocol, C.Element == Binding<SelectionValue>
 //}
 
 extension Picker {
@@ -106,12 +106,12 @@ extension Picker where Label == Text {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S>(_ title: S, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<C, S>(_ title: S, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection, S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<C, S>(_ title: S, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection, S : StringProtocol {
         fatalError()
     }
 }
@@ -128,12 +128,12 @@ extension Picker where Label == SkipFuseUI.Label<Text, Image> {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S>(_ title: S, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<C, S>(_ title: S, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection, S : StringProtocol, C.Element == Binding<SelectionValue> {
+    @_disfavoredOverload /* nonisolated */ public init<C, S>(_ title: S, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection, S : StringProtocol, C.Element == Binding<SelectionValue> {
         fatalError()
     }
 }
