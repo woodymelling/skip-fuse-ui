@@ -7,6 +7,26 @@ import SkipBridge
 import SkipUI
 
 extension View {
+    /* @inlinable nonisolated */ public func aspectRatio(_ aspectRatio: CGFloat? = nil, contentMode: ContentMode) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.aspectRatio(aspectRatio, bridgedContentMode: contentMode.rawValue)
+        }
+    }
+
+    @inlinable /* nonisolated */ public func aspectRatio(_ aspectRatio: CGSize, contentMode: ContentMode) -> some View {
+        return self.aspectRatio(aspectRatio.width / aspectRatio.height, contentMode: contentMode)
+    }
+
+    @inlinable /* nonisolated */ public func scaledToFit() -> some View {
+        return aspectRatio(contentMode: .fit)
+    }
+
+    @inlinable /* nonisolated */ public func scaledToFill() -> some View {
+        return aspectRatio(contentMode: .fill)
+    }
+}
+
+extension View {
     @_disfavoredOverload @inlinable /* nonisolated */ public func background<Background>(_ background: Background, alignment: Alignment = .center) -> some View where Background : View {
         return self.background(alignment: alignment, content: { background })
     }
@@ -66,6 +86,24 @@ extension View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.border(content.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.Color._clear, width: width)
         }
+    }
+}
+
+extension View {
+    /* @inlinable nonisolated */ public func clipShape<S>(_ shape: S, style: FillStyle = FillStyle()) -> some View where S : Shape {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.clipShape(shape.Java_shape, eoFill: style.isEOFilled, antialiased: style.isAntialiased)
+        }
+    }
+
+    /* @inlinable nonisolated */ public func clipped(antialiased: Bool = false) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.clipped(antialiased: antialiased)
+        }
+    }
+
+    @inlinable /* nonisolated */ public func cornerRadius(_ radius: CGFloat, antialiased: Bool = true) -> some View {
+        return clipShape(RoundedRectangle(cornerRadius: radius), style: FillStyle(antialiased: antialiased))
     }
 }
 
