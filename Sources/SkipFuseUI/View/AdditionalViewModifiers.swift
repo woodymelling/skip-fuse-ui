@@ -214,6 +214,31 @@ extension View {
 }
 
 extension View {
+    @_disfavoredOverload @inlinable /* nonisolated */ public func overlay<Overlay>(_ overlay: Overlay, alignment: Alignment = .center) -> some View where Overlay : View {
+        return self.overlay(alignment: alignment, content: { overlay })
+    }
+
+    /* @inlinable nonisolated */ public func overlay<V>(alignment: Alignment = .center, @ViewBuilder content: () -> V) -> some View where V : View {
+        let content = content()
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.overlay(horizontalAlignmentKey: alignment.horizontal.key, verticalAlignmentKey: alignment.vertical.key, bridgedContent: content.Java_viewOrEmpty)
+        }
+    }
+
+    /* @inlinable nonisolated */ public func overlay<S>(_ style: S, ignoresSafeAreaEdges edges: Edge.Set = .all) -> some View where S : ShapeStyle {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.overlay(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.ForegroundStyle(), bridgedIgnoresSafeAreaEdges: Int(edges.rawValue))
+        }
+    }
+
+    /* @inlinable nonisolated */ public func overlay<S, T>(_ style: S, in shape: T, fillStyle: FillStyle = FillStyle()) -> some View where S : ShapeStyle, T : Shape {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.overlay(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.ForegroundStyle(), in: shape.Java_shape, eoFill: fillStyle.isEOFilled, antialiased: fillStyle.isAntialiased)
+        }
+    }
+}
+
+extension View {
     /* @inlinable nonisolated */ public func padding(_ insets: EdgeInsets) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.padding(top: insets.top, leading: insets.leading, bottom: insets.bottom, trailing: insets.trailing)
@@ -240,6 +265,18 @@ extension View {
 
     /* @inlinable nonisolated */ public func padding(_ length: CGFloat) -> some View {
         return padding(.all, length)
+    }
+}
+
+extension View {
+    @inlinable /* nonisolated */ public func position(_ position: CGPoint) -> some View {
+        return self.position(x: position.x, y: position.y)
+    }
+
+    /* @inlinable nonisolated */ public func position(x: CGFloat = 0, y: CGFloat = 0) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.position(x: x, y: y)
+        }
     }
 }
 
@@ -279,7 +316,7 @@ extension View {
 extension View {
     /* nonisolated */ public func tag<V>(_ tag: V, includeOptional: Bool = true) -> some View where V : Hashable {
         return ModifierView(target: self) {
-            $0.Java_viewOrEmpty.tag(SwiftHashable(tag)) // Tag with bridgable wrapper
+            $0.Java_viewOrEmpty.tag(Java_swiftHashable(for: tag)) // Tag with bridgable wrapper
         }
     }
 }

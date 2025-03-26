@@ -28,7 +28,7 @@ extension View {
     /* nonisolated */ public func onTapGesture(count: Int = 1, coordinateSpace: CoordinateSpace = .local, perform action: @escaping (CGPoint) -> Void) -> some View {
         var name: SwiftHashable? = nil
         if case .named(let n) = coordinateSpace {
-            name = SwiftHashable(n)
+            name = Java_swiftHashable(for: n)
         }
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.onTapGesture(count: count, bridgedCoordinateSpace: coordinateSpace.identifier, name: name, perform: { action(CGPoint(x: $0, y: $1)) })
@@ -38,7 +38,7 @@ extension View {
     /* nonisolated */ public func onTapGesture(count: Int = 1, coordinateSpace: some CoordinateSpaceProtocol = .local, perform action: @escaping (CGPoint) -> Void) -> some View {
         var name: SwiftHashable? = nil
         if case .named(let n) = coordinateSpace.coordinateSpace {
-            name = SwiftHashable(n)
+            name = Java_swiftHashable(for: n)
         }
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.onTapGesture(count: count, bridgedCoordinateSpace: coordinateSpace.coordinateSpace.identifier, name: name, perform: { action(CGPoint(x: $0, y: $1)) })

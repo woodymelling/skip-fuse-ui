@@ -480,7 +480,7 @@ public struct ScrollViewProxy {
     let proxy: SkipUI.ScrollViewProxy
 
     public func scrollTo<ID>(_ id: ID, anchor: UnitPoint? = nil) where ID : Hashable {
-        proxy.scrollTo(bridgedID: SwiftHashable(id), anchorX: anchor?.x, anchorY: anchor?.y)
+        proxy.scrollTo(bridgedID: Java_swiftHashable(for: id), anchorX: anchor?.x, anchorY: anchor?.y)
     }
 }
 
