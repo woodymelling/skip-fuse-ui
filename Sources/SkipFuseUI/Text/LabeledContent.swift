@@ -21,14 +21,14 @@ extension LabeledContent where Label == Text, Content : View {
     }
 
     @available(*, unavailable)
-    public init<S>(_ title: S, @ViewBuilder content: () -> Content) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, @ViewBuilder content: () -> Content) where S : StringProtocol {
         fatalError()
     }
 }
 
 extension LabeledContent where Label == Text, Content == Text {
     @available(*, unavailable)
-    public init<S>(_ titleKey: LocalizedStringKey, value: S) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ titleKey: LocalizedStringKey, value: S) where S : StringProtocol {
         fatalError()
     }
 
@@ -43,7 +43,7 @@ extension LabeledContent where Label == Text, Content == Text {
     }
 
     @available(*, unavailable)
-    public init<S, F>(_ title: S, value: F.FormatInput, format: F) where S : StringProtocol, F : FormatStyle, F.FormatInput : Equatable, F.FormatOutput == String {
+    @_disfavoredOverload public init<S, F>(_ title: S, value: F.FormatInput, format: F) where S : StringProtocol, F : FormatStyle, F.FormatInput : Equatable, F.FormatOutput == String {
         fatalError()
     }
 }

@@ -30,7 +30,7 @@ extension Button where Label == Text {
         self.init(action: action, label: { Text(titleKey) })
     }
 
-    /* @preconcurrency nonisolated */ public init<S>(_ title: S, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload /* @preconcurrency nonisolated */ public init<S>(_ title: S, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(action: action, label: { Text(title) })
     }
 }
@@ -40,7 +40,7 @@ extension Button where Label == SkipFuseUI.Label<Text, Image> {
         self.init(action: action, label: { SkipFuseUI.Label(titleKey, systemImage: systemImage) })
     }
 
-    /* nonisolated */ public init<S>(_ title: S, systemImage: String, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, systemImage: String, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(action: action, label: { SkipFuseUI.Label(title, systemImage: systemImage) })
     }
 }
@@ -71,7 +71,7 @@ extension Button where Label == Text {
         self.init(role: role, action: action, label: { Text(titleKey) })
     }
 
-    /* @preconcurrency nonisolated */ public init<S>(_ title: S, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload /* @preconcurrency nonisolated */ public init<S>(_ title: S, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(role: role, action: action, label: { Text(title) })
     }
 }
@@ -81,7 +81,7 @@ extension Button where Label == SkipFuseUI.Label<Text, Image> {
         self.init(role: role, action: action, label: { SkipFuseUI.Label(titleKey, systemImage: systemImage) })
     }
 
-    /* nonisolated */ public init<S>(_ title: S, systemImage: String, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, systemImage: String, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(role: role, action: action, label: { SkipFuseUI.Label(title, systemImage: systemImage) })
     }
 }

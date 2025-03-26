@@ -87,7 +87,7 @@ public struct CommandGroupPlacement {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S>(_ name: S, @ViewBuilder content: () -> Content) where S : StringProtocol {
+    @_disfavoredOverload /* nonisolated */ public init<S>(_ name: S, @ViewBuilder content: () -> Content) where S : StringProtocol {
         fatalError()
     }
 
