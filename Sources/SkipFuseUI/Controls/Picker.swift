@@ -13,7 +13,7 @@ import SkipUI
 
 extension Picker : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        let getSelection: () -> SwiftHashable = { SwiftHashable(selection.wrappedValue) }
+        let getSelection: () -> SwiftHashable = { Java_swiftHashable(for: selection.wrappedValue) }
         let setSelection: (SwiftHashable) -> Void = { selection.wrappedValue = $0.base as! SelectionValue }
         return SkipUI.Picker(getSelection: getSelection, setSelection: setSelection, bridgedContent: content.Java_viewOrEmpty, bridgedLabel: label.Java_viewOrEmpty)
     }

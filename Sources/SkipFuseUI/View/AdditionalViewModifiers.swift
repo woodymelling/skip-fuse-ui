@@ -7,6 +7,26 @@ import SkipBridge
 import SkipUI
 
 extension View {
+    /* @inlinable nonisolated */ public func aspectRatio(_ aspectRatio: CGFloat? = nil, contentMode: ContentMode) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.aspectRatio(aspectRatio, bridgedContentMode: contentMode.rawValue)
+        }
+    }
+
+    @inlinable /* nonisolated */ public func aspectRatio(_ aspectRatio: CGSize, contentMode: ContentMode) -> some View {
+        return self.aspectRatio(aspectRatio.width / aspectRatio.height, contentMode: contentMode)
+    }
+
+    @inlinable /* nonisolated */ public func scaledToFit() -> some View {
+        return aspectRatio(contentMode: .fit)
+    }
+
+    @inlinable /* nonisolated */ public func scaledToFill() -> some View {
+        return aspectRatio(contentMode: .fill)
+    }
+}
+
+extension View {
     @_disfavoredOverload @inlinable /* nonisolated */ public func background<Background>(_ background: Background, alignment: Alignment = .center) -> some View where Background : View {
         return self.background(alignment: alignment, content: { background })
     }
@@ -66,6 +86,24 @@ extension View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.border(content.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.Color._clear, width: width)
         }
+    }
+}
+
+extension View {
+    /* @inlinable nonisolated */ public func clipShape<S>(_ shape: S, style: FillStyle = FillStyle()) -> some View where S : Shape {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.clipShape(shape.Java_shape, eoFill: style.isEOFilled, antialiased: style.isAntialiased)
+        }
+    }
+
+    /* @inlinable nonisolated */ public func clipped(antialiased: Bool = false) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.clipped(antialiased: antialiased)
+        }
+    }
+
+    @inlinable /* nonisolated */ public func cornerRadius(_ radius: CGFloat, antialiased: Bool = true) -> some View {
+        return clipShape(RoundedRectangle(cornerRadius: radius), style: FillStyle(antialiased: antialiased))
     }
 }
 
@@ -176,6 +214,31 @@ extension View {
 }
 
 extension View {
+    @_disfavoredOverload @inlinable /* nonisolated */ public func overlay<Overlay>(_ overlay: Overlay, alignment: Alignment = .center) -> some View where Overlay : View {
+        return self.overlay(alignment: alignment, content: { overlay })
+    }
+
+    /* @inlinable nonisolated */ public func overlay<V>(alignment: Alignment = .center, @ViewBuilder content: () -> V) -> some View where V : View {
+        let content = content()
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.overlay(horizontalAlignmentKey: alignment.horizontal.key, verticalAlignmentKey: alignment.vertical.key, bridgedContent: content.Java_viewOrEmpty)
+        }
+    }
+
+    /* @inlinable nonisolated */ public func overlay<S>(_ style: S, ignoresSafeAreaEdges edges: Edge.Set = .all) -> some View where S : ShapeStyle {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.overlay(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.ForegroundStyle(), bridgedIgnoresSafeAreaEdges: Int(edges.rawValue))
+        }
+    }
+
+    /* @inlinable nonisolated */ public func overlay<S, T>(_ style: S, in shape: T, fillStyle: FillStyle = FillStyle()) -> some View where S : ShapeStyle, T : Shape {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.overlay(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.ForegroundStyle(), in: shape.Java_shape, eoFill: fillStyle.isEOFilled, antialiased: fillStyle.isAntialiased)
+        }
+    }
+}
+
+extension View {
     /* @inlinable nonisolated */ public func padding(_ insets: EdgeInsets) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.padding(top: insets.top, leading: insets.leading, bottom: insets.bottom, trailing: insets.trailing)
@@ -202,6 +265,18 @@ extension View {
 
     /* @inlinable nonisolated */ public func padding(_ length: CGFloat) -> some View {
         return padding(.all, length)
+    }
+}
+
+extension View {
+    @inlinable /* nonisolated */ public func position(_ position: CGPoint) -> some View {
+        return self.position(x: position.x, y: position.y)
+    }
+
+    /* @inlinable nonisolated */ public func position(x: CGFloat = 0, y: CGFloat = 0) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.position(x: x, y: y)
+        }
     }
 }
 
@@ -241,7 +316,7 @@ extension View {
 extension View {
     /* nonisolated */ public func tag<V>(_ tag: V, includeOptional: Bool = true) -> some View where V : Hashable {
         return ModifierView(target: self) {
-            $0.Java_viewOrEmpty.tag(SwiftHashable(tag)) // Tag with bridgable wrapper
+            $0.Java_viewOrEmpty.tag(Java_swiftHashable(for: tag)) // Tag with bridgable wrapper
         }
     }
 }

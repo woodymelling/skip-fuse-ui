@@ -43,17 +43,63 @@ extension EnvironmentValues {
         return key(forAny: String(describing: type))
     }
 
+    // MARK: - Builtin EnvironmentValues bridging
+    // Note: Must be matched by equivalent code in SkipUI.EnvironmentValues
+
     /// Convert a builtin environment value from Compose.
     static func builtin(key: String, bridgedValue: Any?) -> Any? {
-        // NOTE: We also maintain equivalent code in SkipUI.EnvironmentValues.
-        // It would be nice to come up with a better way to do this...
         switch key {
         case "colorScheme":
-            return ColorScheme(rawValue: bridgedValue as! Int)
+            let rawValue = bridgedValue as? Int
+            return bridgedValue == nil ? ColorScheme.light : ColorScheme(rawValue: rawValue!) ?? .light
         case "dismiss":
-            return DismissAction(action: (bridgedValue as! SkipUI.DismissAction).action)
+            let action = (bridgedValue as? SkipUI.DismissAction)?.action ?? { }
+            return DismissAction(action: action)
         case "layoutDirection":
-            return LayoutDirection(rawValue: bridgedValue as! Int)
+            let rawValue = bridgedValue as? Int
+            return rawValue == nil ? LayoutDirection.leftToRight : LayoutDirection(rawValue: rawValue!) ?? .leftToRight
+        case "openURL":
+            let javaAction = bridgedValue as? SkipUI.OpenURLAction
+            let javaHandler = javaAction?.handler ?? { _ in SkipUI.OpenURLAction.Result(rawValue: OpenURLAction.Result.systemAction.identifier) }
+            let javaSystemHandler = javaAction?.systemHandler ?? { _ in }
+            return OpenURLAction(handler: {
+                let result = javaHandler($0)
+                return OpenURLAction.Result(identifier: result.rawValue, url: result.url)
+            }, systemHandler: javaSystemHandler)
+        default:
+            return nil
+        }
+    }
+
+    /// Convert a builtin environment value to Compose.
+    static func bridgeBuiltin(key: String, value: Any?) -> Any? {
+        switch key {
+        case "colorScheme":
+            return (value as? ColorScheme)?.rawValue
+        case "dismiss":
+            guard let action = (value as? DismissAction)?.action else {
+                return nil
+            }
+            #if compiler(>=6.0)
+            return SkipUI.DismissAction(action: { MainActor.assumeIsolated { action() } })
+            #else
+            return SkipUI.DismissAction(action: action)
+            #endif
+        case "layoutDirection":
+            return ((value as? LayoutDirection) ?? .leftToRight).rawValue
+        case "openURL":
+            guard let openURLAction = value as? OpenURLAction else {
+                return nil
+            }
+            let javaHandler: (URL) -> SkipUI.OpenURLAction.Result = {
+                let result = openURLAction.handler($0)
+                return SkipUI.OpenURLAction.Result(rawValue: result.identifier, url: result.url)
+            }
+            if let javaSystemHandler = openURLAction.systemHandler {
+                return SkipUI.OpenURLAction(handler: javaHandler, systemHandler: javaSystemHandler)
+            } else {
+                return SkipUI.OpenURLAction(handler: javaHandler)
+            }
         default:
             return nil
         }
@@ -65,8 +111,11 @@ extension EnvironmentValues {
         keys[\EnvironmentValues.colorScheme] = "colorScheme"
         keys[\EnvironmentValues.dismiss] = "dismiss"
         keys[\EnvironmentValues.layoutDirection] = "layoutDirection"
+        keys[\EnvironmentValues.openURL] = "openURL"
         return keys
     }()
+
+    // MARK: -
 
     private static func key(forAny hashable: AnyHashable) -> String {
         if let key = keys[hashable] {
@@ -88,13 +137,16 @@ extension View {
     /* nonisolated */ public func environment<V>(_ keyPath: WritableKeyPath<EnvironmentValues, V>, _ value: V) -> some View {
         return ModifierView(target: self) {
             let key = EnvironmentValues.key(for: keyPath)
-            guard key.hasPrefix("userkey:") else {
-                fatalError("Set via .\(key) View modifier")
-            }
             let view = $0.Java_viewOrEmpty
-            let ptr = SwiftObjectPointer.pointer(to: Box(value), retain: true)
-            let value = EnvironmentSupport(valueHolder: ptr)
-            return view.environment(bridgedKey: key, value: value)
+            if key.hasPrefix("userkey:") {
+                let ptr = SwiftObjectPointer.pointer(to: Box(value), retain: true)
+                let support = EnvironmentSupport(valueHolder: ptr)
+                return view.environment(bridgedKey: key, value: support)
+            } else {
+                let value = EnvironmentValues.bridgeBuiltin(key: key, value: value)
+                let support = EnvironmentSupport(builtinValue: value)
+                return view.environment(bridgedKey: key, value: support)
+            }
         }
     }
 
@@ -132,8 +184,7 @@ extension EnvironmentValues {
 }
 
 extension EnvironmentValues {
-    @available(*, unavailable)
-    public var openURL: Any /* OpenURLAction */ {
+    public var openURL: OpenURLAction {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
     }

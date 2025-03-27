@@ -22,7 +22,7 @@ extension TabView : SkipUIBridging {
         let selectionGet: (() -> Any)?
         let selectionSet: ((Any) -> Void)?
         if let selection {
-            selectionGet = { SwiftHashable(selection.get()) }
+            selectionGet = { Java_swiftHashable(for: selection.get()) }
             selectionSet = { selection.set(($0 as! SwiftHashable).base as! SelectionValue) }
         } else {
             selectionGet = nil

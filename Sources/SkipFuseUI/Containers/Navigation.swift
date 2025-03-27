@@ -23,7 +23,7 @@ import SkipUI
         self.getData = {
             let boundPath = path.wrappedValue
             return (0..<boundPath.count).map {
-                SwiftHashable(boundPath[$0])
+                Java_swiftHashable(for: boundPath[$0])
             }
         }
         self.setData = { array in
@@ -36,7 +36,7 @@ import SkipUI
     /* nonisolated */ public init(path: Binding<Data>, @ViewBuilder root: () -> Root) where Data : MutableCollection, Data : RandomAccessCollection, Data : RangeReplaceableCollection, Data.Element : Hashable {
         self.root = root()
         self.getData = {
-            return path.wrappedValue.map { SwiftHashable($0) }
+            return path.wrappedValue.map { Java_swiftHashable(for: $0) }
         }
         self.setData = { array in
             var boundPath = path.wrappedValue
@@ -55,11 +55,7 @@ extension NavigationStack : SkipUIBridging {
             let value = ($0 as! SwiftHashable).base
             return String(describing: type(of: value))
         }
-        let destinationRouteFunction: (Any) -> String = {
-            let value = ($0 as! SwiftHashable).base
-            return Java_composeBundleString(for: value)
-        }
-        return SkipUI.NavigationStack(getData: getData, setData: setData, bridgedRoot: root.Java_viewOrEmpty, destinationKeyTransformer: destinationKeyTransformer, destinationRouteFunction: destinationRouteFunction)
+        return SkipUI.NavigationStack(getData: getData, setData: setData, bridgedRoot: root.Java_viewOrEmpty, destinationKeyTransformer: destinationKeyTransformer)
     }
 }
 
@@ -83,7 +79,7 @@ extension NavigationStack : SkipUIBridging {
 
 extension NavigationLink : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        let bridgedValue = value == nil ? nil : SwiftHashable(value!)
+        let bridgedValue = value == nil ? nil : Java_swiftHashable(for: value!)
         return SkipUI.NavigationLink(bridgedDestination: destination?.Java_viewOrEmpty, value: bridgedValue, bridgedLabel: label.Java_viewOrEmpty)
     }
 }
