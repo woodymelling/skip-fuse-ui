@@ -333,3 +333,11 @@ extension View {
         }
     }
 }
+
+extension View {
+    /* @inlinable nonisolated */ public func zIndex(_ value: Double) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.zIndex(value)
+        }
+    }
+}
