@@ -60,7 +60,7 @@ extension Shape {
 
 @frozen public struct Rectangle : Shape {
     /* nonisolated */ public func path(in rect: CGRect) -> Path {
-        return Path(Java_path: Java_shape.path(inX: rect.origin.x, y: rect.origin.y, width: rect.width, height: rect.height))
+        return Path(rect)
     }
 
     @inlinable /* nonisolated */ public init() {
@@ -102,7 +102,7 @@ extension Shape where Self == Rectangle {
     }
 
     /* nonisolated */ public func path(in rect: CGRect) -> Path {
-        return Path(Java_path: Java_shape.path(inX: rect.origin.x, y: rect.origin.y, width: rect.width, height: rect.height))
+        return Path(roundedRect: rect, cornerSize: cornerSize, style: style)
     }
 
 //    public var animatableData: CGSize.AnimatableData
@@ -145,7 +145,7 @@ extension Shape where Self == RoundedRectangle {
     }
 
     /* nonisolated */ public func path(in rect: CGRect) -> Path {
-        return Path(Java_path: Java_shape.path(inX: rect.origin.x, y: rect.origin.y, width: rect.width, height: rect.height))
+        return Path(roundedRect: rect, cornerRadii: cornerRadii, style: style)
     }
 
 //    public var animatableData: RectangleCornerRadii.AnimatableData
@@ -182,7 +182,20 @@ extension Shape where Self == UnevenRoundedRectangle {
     }
 
     /* nonisolated */ public func path(in rect: CGRect) -> Path {
-        return Path(Java_path: Java_shape.path(inX: rect.origin.x, y: rect.origin.y, width: rect.width, height: rect.height))
+        var path = Path()
+        if rect.width >= rect.height {
+            path.move(to: CGPoint(x: rect.minX + rect.height / 2.0, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX - rect.height / 2.0, y: rect.minY))
+            path.addRelativeArc(center: CGPoint(x: rect.maxX - rect.height / 2.0, y: rect.midY), radius: rect.height / 2.0, startAngle: Angle(degrees: -90.0), delta: Angle(degrees: 180.0))
+            path.addLine(to: CGPoint(x: rect.minX + rect.height / 2.0, y: rect.maxY))
+            path.addRelativeArc(center: CGPoint(x: rect.minX + rect.height / 2.0, y: rect.midY), radius: rect.height / 2.0, startAngle: Angle(degrees: 90.0), delta: Angle(degrees: 180.0))
+        } else {
+            path.move(to: CGPoint(x: rect.minX, y: rect.minY + rect.width / 2.0))
+            path.addRelativeArc(center: CGPoint(x: rect.midX, y: rect.minY + rect.width / 2.0), radius: rect.width / 2.0, startAngle: Angle(degrees: -180.0), delta: Angle(degrees: 180.0))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - rect.width / 2.0))
+            path.addRelativeArc(center: CGPoint(x: rect.midX, y: rect.maxY - rect.width / 2.0), radius: rect.width / 2.0, startAngle: Angle(degrees: 0.0), delta: Angle(degrees: 180.0))
+        }
+        return path
     }
 
 //    public typealias AnimatableData = EmptyAnimatableData
@@ -212,7 +225,7 @@ extension Shape where Self == Capsule {
 
 @frozen public struct Ellipse : Shape /*, BitwiseCopyable */ {
     /* nonisolated */ public func path(in rect: CGRect) -> Path {
-        return Path(Java_path: Java_shape.path(inX: rect.origin.x, y: rect.origin.y, width: rect.width, height: rect.height))
+        return Path(ellipseIn: rect)
     }
 
     @inlinable /* nonisolated */ public init() {
@@ -241,7 +254,10 @@ extension Shape where Self == Ellipse {
 
 @frozen public struct Circle : Shape /*, BitwiseCopyable */ {
     /* nonisolated */ public func path(in rect: CGRect) -> Path {
-        return Path(Java_path: Java_shape.path(inX: rect.origin.x, y: rect.origin.y, width: rect.width, height: rect.height))
+        let dim = min(rect.width, rect.height)
+        let x = rect.minX + (rect.width - dim) / 2.0
+        let y = rect.minY + (rect.height - dim) / 2.0
+        return Path(ellipseIn: CGRect(x: x, y: y, width: dim, height: dim))
     }
 
     @inlinable /* nonisolated */ public init() {
@@ -274,7 +290,7 @@ extension Shape where Self == Circle {
 
 @frozen public struct ContainerRelativeShape : Shape /*, BitwiseCopyable */ {
     /* nonisolated */ public func path(in rect: CGRect) -> Path {
-        return Path(Java_path: Java_shape.path(inX: rect.origin.x, y: rect.origin.y, width: rect.width, height: rect.height))
+        return Path(rect)
     }
 
     @available(*, unavailable)
@@ -640,7 +656,7 @@ public struct _InsetShape<Content> : InsettableShape where Content : InsettableS
     }
 
     public func path(in rect: CGRect) -> Path {
-        return Path(Java_path: Java_shape.path(inX: rect.origin.x, y: rect.origin.y, width: rect.width, height: rect.height))
+        return shape.path(in: rect)
     }
 
     /* nonisolated */ public static var role: ShapeRole {
@@ -677,7 +693,7 @@ public struct _StrokeShape<Content> : Shape where Content : Shape {
     }
 
     public func path(in rect: CGRect) -> Path {
-        return Path(Java_path: Java_shape.path(inX: rect.origin.x, y: rect.origin.y, width: rect.width, height: rect.height))
+        return shape.path(in: rect)
     }
 
     /* nonisolated */ public static var role: ShapeRole {
