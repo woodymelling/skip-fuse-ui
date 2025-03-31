@@ -158,6 +158,12 @@ public protocol PickerStyle {
     var identifier: Int { get } // For bridging
 }
 
+extension PickerStyle {
+    public var identifier: Int {
+        return -1
+    }
+}
+
 public struct RadioGroupPickerStyle : PickerStyle {
     @available(*, unavailable)
     public init() {

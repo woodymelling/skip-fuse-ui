@@ -477,7 +477,7 @@ public struct AnimationCompletionCriteria : Hashable /*, Sendable */ {
 public func withAnimation<Result>(_ animation: Animation? = .default, _ body: () throws -> Result) rethrows -> Result {
     let isNested = SkipUI.Animation.preBodyWithAnimation(animation?.Java_animation)
     defer {
-        if isNested {
+        if !isNested {
             SkipUI.Animation.postBodyWithAnimation()
         }
     }

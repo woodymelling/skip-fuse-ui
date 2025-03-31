@@ -19,3 +19,9 @@ extension ModifierView : SkipUIBridging {
         return modifier(target)
     }
 }
+
+extension ModifierView : DynamicViewContent where Target : DynamicViewContent {
+    var data: Target.Data {
+        return target.data
+    }
+}

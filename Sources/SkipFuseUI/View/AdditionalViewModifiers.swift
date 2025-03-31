@@ -177,6 +177,14 @@ extension View {
 }
 
 extension View {
+    /* nonisolated */ public func labelsHidden() -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.labelsHidden()
+        }
+    }
+}
+
+extension View {
     @inlinable nonisolated public func offset(_ offset: CGSize) -> some View {
         return self.offset(x: offset.width, y: offset.height)
     }
@@ -202,7 +210,28 @@ extension View {
             $0.Java_viewOrEmpty.onDisappear(perform: action)
         }
     }
+}
 
+extension View {
+    @inlinable nonisolated public func onChange<V>(of value: V, perform action: @escaping (_ newValue: V) -> Void) -> some View where V : Equatable {
+        return onChange(of: value, initial: false) { _, newValue in
+            action(newValue)
+        }
+    }
+
+    nonisolated public func onChange<V>(of value: V, initial: Bool = false, _ action: @escaping (_ oldValue: V, _ newValue: V) -> Void) -> some View where V : Equatable {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.onChange(of: SwiftEquatable(value), initial: initial) { oldValue, newValue in
+                action(oldValue.base as! V, newValue.base as! V)
+            }
+        }
+    }
+
+    nonisolated public func onChange<V>(of value: V, initial: Bool = false, _ action: @escaping () -> Void) -> some View where V : Equatable {
+        return onChange(of: value, initial: initial) { _, _ in
+            action()
+        }
+    }
 }
 
 extension View {

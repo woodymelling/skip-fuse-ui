@@ -1,5 +1,6 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
+import Foundation
 import SkipBridge
 import SkipUI
 
@@ -64,5 +65,50 @@ extension ForEach where Data == Range<Int>, ID == Int, Content : View {
         self.data = data
         self.content = content
         self.id = { Java_swiftHashable(for: $0) }
+    }
+}
+
+extension DynamicViewContent {
+    /* @inlinable nonisolated */ public func onMove(perform action: ((IndexSet, Int) -> Void)?) -> some DynamicViewContent {
+        return ModifierView(target: self) {
+            let view = $0.Java_viewOrEmpty
+            if let forEach = view as? SkipUI.ForEach {
+                let bridgedAction: (([Int], Int) -> Void)? = action == nil ? nil : { action!(IndexSet($0), $1) }
+                return forEach.onMoveArray(bridgedAction: bridgedAction)
+            } else {
+                return view
+            }
+        }
+    }
+}
+
+extension View {
+    /* @inlinable nonisolated */ public func moveDisabled(_ isDisabled: Bool) -> some View {
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.moveDisabled(isDisabled)
+        }
+    }
+}
+
+extension DynamicViewContent {
+    /* @inlinable nonisolated */ public func onDelete(perform action: ((IndexSet) -> Void)?) -> some DynamicViewContent {
+        return ModifierView(target: self) {
+            let view = $0.Java_viewOrEmpty
+            if let forEach = view as? SkipUI.ForEach {
+                let bridgedAction: (([Int]) -> Void)? = action == nil ? nil : { action!(IndexSet($0)) }
+                return forEach.onDeleteArray(bridgedAction: bridgedAction)
+            } else {
+                return view
+            }
+        }
+    }
+
+}
+
+extension View {
+    /* @inlinable nonisolated */ public func deleteDisabled(_ isDisabled: Bool) -> some View {
+        return ModifierView(target: self) {
+            return $0.Java_viewOrEmpty.moveDisabled(isDisabled)
+        }
     }
 }

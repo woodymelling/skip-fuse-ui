@@ -63,7 +63,9 @@ extension View {
 }
 
 extension TabViewStyle {
-    public var identifier: Int { -1 }
+    public var identifier: Int {
+        return -1
+    }
 }
 
 /* @MainActor @preconcurrency */ public struct SidebarAdaptableTabViewStyle : TabViewStyle {

@@ -13,7 +13,7 @@ import SkipUI
 
 extension TextField : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.TextField(getText: { text.wrappedValue }, setText: { text.wrappedValue = $0 }, prompt: prompt?.Java_view as? SkipUI.Text ?? SkipUI.Text(verbatim: ""), isSecure: false, bridgedLabel: label.Java_viewOrEmpty)
+        return SkipUI.TextField(getText: { text.wrappedValue }, setText: { text.wrappedValue = $0 }, prompt: prompt?.Java_view as? SkipUI.Text, isSecure: false, bridgedLabel: label.Java_viewOrEmpty)
     }
 }
 
@@ -40,15 +40,19 @@ extension TextField {
         return Binding<String>(get: { getText(value.wrappedValue) }, set: { value.wrappedValue = setText($0) })
     }
 
-    private static func text<V>(from value: Binding<V>, formatter: Formatter) -> Binding<String> {
-        let getText: (V) -> String = { formatter.string(for: $0) ?? "" }
-        let setText: (String) -> V = {
-            var object: AnyObject?
-            formatter.getObjectValue(&object, for: $0, errorDescription: nil)
-            return object as! V
-        }
-        return Binding<String>(get: { getText(value.wrappedValue) }, set: { value.wrappedValue = setText($0) })
-    }
+    // Error: Cannot find AutoreleasingUnsafeMutablePointer in scope
+//    private static func text<V>(from value: Binding<V>, formatter: Formatter) -> Binding<String> {
+//        let getText: (V) -> String = { formatter.string(for: $0) ?? "" }
+//        let setText: (String) -> V = { text in
+//            var object: AnyObject?
+//            withUnsafeMutablePointer(to: &object) { ptr in
+//                let autoptr = AutoreleasingUnsafeMutablePointer<AnyObject?>(ptr)
+//                formatter.getObjectValue(autoptr, for: text, errorDescription: nil)
+//            }
+//            return object as! V
+//        }
+//        return Binding<String>(get: { getText(value.wrappedValue) }, set: { value.wrappedValue = setText($0) })
+//    }
 }
 
 extension TextField where Label == Text {
@@ -92,38 +96,48 @@ extension TextField {
 }
 
 extension TextField where Label == Text {
+    @available(*, unavailable)
     /* nonisolated */ public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, prompt: Text?) {
-        self.text = Self.text(from: value, formatter: formatter)
-        self.label = Text(titleKey)
-        self.prompt = prompt
+        fatalError()
+//        self.text = Self.text(from: value, formatter: formatter)
+//        self.label = Text(titleKey)
+//        self.prompt = prompt
     }
 
+    @available(*, unavailable)
     @_disfavoredOverload /* nonisolated */ public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, prompt: Text?) where S : StringProtocol {
-        self.text = Self.text(from: value, formatter: formatter)
-        self.label = Text(title)
-        self.prompt = prompt
+        fatalError()
+//        self.text = Self.text(from: value, formatter: formatter)
+//        self.label = Text(title)
+//        self.prompt = prompt
     }
 }
 
 extension TextField {
+    @available(*, unavailable)
     /* nonisolated */ public init<V>(value: Binding<V>, formatter: Formatter, prompt: Text? = nil, @ViewBuilder label: () -> Label) {
-        self.text = Self.text(from: value, formatter: formatter)
-        self.label = label()
-        self.prompt = prompt
+        fatalError()
+//        self.text = Self.text(from: value, formatter: formatter)
+//        self.label = label()
+//        self.prompt = prompt
     }
 }
 
 extension TextField where Label == Text {
+    @available(*, unavailable)
     /* nonisolated */ public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter) {
-        self.text = Self.text(from: value, formatter: formatter)
-        self.label = Text(titleKey)
-        self.prompt = nil
+        fatalError()
+//        self.text = Self.text(from: value, formatter: formatter)
+//        self.label = Text(titleKey)
+//        self.prompt = nil
     }
 
+    @available(*, unavailable)
     @_disfavoredOverload /* nonisolated */ public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter) where S : StringProtocol {
-        self.text = Self.text(from: value, formatter: formatter)
-        self.label = Text(title)
-        self.prompt = nil
+        fatalError()
+//        self.text = Self.text(from: value, formatter: formatter)
+//        self.label = Text(title)
+//        self.prompt = nil
     }
 }
 
@@ -270,6 +284,12 @@ extension TextField where Label == Text {
 
 public protocol TextFieldStyle {
     var identifier: Int { get } // For bridging
+}
+
+extension TextFieldStyle {
+    public var identifier: Int {
+        return -1
+    }
 }
 
 public struct DefaultTextFieldStyle : TextFieldStyle {

@@ -6,7 +6,7 @@ import SkipBridge
     let get: () -> Value
     let set: (Value) -> Void
 
-    @preconcurrency public init(valueBox: BridgedStateBox<Value>? = nil, get: @escaping /* @isolated(any) @Sendable */ () -> Value, set: @escaping /* @isolated(any) @Sendable */ (Value) -> Void) {
+    /* @preconcurrency */ public init(valueBox: BridgedStateBox<Value>? = nil, get: @escaping /* @isolated(any) @Sendable */ () -> Value, set: @escaping /* @isolated(any) @Sendable */ (Value) -> Void) {
         self.valueBox = valueBox
         self.get = get
         self.set = set
