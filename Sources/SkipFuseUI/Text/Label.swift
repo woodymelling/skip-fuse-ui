@@ -61,6 +61,14 @@ extension Label where Title == LabelStyleConfiguration.Title, Icon == LabelStyle
     @ViewBuilder @MainActor /* @preconcurrency */ func makeBody(configuration: Self.Configuration) -> Self.Body
 
     typealias Configuration = LabelStyleConfiguration
+
+    var identifier: Int { get } // For bridging
+}
+
+extension LabelStyle {
+    public var identifier: Int {
+        return -1
+    }
 }
 
 /* @MainActor @preconcurrency */ public struct DefaultLabelStyle : LabelStyle {
@@ -70,14 +78,8 @@ extension Label where Title == LabelStyleConfiguration.Title, Icon == LabelStyle
     @MainActor /* @preconcurrency */ public func makeBody(configuration: DefaultLabelStyle.Configuration) -> some View {
         stubView()
     }
-}
 
-extension DefaultLabelStyle : RawRepresentable {
-    public init?(rawValue: Int) {
-        return nil
-    }
-    
-    public var rawValue: Int { 0 } // For bridging
+    public let identifier = 0 // For bridging
 }
 
 extension LabelStyle where Self == DefaultLabelStyle {
@@ -93,14 +95,8 @@ extension LabelStyle where Self == DefaultLabelStyle {
     @MainActor /* @preconcurrency */ public func makeBody(configuration: IconOnlyLabelStyle.Configuration) -> some View {
         stubView()
     }
-}
 
-extension IconOnlyLabelStyle : RawRepresentable {
-    public init?(rawValue: Int) {
-        return nil
-    }
-
-    public var rawValue: Int { 2 } // For bridging
+    public let identifier = 2 // For bridging
 }
 
 extension LabelStyle where Self == IconOnlyLabelStyle {
@@ -116,14 +112,8 @@ extension LabelStyle where Self == IconOnlyLabelStyle {
     @MainActor /* @preconcurrency */ public func makeBody(configuration: TitleAndIconLabelStyle.Configuration) -> some View {
         stubView()
     }
-}
 
-extension TitleAndIconLabelStyle : RawRepresentable {
-    public init?(rawValue: Int) {
-        return nil
-    }
-
-    public var rawValue: Int { 3 } // For bridging
+    public let identifier = 3 // For bridging
 }
 
 extension LabelStyle where Self == TitleAndIconLabelStyle {
@@ -139,14 +129,8 @@ extension LabelStyle where Self == TitleAndIconLabelStyle {
     @MainActor /* @preconcurrency */ public func makeBody(configuration: TitleOnlyLabelStyle.Configuration) -> some View {
         stubView()
     }
-}
 
-extension TitleOnlyLabelStyle : RawRepresentable {
-    public init?(rawValue: Int) {
-        return nil
-    }
-
-    public var rawValue: Int { 1 } // For bridging
+    public let identifier = 1 // For bridging
 }
 
 extension LabelStyle where Self == TitleOnlyLabelStyle {
@@ -175,9 +159,8 @@ public struct LabelStyleConfiguration {
 
 extension View {
     /* nonisolated */ public func labelStyle<S>(_ style: S) -> some View where S : LabelStyle {
-        let rawValue = (style as? any RawRepresentable)?.rawValue as? Int ?? 0
         return ModifierView(target: self) {
-            $0.Java_viewOrEmpty.labelStyle(bridgedStyle: rawValue)
+            $0.Java_viewOrEmpty.labelStyle(bridgedStyle: style.identifier)
         }
     }
 }

@@ -191,6 +191,12 @@ public struct ButtonStyleConfiguration {
     var identifier: Int { get } // For bridging
 }
 
+extension PrimitiveButtonStyle {
+    public var identifier: Int {
+        return -1
+    }
+}
+
 extension PrimitiveButtonStyle where Self == DefaultButtonStyle {
     /* @MainActor @preconcurrency */ public static var automatic: DefaultButtonStyle {
         return DefaultButtonStyle()
