@@ -372,8 +372,8 @@ extension View {
 
 extension View {
     @available(*, unavailable)
-    @inlinable /* nonisolated */ public func textContentType(_ textContentType: UITextContentType?) -> some View {
-        fatalError()
+    /* @inlinable nonisolated */ public func textContentType(_ textContentType: UITextContentType?) -> some View {
+        stubView()
     }
 }
 
