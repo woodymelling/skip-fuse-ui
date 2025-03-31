@@ -9,10 +9,12 @@ import SkipUI
         self.text = text
     }
 
+    #if compiler(>=6.0)
     @available(*, unavailable)
     /* nonisolated */ public init(text: Binding<String>, selection: Binding<TextSelection?>) {
         fatalError()
     }
+    #endif
 
     public typealias Body = Never
 }

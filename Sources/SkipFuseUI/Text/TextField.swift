@@ -224,6 +224,7 @@ extension TextField {
     }
 }
 
+#if compiler(>=6.0)
 extension TextField where Label == Text {
     @available(*, unavailable)
     /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>, selection: Binding<TextSelection?>, prompt: Text? = nil, axis: Axis? = nil) {
@@ -235,6 +236,7 @@ extension TextField where Label == Text {
         fatalError()
     }
 }
+#endif
 
 extension TextField where Label == Text {
     /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>) {
