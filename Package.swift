@@ -6,6 +6,7 @@ let package = Package(
     platforms: [.iOS(.v16), .macOS(.v13), .tvOS(.v16), .watchOS(.v9), .macCatalyst(.v16)],
     products: [
         .library(name: "SkipFuseUI", type: .dynamic, targets: ["SkipFuseUI"]),
+        .library(name: "SkipSwiftUI", type: .dynamic, targets: ["SkipSwiftUI"]),
     ],
     dependencies: [ 
         .package(url: "https://source.skip.tools/skip.git", from: "1.2.21"),
@@ -15,14 +16,15 @@ let package = Package(
         .package(url: "https://source.skip.tools/skip-ui.git", from: "1.0.0")
     ],
     targets: [
-        .target(name: "SkipFuseUI", dependencies: [
+        .target(name: "SkipFuseUI", dependencies: ["SkipSwiftUI"]),
+        .target(name: "SkipSwiftUI", dependencies: [
             .product(name: "SkipFuse", package: "skip-fuse"),
             .product(name: "SkipBridge", package: "skip-bridge"),
             .product(name: "SwiftJNI", package: "swift-jni"),
             .product(name: "SkipUI", package: "skip-ui")
         ], plugins: [.plugin(name: "skipstone", package: "skip")]),
-        .testTarget(name: "SkipFuseUITests", dependencies: [
-            "SkipFuseUI",
+        .testTarget(name: "SkipSwiftUITests", dependencies: [
+            "SkipSwiftUI",
             .product(name: "SkipTest", package: "skip")
         ], plugins: [.plugin(name: "skipstone", package: "skip")]),
     ]
