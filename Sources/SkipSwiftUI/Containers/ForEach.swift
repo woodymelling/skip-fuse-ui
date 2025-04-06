@@ -15,8 +15,6 @@ public struct ForEach<Data, ID, Content> : ForEachProtocol where Data : RandomAc
 
 extension ForEach : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        //~~~
-        logger.error("Java_view WITH START: \(data.startIndex as! Int), END: \(data.endIndex as! Int)")
         let indexedIdentifier: ((Int) -> SwiftHashable)?
         if let id {
             indexedIdentifier = { Java_swiftHashable(for: id(data[$0 as! Data.Index])) }
