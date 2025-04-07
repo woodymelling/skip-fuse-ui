@@ -72,3 +72,11 @@ import Foundation
         }
     }
 }
+
+public struct RefreshAction /* : Sendable */ {
+    let action: () async -> Void
+
+    public func callAsFunction() async {
+        await action()
+    }
+}

@@ -326,6 +326,13 @@ extension View {
 }
 
 extension View {
+    nonisolated public func refreshable(action: @escaping /* @Sendable */ () async -> Void) -> some View {
+        return environment(\.refresh, RefreshAction(action: action))
+    }
+
+}
+
+extension View {
     /* @inlinable nonisolated */ public func rotation3DEffect(_ angle: Angle, axis: (x: CGFloat, y: CGFloat, z: CGFloat), anchor: UnitPoint = .center, anchorZ: CGFloat = 0, perspective: CGFloat = 1) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.rotation3DEffect(bridgedAngle: angle.radians, axis: axis, anchorX: anchor.x, anchorY: anchor.y, anchorZ: anchorZ, perspective: perspective)
@@ -354,6 +361,28 @@ extension View {
     /* nonisolated */ public func tag<V>(_ tag: V, includeOptional: Bool = true) -> some View where V : Hashable {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.tag(Java_swiftHashable(for: tag)) // Tag with bridgable wrapper
+        }
+    }
+}
+
+extension View {
+    @inlinable /* nonisolated */ public func task(priority: TaskPriority = .userInitiated, _ action: @escaping /* @Sendable */ () async -> Void) -> some View {
+        return task(id: 0, priority: priority, action)
+    }
+
+    /* @inlinable nonisolated */ public func task<T>(id value: T, priority: TaskPriority = .userInitiated, _ action: @escaping /* @Sendable */ () async -> Void) -> some View where T : Equatable {
+        return ModifierView(target: self) {
+            var task: Task<Void, Never>? = nil
+            return $0.Java_viewOrEmpty.task(id: SwiftEquatable(value), bridgedAction: { completionHandler in
+                task = Task(priority: priority) {
+                    await action()
+                    if !Task.isCancelled {
+                        completionHandler.run()
+                    }
+                }
+            }, bridgedCancel: {
+                task?.cancel()
+            })
         }
     }
 }
