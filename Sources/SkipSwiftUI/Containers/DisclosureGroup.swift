@@ -23,7 +23,7 @@ import SkipUI
 
 extension DisclosureGroup : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.DisclosureGroup(getExpanded: { isExpanded.wrappedValue }, setExpanded: { isExpanded.wrappedValue = $0 }, bridgedLabel: label.Java_viewOrEmpty, bridgedContent: content.Java_viewOrEmpty)
+        return SkipUI.DisclosureGroup(getExpanded: { isExpanded.wrappedValue }, setExpanded: { isExpanded.wrappedValue = $0 }, bridgedContent: content.Java_viewOrEmpty, bridgedLabel: label.Java_viewOrEmpty)
     }
 }
 

@@ -511,8 +511,10 @@ public struct PinnedScrollableViews : OptionSet /*, Sendable */ {
         self.rawValue = rawValue
     }
 
-    public static let sectionHeaders = PinnedScrollableViews(rawValue: 1 << 0)
-    public static let sectionFooters = PinnedScrollableViews(rawValue: 1 << 1)
+    @available(*, unavailable)
+    public static let sectionHeaders = PinnedScrollableViews(rawValue: 1 << 0) // For bridging
+    @available(*, unavailable)
+    public static let sectionFooters = PinnedScrollableViews(rawValue: 1 << 1) // For bridging
 }
 
 extension View {
