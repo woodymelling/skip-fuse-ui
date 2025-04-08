@@ -55,6 +55,8 @@ extension EnvironmentValues {
         case "dismiss":
             let action = (bridgedValue as? SkipUI.DismissAction)?.action ?? { }
             return DismissAction(action: action)
+        case "isSearching":
+            return bridgedValue as? Bool == true
         case "layoutDirection":
             let rawValue = bridgedValue as? Int
             return rawValue == nil ? LayoutDirection.leftToRight : LayoutDirection(rawValue: rawValue!) ?? .leftToRight
@@ -96,6 +98,8 @@ extension EnvironmentValues {
             #else
             return SkipUI.DismissAction(action: action)
             #endif
+        case "isSearching":
+            return value as? Bool == true
         case "layoutDirection":
             return ((value as? LayoutDirection) ?? .leftToRight).rawValue
         case "openURL":
@@ -119,9 +123,7 @@ extension EnvironmentValues {
             let bridgedAction: (SkipUI.CompletionHandler) -> Void = { completionHandler in
                 task = Task {
                     await refreshAction()
-                    if !Task.isCancelled {
-                        completionHandler.run()
-                    }
+                    completionHandler.run()
                 }
             }
             let bridgedCancel: () -> Void = { task?.cancel() }
@@ -136,6 +138,7 @@ extension EnvironmentValues {
         // Initialize builtins
         keys[\EnvironmentValues.colorScheme] = "colorScheme"
         keys[\EnvironmentValues.dismiss] = "dismiss"
+        keys[\EnvironmentValues.isSearching] = "isSearching"
         keys[\EnvironmentValues.layoutDirection] = "layoutDirection"
         keys[\EnvironmentValues.openURL] = "openURL"
         keys[\EnvironmentValues.refresh] = "refresh"
@@ -539,5 +542,11 @@ extension EnvironmentValues {
     public var refresh: RefreshAction? {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
+    }
+}
+
+extension EnvironmentValues {
+    public var isSearching: Bool {
+        get { fatalError("Read via @Environment property wrapper") }
     }
 }
