@@ -31,6 +31,14 @@ func Java_swiftHashable<T>(for value: T) -> SwiftHashable where T : Hashable {
     }
 }
 
+func Java_swiftEquatable<T>(for value: T) -> SwiftEquatable where T : Equatable {
+    if let swiftEquatable = value as? SwiftEquatable {
+        return swiftEquatable
+    } else {
+        return SwiftEquatable(value)
+    }
+}
+
 /// - Seealso `SkipUI.composeBundleString(for:)`
 func Java_composeBundleString(for value: Any?) -> String {
     if let identifiable = value as? any Identifiable {

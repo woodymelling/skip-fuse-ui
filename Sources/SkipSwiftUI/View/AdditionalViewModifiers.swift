@@ -253,7 +253,7 @@ extension View {
 
     nonisolated public func onChange<V>(of value: V, initial: Bool = false, _ action: @escaping (_ oldValue: V, _ newValue: V) -> Void) -> some View where V : Equatable {
         return ModifierView(target: self) {
-            $0.Java_viewOrEmpty.onChange(of: SwiftEquatable(value), initial: initial) { oldValue, newValue in
+            $0.Java_viewOrEmpty.onChange(of: Java_swiftEquatable(for: value), initial: initial) { oldValue, newValue in
                 action(oldValue.base as! V, newValue.base as! V)
             }
         }
@@ -404,7 +404,7 @@ extension View {
     /* @inlinable nonisolated */ public func task<T>(id value: T, priority: TaskPriority = .userInitiated, _ action: @escaping /* @Sendable */ () async -> Void) -> some View where T : Equatable {
         return ModifierView(target: self) {
             var task: Task<Void, Never>? = nil
-            return $0.Java_viewOrEmpty.task(id: SwiftEquatable(value), bridgedAction: { completionHandler in
+            return $0.Java_viewOrEmpty.task(id: Java_swiftEquatable(for: value), bridgedAction: { completionHandler in
                 task = Task(priority: priority) {
                     await action()
                     completionHandler.run()
