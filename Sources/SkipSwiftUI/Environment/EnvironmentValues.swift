@@ -66,6 +66,17 @@ extension EnvironmentValues {
                 let result = javaHandler($0)
                 return OpenURLAction.Result(identifier: result.rawValue, url: result.url)
             }, systemHandler: javaSystemHandler)
+        case "refresh":
+            guard let javaAction = bridgedValue as? SkipUI.RefreshAction else {
+                return nil
+            }
+            return RefreshAction {
+                Task {
+                    await withCheckedContinuation { continuation in
+                        javaAction.run { continuation.resume() }
+                    }
+                }
+            }
         default:
             return nil
         }
@@ -100,6 +111,21 @@ extension EnvironmentValues {
             } else {
                 return SkipUI.OpenURLAction(handler: javaHandler)
             }
+        case "refresh":
+            guard let refreshAction = value as? RefreshAction else {
+                return nil
+            }
+            var task: Task<Void, Never>? = nil
+            let bridgedAction: (SkipUI.CompletionHandler) -> Void = { completionHandler in
+                task = Task {
+                    await refreshAction()
+                    if !Task.isCancelled {
+                        completionHandler.run()
+                    }
+                }
+            }
+            let bridgedCancel: () -> Void = { task?.cancel() }
+            return SkipUI.RefreshAction(bridgedAction: bridgedAction, bridgedCancel: bridgedCancel)
         default:
             return nil
         }
@@ -112,6 +138,7 @@ extension EnvironmentValues {
         keys[\EnvironmentValues.dismiss] = "dismiss"
         keys[\EnvironmentValues.layoutDirection] = "layoutDirection"
         keys[\EnvironmentValues.openURL] = "openURL"
+        keys[\EnvironmentValues.refresh] = "refresh"
         return keys
     }()
 
@@ -505,5 +532,12 @@ extension EnvironmentValues {
     @available(*, unavailable)
     public var isPresented: Bool {
         get { fatalError("Read via @Environment property wrapper") }
+    }
+}
+
+extension EnvironmentValues {
+    public var refresh: RefreshAction? {
+        get { fatalError("Read via @Environment property wrapper") }
+        set { fatalError("Set via dedicated View modifier") }
     }
 }

@@ -9,7 +9,7 @@ import SkipUI
 /* @frozen */ public struct Image : Equatable /*, Sendable */ {
     let spec: ImageSpec
 
-    fileprivate init(spec: ImageSpec) {
+    init(spec: ImageSpec) {
         self.spec = spec
     }
 
@@ -34,6 +34,7 @@ enum ImageType : Equatable {
     case system(String)
     case decorative(String, Bundle?)
     case uiImage(UIImage)
+    case java(SkipUI.Image)
 }
 
 extension Image : View {
@@ -52,6 +53,8 @@ extension Image : SkipUIBridging {
             image = SkipUI.Image(name: name, isSystem: false, isDecorative: true, bridgedBundle: bundle, label: nil)
         case .uiImage(let uiImage):
             image = SkipUI.Image(uiImage: uiImage.uiImage)
+        case .java(let javaImage):
+            image = javaImage
         }
         guard spec.resizingMode != nil else {
             return image
