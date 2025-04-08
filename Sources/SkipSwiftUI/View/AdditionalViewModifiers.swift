@@ -82,6 +82,14 @@ extension View {
 }
 
 extension View {
+    /* @inlinable nonisolated */ public func blur(radius: CGFloat, opaque: Bool = false) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.blur(radius: radius, opaque: opaque)
+        }
+    }
+}
+
+extension View {
     /* nonisolated */ public func border<S>(_ content: S, width: CGFloat = 1) -> some View where S : ShapeStyle {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.border(content.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.Color._clear, width: width)
@@ -111,6 +119,14 @@ extension View {
     /* nonisolated */ public func colorInvert() -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.colorInvert()
+        }
+    }
+}
+
+extension View {
+    /* @inlinable nonisolated */ public func compositingGroup() -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.compositingGroup()
         }
     }
 }
@@ -164,6 +180,14 @@ extension View {
     /* @inlinable nonisolated */ public func frame(minWidth: CGFloat? = nil, idealWidth: CGFloat? = nil, maxWidth: CGFloat? = nil, minHeight: CGFloat? = nil, idealHeight: CGFloat? = nil, maxHeight: CGFloat? = nil, alignment: Alignment = .center) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.frame(minWidth: minWidth, idealWidth: idealWidth, maxWidth: maxWidth, minHeight: minHeight, idealHeight: idealHeight, maxHeight: maxHeight, horizontalAlignmentKey: alignment.horizontal.key, verticalAlignmentKey: alignment.vertical.key)
+        }
+    }
+}
+
+extension View {
+    /* @inlinable nonisolated */ public func grayscale(_ amount: Double) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.grayscale(amount)
         }
     }
 }
@@ -356,6 +380,13 @@ extension View {
     }
 }
 
+extension View {
+    /* @inlinable nonisolated */ public func shadow(color: Color = Color(.sRGBLinear, white: 0, opacity: 0.33), radius: CGFloat, x: CGFloat = 0, y: CGFloat = 0) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.shadow(color: color.Java_view as? SkipUI.Color ?? SkipUI.Color._black, radius: radius, x: x, y: y)
+        }
+    }
+}
 
 extension View {
     /* nonisolated */ public func tag<V>(_ tag: V, includeOptional: Bool = true) -> some View where V : Hashable {
@@ -376,9 +407,7 @@ extension View {
             return $0.Java_viewOrEmpty.task(id: SwiftEquatable(value), bridgedAction: { completionHandler in
                 task = Task(priority: priority) {
                     await action()
-                    if !Task.isCancelled {
-                        completionHandler.run()
-                    }
+                    completionHandler.run()
                 }
             }, bridgedCancel: {
                 task?.cancel()
