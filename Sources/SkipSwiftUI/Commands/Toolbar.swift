@@ -3,35 +3,37 @@
 import SkipUI
 
 /* @MainActor @preconcurrency */ public protocol ToolbarContent {
-//    associatedtype Body : ToolbarContent
-//
-//    @ToolbarContentBuilder @MainActor /* @preconcurrency */ var body: Self.Body { get }
+    associatedtype Body : ToolbarContent
+
+    @ToolbarContentBuilder @MainActor /* @preconcurrency */ var body: Self.Body { get }
 }
 
-extension ToolbarContent {
-    /* nonisolated */ public func hidden(_ hidden: Bool = true) -> some ToolbarContent {
-        if hidden {
-            return AnyToolbarContent(erasing: EmptyToolbarContent())
-        } else {
-            return AnyToolbarContent(erasing: self)
+public protocol CustomizableToolbarContent : ToolbarContent where Self.Body : CustomizableToolbarContent {
+}
+
+extension Never : ToolbarContent, CustomizableToolbarContent {
+}
+
+extension Optional : ToolbarContent where Wrapped : ToolbarContent {
+    public var body: AnyToolbarContent {
+        switch self {
+        case .none:
+            return AnyToolbarContent(EmptyToolbarContent())
+        case .some(let content):
+            return AnyToolbarContent(content.body)
         }
     }
 }
 
-public protocol CustomizableToolbarContent : ToolbarContent /* where Self.Body : CustomizableToolbarContent */ {
-}
-
-extension Optional : ToolbarContent where Wrapped : ToolbarContent {
-}
-
-extension Optional : CustomizableToolbarContent where Wrapped : CustomizableToolbarContent {
-}
+//extension Optional : CustomizableToolbarContent where Wrapped : CustomizableToolbarContent {
+//}
 
 func stubToolbarContent() -> EmptyToolbarContent {
     return EmptyToolbarContent()
 }
 
 public struct EmptyToolbarContent : ToolbarContent, CustomizableToolbarContent {
+    public var body : Never { fatalError("Never") }
 }
 
 extension EmptyToolbarContent : SkipUIBridging {
@@ -50,6 +52,8 @@ extension EmptyToolbarContent : SkipUIBridging {
     /* nonisolated */ public init<C>(erasing content: C) where C : ToolbarContent {
         self.content = content
     }
+
+    public var body : Never { fatalError("Never") }
 }
 
 extension AnyToolbarContent : SkipUIBridging {
@@ -68,11 +72,23 @@ extension AnyToolbarContent : SkipUIBridging {
     /* nonisolated */ public init<C>(erasing content: C) where C : CustomizableToolbarContent {
         self.content = content
     }
+
+    public var body : Never { fatalError("Never") }
 }
 
 extension AnyCustomizableToolbarContent : SkipUIBridging {
     public var Java_view: any SkipUI.View {
         return (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+    }
+}
+
+extension ToolbarContent {
+    /* nonisolated */ public func hidden(_ hidden: Bool = true) -> some ToolbarContent {
+        if hidden {
+            return AnyToolbarContent(erasing: EmptyToolbarContent())
+        } else {
+            return AnyToolbarContent(erasing: self)
+        }
     }
 }
 
@@ -143,6 +159,8 @@ public struct ToolbarDefaultItemKind {
     private let _id: ID
     private let placement: ToolbarItemPlacement
     private let content: Content
+
+    public var body : Never { fatalError("Never") }
 }
 
 extension ToolbarItem where ID == () {
@@ -187,6 +205,8 @@ extension ToolbarItem : Identifiable where ID : Hashable {
         self.placement = placement
         self.content = content()
     }
+
+    public var body : Never { fatalError("Never") }
 }
 
 extension ToolbarItemGroup : SkipUIBridging {
@@ -315,12 +335,16 @@ public struct ToolbarTitleDisplayMode {
     /* nonisolated */ public init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
+
+    public var body : Never { fatalError("Never") }
 }
 
 extension Group : ToolbarContent where Content : ToolbarContent {
     /* nonisolated */ public init(@ToolbarContentBuilder content: () -> Content) {
         self.content = content()
     }
+
+    public var body : Never { fatalError("Never") }
 }
 
 extension Group : CustomizableToolbarContent where Content : CustomizableToolbarContent {
@@ -401,6 +425,8 @@ public struct TupleToolbarContent : ToolbarContent, CustomizableToolbarContent {
     public init(_ content: [any ToolbarContent]) {
         self.content = content
     }
+
+    public var body : Never { fatalError("Never") }
 }
 
 extension TupleToolbarContent : SkipUIBridging {

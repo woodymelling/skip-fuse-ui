@@ -20,13 +20,6 @@ import SkipUI
     public typealias Body = Never
 }
 
-extension ScrollView {
-    /* nonisolated */ public init(_ axes: Axis.Set = .vertical, @ViewBuilder content: () -> Content) {
-        self.axes = axes
-        self.content = content()
-    }
-}
-
 extension ScrollView : SkipUIBridging {
     public var Java_view: any SkipUI.View {
         return SkipUI.ScrollView(bridgedAxes: Int(axes.rawValue), showsIndicators: showsIndicators, bridgedContent: content.Java_viewOrEmpty)

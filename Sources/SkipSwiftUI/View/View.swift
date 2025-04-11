@@ -6,7 +6,7 @@ import SkipUI
 let logger: Logger = Logger(subsystem: "SkipSwiftUI", category: "SkipSwiftUI")
 
 public protocol View {
-    associatedtype Body: View
+    associatedtype Body : View
     @ViewBuilder @MainActor var body: Body { get }
 }
 
@@ -14,8 +14,8 @@ func stubView() -> EmptyView {
     return EmptyView()
 }
 
-public extension View where Body == Never {
-    var body: Never { fatalError("Never") }
+extension View where Body == Never {
+    public var body: Never { fatalError("Never") }
 }
 
 extension Optional : View where Wrapped : View {
