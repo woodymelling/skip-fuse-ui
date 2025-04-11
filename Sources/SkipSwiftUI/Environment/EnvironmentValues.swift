@@ -119,15 +119,14 @@ extension EnvironmentValues {
             guard let refreshAction = value as? RefreshAction else {
                 return nil
             }
-            var task: Task<Void, Never>? = nil
             let bridgedAction: (SkipUI.CompletionHandler) -> Void = { completionHandler in
-                task = Task {
+                let task = Task {
                     await refreshAction()
                     completionHandler.run()
                 }
+                completionHandler.onCancel = { task.cancel() }
             }
-            let bridgedCancel: () -> Void = { task?.cancel() }
-            return SkipUI.RefreshAction(bridgedAction: bridgedAction, bridgedCancel: bridgedCancel)
+            return SkipUI.RefreshAction(bridgedAction: bridgedAction)
         default:
             return nil
         }

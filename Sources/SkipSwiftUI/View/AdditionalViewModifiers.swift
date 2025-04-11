@@ -403,14 +403,14 @@ extension View {
 
     /* @inlinable nonisolated */ public func task<T>(id value: T, priority: TaskPriority = .userInitiated, _ action: @escaping /* @Sendable */ () async -> Void) -> some View where T : Equatable {
         return ModifierView(target: self) {
-            var task: Task<Void, Never>? = nil
             return $0.Java_viewOrEmpty.task(id: Java_swiftEquatable(for: value), bridgedAction: { completionHandler in
-                task = Task(priority: priority) {
+                let task = Task(priority: priority) {
                     await action()
                     completionHandler.run()
                 }
-            }, bridgedCancel: {
-                task?.cancel()
+                completionHandler.onCancel = {
+                    task.cancel()
+                }
             })
         }
     }
