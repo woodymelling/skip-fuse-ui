@@ -159,3 +159,24 @@ extension Binding {
         fatalError()
     }
 }
+
+extension Binding : JConvertible, JObjectProtocol {
+    public static func fromJavaObject(_ ptr: JavaObjectPointer?, options: JConvertibleOptions) -> Self {
+        let get_java: JavaObjectPointer = try! ptr!.call(method: Java_SkipUIBinding_get_methodID, options: options, args: [])
+        let set_java: JavaObjectPointer = try! ptr!.call(method: Java_SkipUIBinding_set_methodID, options: options, args: [])
+        let get_swift: () -> Value = SwiftClosure0.closure(forJavaObject: get_java, options: options)!
+        let set_swift: (Value) -> Void = SwiftClosure1.closure(forJavaObject: set_java, options: options)!
+        return Binding(get: get_swift, set: set_swift)
+    }
+    
+    public func toJavaObject(options: JConvertibleOptions) -> JavaObjectPointer? {
+        let get_java = SwiftClosure0.javaObject(for: self.get, options: options)!.toJavaParameter(options: options)
+        let set_java = SwiftClosure1.javaObject(for: self.set, options: options)!.toJavaParameter(options: options)
+        return try! Java_SkipUIBinding.create(ctor: Java_SkipUIBinding_constructor_methodID, options: options, args: [get_java, set_java])
+    }
+}
+
+private let Java_SkipUIBinding = try! JClass(name: "skip/ui/Binding")
+private let Java_SkipUIBinding_constructor_methodID = Java_SkipUIBinding.getMethodID(name: "<init>", sig: "(Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)V")!
+private let Java_SkipUIBinding_get_methodID = Java_SkipUIBinding.getMethodID(name: "getGet", sig: "()Lkotlin/jvm/functions/Function0;")!
+private let Java_SkipUIBinding_set_methodID = Java_SkipUIBinding.getMethodID(name: "getSet", sig: "()Lkotlin/jvm/functions/Function1;")!
