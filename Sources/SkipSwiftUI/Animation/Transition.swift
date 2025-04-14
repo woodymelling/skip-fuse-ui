@@ -8,93 +8,98 @@ import SkipUI
 /* @MainActor @preconcurrency */ public protocol Transition {
     associatedtype Body : View
 
-    @ViewBuilder @MainActor /* @preconcurrency */ func body(content: Self.Content, phase: TransitionPhase) -> Self.Body
+    @ViewBuilder @MainActor /* @preconcurrency */ func body(content: Any /* Self.Content */, phase: TransitionPhase) -> Self.Body
 
     /* @MainActor @preconcurrency */ static var properties: TransitionProperties { get }
 
 //    typealias Content = PlaceholderContentView<Self>
+
+    var Java_transition: any SkipUI.Transition { get }
 }
 
 extension Transition where Self == OffsetTransition {
     /* @MainActor @preconcurrency */ public static func offset(_ offset: CGSize) -> Self {
-        //~~~
+        return OffsetTransition(offset)
     }
 
     /* @MainActor @preconcurrency */ public static func offset(x: CGFloat = 0, y: CGFloat = 0) -> Self {
-        //~~~
+        return self.offset(CGSize(width: x, height: y))
     }
 }
 
 extension Transition where Self == MoveTransition {
     /* @MainActor @preconcurrency */ public static func move(edge: Edge) -> Self {
-        //~~~
+        return MoveTransition(edge: edge)
     }
 }
 
 extension Transition where Self == OpacityTransition {
     /* @MainActor @preconcurrency */ public static var opacity: OpacityTransition {
-        //~~~
+        return OpacityTransition()
     }
 }
 
 extension Transition where Self == SlideTransition {
     /* @MainActor @preconcurrency */ public static var slide: SlideTransition {
-        //~~~
+        return SlideTransition()
     }
 }
 
 extension Transition where Self == PushTransition {
     /* @MainActor @preconcurrency */ public static func push(from edge: Edge) -> Self {
-        //~~~
+        return PushTransition(edge: edge)
     }
 }
 
 extension Transition {
+    @available(*, unavailable)
     /* @MainActor @preconcurrency */ public func animation(_ animation: Animation?) -> some Transition {
-        //~~~
+        return self
     }
 }
 
 extension Transition {
     /* @MainActor @preconcurrency */ public func combined<T>(with other: T) -> some Transition where T : Transition {
-        //~~~
+        return CombinedTransition(self, other)
     }
 }
 
 extension Transition {
     /* @MainActor @preconcurrency */ public static var properties: TransitionProperties {
-        //~~~
+        return TransitionProperties()
     }
 
+    @available(*, unavailable)
     /* @MainActor @preconcurrency */ public func apply<V>(content: V, phase: TransitionPhase) -> some View where V : View {
-        //~~~
+        stubView()
     }
-
 }
 
 extension Transition where Self == IdentityTransition {
     @MainActor @preconcurrency public static var identity: IdentityTransition {
-        //~~~
+        return IdentityTransition()
     }
 }
 
 extension Transition where Self == BlurReplaceTransition {
-    /* @MainActor @preconcurrency */ public static func blurReplace(_ config: BlurReplaceTransition.Configuration = .downUp) -> Self {
-        //~~~
+    @available(*, unavailable)
+    /* @MainActor @preconcurrency */ public static func blurReplace(_ config: BlurReplaceTransition.Configuration = .downUp) -> BlurReplaceTransition {
+        fatalError()
     }
 
+    @available(*, unavailable)
     /* @MainActor @preconcurrency */ public static var blurReplace: BlurReplaceTransition {
-        //~~~
+        fatalError()
     }
 }
 
 extension Transition where Self == ScaleTransition {
     /* @MainActor @preconcurrency */ public static var scale: ScaleTransition {
-        //~~~
+        return ScaleTransition(0.5)
     }
 
     /* @MainActor @preconcurrency */ public static func scale(_ scale: Double, anchor: UnitPoint = .center) -> Self {
-        //~~~
+        return ScaleTransition(scale, anchor: anchor)
     }
 }
 
@@ -135,7 +140,7 @@ public struct TransitionProperties : Sendable {
 }
 
 @frozen public struct AnyTransition {
-    private let transition: any Transition
+    let transition: any Transition
 
     public init<T>(_ transition: T) where T : Transition {
         self.transition = transition
@@ -143,516 +148,277 @@ public struct TransitionProperties : Sendable {
 }
 
 extension AnyTransition {
+    @available(*, unavailable)
     public static func modifier<E>(active: E, identity: E) -> AnyTransition where E : ViewModifier {
-        //~~~
+        fatalError()
     }
 }
 
 extension AnyTransition {
     public static func offset(_ offset: CGSize) -> AnyTransition {
-        //~~~
+        return AnyTransition(OffsetTransition(offset))
     }
 
     public static func offset(x: CGFloat = 0, y: CGFloat = 0) -> AnyTransition {
-        //~~~
+        return AnyTransition(OffsetTransition(CGSize(width: x, height: y)))
     }
 }
 
 extension AnyTransition {
     public static func move(edge: Edge) -> AnyTransition {
-        //~~~
+        return AnyTransition(MoveTransition(edge: edge))
     }
 }
 
 extension AnyTransition {
-    public static let opacity: AnyTransition {
-        //~~~
-    }
+    public static let opacity = AnyTransition(OpacityTransition())
 }
 
 extension AnyTransition {
     public static func asymmetric(insertion: AnyTransition, removal: AnyTransition) -> AnyTransition {
-        //~~~
+        return AnyTransition(AsymmetricTransition(insertion: insertion.transition, removal: removal.transition))
     }
 }
 
 extension AnyTransition {
     public static var slide: AnyTransition {
-        //~~~
+        return AnyTransition(SlideTransition())
     }
 }
 
 extension AnyTransition {
     public static func push(from edge: Edge) -> AnyTransition {
-        //~~~
+        return AnyTransition(PushTransition(edge: edge))
     }
 }
 
 extension AnyTransition {
+    @available(*, unavailable)
     public func animation(_ animation: Animation?) -> AnyTransition {
-        //~~~
+        fatalError()
     }
 }
 
 extension AnyTransition {
     public func combined(with other: AnyTransition) -> AnyTransition {
-        //~~~
+        return AnyTransition(CombinedTransition(self.transition, other.transition))
     }
 }
 
 extension AnyTransition {
-    public static let identity: AnyTransition {
-        //~~~
-    }
+    public static let identity = AnyTransition(IdentityTransition())
 }
 
 extension AnyTransition {
     public static var scale: AnyTransition {
-        //~~~
+        return AnyTransition(ScaleTransition(0.5))
     }
 
     public static func scale(scale: CGFloat, anchor: UnitPoint = .center) -> AnyTransition {
-        //~~~
+        return AnyTransition(ScaleTransition(scale, anchor: anchor))
     }
 }
 
-/// A composite `Transition` that uses a different transition for
-/// insertion versus removal.
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-@MainActor @preconcurrency public struct AsymmetricTransition<Insertion, Removal> : Transition where Insertion : Transition, Removal : Transition {
+/* @MainActor @preconcurrency */ public struct AsymmetricTransition /* <Insertion, Removal> */ : Transition /* where Insertion : Transition, Removal : Transition */ {
+    /* @MainActor @preconcurrency */ public var insertion: any Transition /* Insertion */
+    /* @MainActor @preconcurrency */ public var removal: any Transition /* Removal */
 
-    /// The `Transition` defining the insertion phase of `self`.
-    @MainActor @preconcurrency public var insertion: Insertion
+    /* @MainActor @preconcurrency */ public init(insertion: any Transition /* Insertion */, removal: any Transition /* Removal */) {
+        self.insertion = insertion
+        self.removal = removal
+    }
 
-    /// The `Transition` defining the removal phase of `self`.
-    @MainActor @preconcurrency public var removal: Removal
+    /* @MainActor @preconcurrency */ public func body(content: Any /* AsymmetricTransition<Insertion, Removal>.Content */, phase: TransitionPhase) -> some View {
+        stubView()
+    }
 
-    /// Creates a composite `Transition` that uses a different transition for
-    /// insertion versus removal.
-    @MainActor @preconcurrency public init(insertion: Insertion, removal: Removal)
+//    @MainActor @preconcurrency public static var properties: TransitionProperties
 
-    /// Gets the current body of the caller.
-    ///
-    /// `content` is a proxy for the view that will have the modifier
-    /// represented by `Self` applied to it.
-    @MainActor @preconcurrency public func body(content: AsymmetricTransition<Insertion, Removal>.Content, phase: TransitionPhase) -> some View
-
-
-    /// Returns the properties this transition type has.
-    ///
-    /// Defaults to `TransitionProperties()`.
-    @MainActor @preconcurrency public static var properties: TransitionProperties { get }
-
-    /// The type of view representing the body.
-    @available(iOS 17.0, tvOS 17.0, watchOS 10.0, macOS 14.0, *)
-    public typealias Body = some View
+    public var Java_transition: any SkipUI.Transition {
+        return SkipUI.AsymmetricTransition(insertion: insertion.Java_transition, removal: removal.Java_transition)
+    }
 }
 
-/// A transition that animates the insertion or removal of a view by
-/// combining blurring and scaling effects.
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-@MainActor @preconcurrency public struct BlurReplaceTransition : Transition {
-
-    /// Configuration properties for a transition.
+/* @MainActor @preconcurrency */ public struct BlurReplaceTransition : Transition {
     public struct Configuration : Equatable {
-
-        /// A configuration that requests a transition that scales the
-        /// view down while removing it and up while inserting it.
-        public static let downUp: BlurReplaceTransition.Configuration
-
-        /// A configuration that requests a transition that scales the
-        /// view up while both removing and inserting it.
-        public static let upUp: BlurReplaceTransition.Configuration
-
-        /// Returns a Boolean value indicating whether two values are equal.
-        ///
-        /// Equality is the inverse of inequality. For any values `a` and `b`,
-        /// `a == b` implies that `a != b` is `false`.
-        ///
-        /// - Parameters:
-        ///   - lhs: A value to compare.
-        ///   - rhs: Another value to compare.
-        public static func == (a: BlurReplaceTransition.Configuration, b: BlurReplaceTransition.Configuration) -> Bool
+        public static let downUp = BlurReplaceTransition.Configuration()
+        public static let upUp = BlurReplaceTransition.Configuration()
     }
 
-    /// The transition configuration.
-    @MainActor @preconcurrency public var configuration: BlurReplaceTransition.Configuration
+    /* @MainActor @preconcurrency */ public var configuration: BlurReplaceTransition.Configuration
 
-    /// Creates a new transition.
-    ///
-    /// - Parameter configuration: the transition configuration.
-    @MainActor @preconcurrency public init(configuration: BlurReplaceTransition.Configuration)
+    @available(*, unavailable)
+    /* @MainActor @preconcurrency */ public init(configuration: BlurReplaceTransition.Configuration) {
+        self.configuration = configuration
+    }
 
-    /// Gets the current body of the caller.
-    ///
-    /// `content` is a proxy for the view that will have the modifier
-    /// represented by `Self` applied to it.
-    @MainActor @preconcurrency public func body(content: BlurReplaceTransition.Content, phase: TransitionPhase) -> some View
+    /* @MainActor @preconcurrency */ public func body(content: Any /* BlurReplaceTransition.Content */, phase: TransitionPhase) -> some View {
+        stubView()
+    }
 
-
-    /// The type of view representing the body.
-    @available(iOS 17.0, tvOS 17.0, watchOS 10.0, macOS 14.0, *)
-    public typealias Body = some View
+    public var Java_transition: any SkipUI.Transition {
+        fatalError()
+    }
 }
 
-/// A kind of transition that applies to the content within a single view,
-/// rather than to the insertion or removal of a view.
-///
-/// Set the behavior of content transitions within a view with the
-/// ``View/contentTransition(_:)`` modifier, passing in one of the defined
-/// transitions, such as ``opacity`` or ``interpolate`` as the parameter.
-///
-/// > Tip: Content transitions only take effect within transactions that apply
-/// an ``Animation`` to the views inside the ``View/contentTransition(_:)``
-/// modifier.
-///
-/// Content transitions only take effect within the context of an
-/// ``Animation`` block.
-@available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
-public struct ContentTransition : Equatable, Sendable {
+struct CombinedTransition : Transition {
+    let first: any Transition
+    let second: any Transition
 
-    /// The identity content transition, which indicates that content changes
-    /// shouldn't animate.
-    ///
-    /// You can pass this value to a ``View/contentTransition(_:)``
-    /// modifier to selectively disable animations that would otherwise
-    /// be applied by a ``withAnimation(_:_:)`` block.
-    public static let identity: ContentTransition
+    init(_ first: any Transition, _ second: any Transition) {
+        self.first = first
+        self.second = second
+    }
 
-    /// A content transition that indicates content fades from transparent
-    /// to opaque on insertion, and from opaque to transparent on removal.
-    public static let opacity: ContentTransition
+    /* @MainActor @preconcurrency */ public func body(content: Any /* CombinedTransition.Content */, phase: TransitionPhase) -> some View {
+        stubView()
+    }
 
-    /// A content transition that indicates the views attempt to interpolate
-    /// their contents during transitions, where appropriate.
-    ///
-    /// Text views can interpolate transitions when the text views have
-    /// identical strings. Matching glyph pairs can animate changes to their
-    /// color, position, size, and any variable properties. Interpolation can
-    /// apply within a ``Font/Design`` case, but not between cases, or between
-    /// entirely different fonts. For example, you can interpolate a change
-    /// between ``Font/Weight/thin`` and ``Font/Weight/black`` variations of a
-    /// font, since these are both cases of ``Font/Weight``. However, you can't
-    /// interpolate between the default design of a font and its Italic version,
-    /// because these are different fonts. Any changes that can't show an
-    /// interpolated animation use an opacity animation instead.
-    ///
-    /// Symbol images created with the ``Image/init(systemName:)`` initializer
-    /// work the same way as text: changes within the same symbol attempt to
-    /// interpolate the symbol's paths. When interpolation is unavailable, the
-    /// system uses an opacity transition instead.
-    public static let interpolate: ContentTransition
-
-    /// Creates a content transition intended to be used with `Text`
-    /// views displaying numeric text. In certain environments changes
-    /// to the text will enable a nonstandard transition tailored to
-    /// numeric characters that count up or down.
-    ///
-    /// - Parameters:
-    ///   - countsDown: true if the numbers represented by the text
-    ///     are counting downwards.
-    ///
-    /// - Returns: a new content transition.
-    public static func numericText(countsDown: Bool = false) -> ContentTransition
-
-    /// Creates a content transition intended to be used with `Text`
-    /// views displaying numbers.
-    ///
-    /// The example below creates a text view displaying a particular
-    /// value, assigning the same value to the associated transition:
-    ///
-    ///     Text("\(value)")
-    ///         .contentTransition(.numericText(value: value))
-    ///
-    /// - Parameters:
-    ///   - value: the value represented by the `Text` view being
-    ///     animated. The difference between the old and new values
-    ///     when the text changes will be used to determine the
-    ///     animation direction.
-    ///
-    /// - Returns: a new content transition.
-    @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-    public static func numericText(value: Double) -> ContentTransition
-
-    /// Returns a Boolean value indicating whether two values are equal.
-    ///
-    /// Equality is the inverse of inequality. For any values `a` and `b`,
-    /// `a == b` implies that `a != b` is `false`.
-    ///
-    /// - Parameters:
-    ///   - lhs: A value to compare.
-    ///   - rhs: Another value to compare.
-    public static func == (a: ContentTransition, b: ContentTransition) -> Bool
+    public var Java_transition: any SkipUI.Transition {
+        return SkipUI.CombinedTransition(first.Java_transition, second.Java_transition)
+    }
 }
 
-/// A transition that returns the input view, unmodified, as the output
-/// view.
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-@MainActor @preconcurrency public struct IdentityTransition : Transition {
+public struct ContentTransition : Equatable /*, Sendable */ {
+    public static let identity = ContentTransition()
 
-    @MainActor @preconcurrency public init()
+    public static let opacity = ContentTransition()
 
-    /// Gets the current body of the caller.
-    ///
-    /// `content` is a proxy for the view that will have the modifier
-    /// represented by `Self` applied to it.
-    @MainActor @preconcurrency public func body(content: IdentityTransition.Content, phase: TransitionPhase) -> IdentityTransition.Content
+    public static let interpolate = ContentTransition()
 
-    /// Returns the properties this transition type has.
-    ///
-    /// Defaults to `TransitionProperties()`.
-    @MainActor @preconcurrency public static let properties: TransitionProperties
+    public static func numericText(countsDown: Bool = false) -> ContentTransition {
+        return ContentTransition()
+    }
 
-    /// The type of view representing the body.
-    @available(iOS 17.0, tvOS 17.0, watchOS 10.0, macOS 14.0, *)
-    public typealias Body = IdentityTransition.Content
+    public static func numericText(value: Double) -> ContentTransition {
+        return ContentTransition()
+    }
 }
 
-/// Returns a transition that moves the view away, towards the specified
-/// edge of the view.
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-@MainActor @preconcurrency public struct MoveTransition : Transition {
+/* @MainActor @preconcurrency */ public struct IdentityTransition : Transition {
+    /* @MainActor @preconcurrency */ public init() {
+    }
 
-    /// The edge to move the view towards.
-    @MainActor @preconcurrency public var edge: Edge
+    /* @MainActor @preconcurrency */ public func body(content: Any /* IdentityTransition.Content */, phase: TransitionPhase) -> some View /* IdentityTransition.Content */ {
+        stubView()
+    }
 
-    /// Creates a transition that moves the view away, towards the specified
-    /// edge of the view.
-    @MainActor @preconcurrency public init(edge: Edge)
+//    @MainActor @preconcurrency public static let properties: TransitionProperties
 
-    /// Gets the current body of the caller.
-    ///
-    /// `content` is a proxy for the view that will have the modifier
-    /// represented by `Self` applied to it.
-    @MainActor @preconcurrency public func body(content: MoveTransition.Content, phase: TransitionPhase) -> some View
-
-
-    /// The type of view representing the body.
-    @available(iOS 17.0, tvOS 17.0, watchOS 10.0, macOS 14.0, *)
-    public typealias Body = some View
+    public var Java_transition: any SkipUI.Transition {
+        return SkipUI.IdentityTransition()
+    }
 }
 
-/// Returns a transition that offset the view by the specified amount.
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-@MainActor @preconcurrency public struct OffsetTransition : Transition {
+/* @MainActor @preconcurrency */ public struct MoveTransition : Transition {
+    /* @MainActor @preconcurrency */ public var edge: Edge
 
-    /// The amount to offset the view by.
-    @MainActor @preconcurrency public var offset: CGSize
+    /* @MainActor @preconcurrency */ public init(edge: Edge) {
+        self.edge = edge
+    }
 
-    /// Creates a transition that offset the view by the specified amount.
-    @MainActor @preconcurrency public init(_ offset: CGSize)
+    /* @MainActor @preconcurrency */ public func body(content: Any /* MoveTransition.Content */, phase: TransitionPhase) -> some View {
+        stubView()
+    }
 
-    /// Gets the current body of the caller.
-    ///
-    /// `content` is a proxy for the view that will have the modifier
-    /// represented by `Self` applied to it.
-    @MainActor @preconcurrency public func body(content: OffsetTransition.Content, phase: TransitionPhase) -> some View
-
-
-    /// The type of view representing the body.
-    @available(iOS 17.0, tvOS 17.0, watchOS 10.0, macOS 14.0, *)
-    public typealias Body = some View
+    public var Java_transition: any SkipUI.Transition {
+        return SkipUI.MoveTransition(bridgedEdge: Int(edge.rawValue))
+    }
 }
 
-/// A transition from transparent to opaque on insertion, and from opaque to
-/// transparent on removal.
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-@MainActor @preconcurrency public struct OpacityTransition : Transition {
+/* @MainActor @preconcurrency */ public struct OffsetTransition : Transition {
+    /* @MainActor @preconcurrency */ public var offset: CGSize
 
-    @MainActor @preconcurrency public init()
+    /* @MainActor @preconcurrency */ public init(_ offset: CGSize) {
+        self.offset = offset
+    }
 
-    /// Gets the current body of the caller.
-    ///
-    /// `content` is a proxy for the view that will have the modifier
-    /// represented by `Self` applied to it.
-    @MainActor @preconcurrency public func body(content: OpacityTransition.Content, phase: TransitionPhase) -> some View
+    /* @MainActor @preconcurrency */ public func body(content: Any /* OffsetTransition.Content */, phase: TransitionPhase) -> some View {
+        stubView()
+    }
 
-
-    /// Returns the properties this transition type has.
-    ///
-    /// Defaults to `TransitionProperties()`.
-    @MainActor @preconcurrency public static let properties: TransitionProperties
-
-    /// The type of view representing the body.
-    @available(iOS 17.0, tvOS 17.0, watchOS 10.0, macOS 14.0, *)
-    public typealias Body = some View
+    public var Java_transition: any SkipUI.Transition {
+        return SkipUI.OffsetTransition(offsetWidth: offset.width, height: offset.height)
+    }
 }
 
-/// A transition that when added to a view will animate the view's insertion by
-/// moving it in from the specified edge while fading it in, and animate its
-/// removal by moving it out towards the opposite edge and fading it out.
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-@MainActor @preconcurrency public struct PushTransition : Transition {
+/* @MainActor @preconcurrency */ public struct OpacityTransition : Transition {
+    /* @MainActor @preconcurrency */ public init() {
+    }
 
-    /// The edge from which the view will be animated in.
-    @MainActor @preconcurrency public var edge: Edge
+    /* @MainActor @preconcurrency */ public func body(content: Any /* OpacityTransition.Content */, phase: TransitionPhase) -> some View {
+        stubView()
+    }
 
-    /// Creates a transition that animates a view by moving and fading it.
-    @MainActor @preconcurrency public init(edge: Edge)
+//    @MainActor @preconcurrency public static let properties: TransitionProperties
 
-    /// Gets the current body of the caller.
-    ///
-    /// `content` is a proxy for the view that will have the modifier
-    /// represented by `Self` applied to it.
-    @MainActor @preconcurrency public func body(content: PushTransition.Content, phase: TransitionPhase) -> some View
-
-
-    /// The type of view representing the body.
-    @available(iOS 17.0, tvOS 17.0, watchOS 10.0, macOS 14.0, *)
-    public typealias Body = some View
+    public var Java_transition: any SkipUI.Transition {
+        return SkipUI.OpacityTransition()
+    }
 }
 
-/// Returns a transition that scales the view.
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-@MainActor @preconcurrency public struct ScaleTransition : Transition {
+/* @MainActor @preconcurrency */ public struct PushTransition : Transition {
+    /* @MainActor @preconcurrency */ public var edge: Edge
 
-    /// The amount to scale the view by.
-    @MainActor @preconcurrency public var scale: Double
+    /* @MainActor @preconcurrency */ public init(edge: Edge) {
+        self.edge = edge
+    }
 
-    /// The anchor point to scale the view around.
-    @MainActor @preconcurrency public var anchor: UnitPoint
+    /* @MainActor @preconcurrency */ public func body(content: Any /* PushTransition.Content */, phase: TransitionPhase) -> some View {
+        stubView()
+    }
 
-    /// Creates a transition that scales the view by the specified amount.
-    @MainActor @preconcurrency public init(_ scale: Double, anchor: UnitPoint = .center)
-
-    /// Gets the current body of the caller.
-    ///
-    /// `content` is a proxy for the view that will have the modifier
-    /// represented by `Self` applied to it.
-    @MainActor @preconcurrency public func body(content: ScaleTransition.Content, phase: TransitionPhase) -> some View
-
-
-    /// The type of view representing the body.
-    @available(iOS 17.0, tvOS 17.0, watchOS 10.0, macOS 14.0, *)
-    public typealias Body = some View
+    public var Java_transition: any SkipUI.Transition {
+        return SkipUI.PushTransition(bridgedEdge: Int(edge.rawValue))
+    }
 }
 
-/// A transition that inserts by moving in from the leading edge, and
-/// removes by moving out towards the trailing edge.
-///
-/// - SeeAlso: `MoveTransition`
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-@MainActor @preconcurrency public struct SlideTransition : Transition {
+/* @MainActor @preconcurrency */ public struct ScaleTransition : Transition {
+    /* @MainActor @preconcurrency */ public var scale: Double
+    /* @MainActor @preconcurrency */ public var anchor: UnitPoint
 
-    @MainActor @preconcurrency public init()
+    /* @MainActor @preconcurrency */ public init(_ scale: Double, anchor: UnitPoint = .center) {
+        self.scale = scale
+        self.anchor = anchor
+    }
 
-    /// Gets the current body of the caller.
-    ///
-    /// `content` is a proxy for the view that will have the modifier
-    /// represented by `Self` applied to it.
-    @MainActor @preconcurrency public func body(content: SlideTransition.Content, phase: TransitionPhase) -> some View
+    /* @MainActor @preconcurrency */ public func body(content: Any /* ScaleTransition.Content */, phase: TransitionPhase) -> some View {
+        stubView()
+    }
 
+    public var Java_transition: any SkipUI.Transition {
+        return SkipUI.ScaleTransition(scale: scale, anchorX: anchor.x, anchorY: anchor.y)
+    }
+}
 
-    /// The type of view representing the body.
-    @available(iOS 17.0, tvOS 17.0, watchOS 10.0, macOS 14.0, *)
-    public typealias Body = some View
+/* @MainActor @preconcurrency */ public struct SlideTransition : Transition {
+    /* @MainActor @preconcurrency */ public init() {
+    }
+
+    /* @MainActor @preconcurrency */ public func body(content: Any /* SlideTransition.Content */, phase: TransitionPhase) -> some View {
+        stubView()
+    }
+
+    public var Java_transition: any SkipUI.Transition {
+        return SkipUI.SlideTransition()
+    }
 }
 
 extension View {
-
-    /// Modifies the view to use a given transition as its method of animating
-    /// changes to the contents of its views.
-    ///
-    /// This modifier allows you to perform a transition that animates a change
-    /// within a single view. The provided ``ContentTransition`` can present an
-    /// opacity animation for content changes, an interpolated animation of
-    /// the content's paths as they change, or perform no animation at all.
-    ///
-    /// > Tip: The `contentTransition(_:)` modifier only has an effect within
-    /// the context of an ``Animation``.
-    ///
-    /// In the following example, a ``Button`` changes the color and font size
-    /// of a ``Text`` view. Since both of these properties apply to the paths of
-    /// the text, the ``ContentTransition/interpolate`` transition can animate a
-    /// gradual change to these properties through the entire transition. By
-    /// contrast, the ``ContentTransition/opacity`` transition would simply fade
-    /// between the start and end states.
-    ///
-    ///     private static let font1 = Font.system(size: 20)
-    ///     private static let font2 = Font.system(size: 45)
-    ///
-    ///     @State private var color = Color.red
-    ///     @State private var currentFont = font1
-    ///
-    ///     var body: some View {
-    ///         VStack {
-    ///             Text("Content transition")
-    ///                 .foregroundColor(color)
-    ///                 .font(currentFont)
-    ///                 .contentTransition(.interpolate)
-    ///             Spacer()
-    ///             Button("Change") {
-    ///                 withAnimation(Animation.easeInOut(duration: 5.0)) {
-    ///                     color = (color == .red) ? .green : .red
-    ///                     currentFont = (currentFont == font1) ? font2 : font1
-    ///                 }
-    ///             }
-    ///         }
-    ///     }
-    ///
-    /// This example uses an ease-in–ease-out animation with a five-second
-    /// duration to make it easier to see the effect of the interpolation. The
-    /// figure below shows the `Text` at the beginning of the animation,
-    /// halfway through, and at the end.
-    ///
-    /// | Time    | Display |
-    /// | ------- | ------- |
-    /// | Start   | ![The text Content transition in a small red font.](ContentTransition-1) |
-    /// | Middle  | ![The text Content transition in a medium brown font.](ContentTransition-2) |
-    /// | End     | ![The text Content transition in a large green font.](ContentTransition-3) |
-    ///
-    /// To control whether content transitions use GPU-accelerated rendering,
-    /// set the value of the
-    /// ``EnvironmentValues/contentTransitionAddsDrawingGroup`` environment
-    /// variable.
-    ///
-    /// - parameter transition: The transition to apply when animating the
-    ///   content change.
-    nonisolated public func contentTransition(_ transition: ContentTransition) -> some View
-
+    @available(*, unavailable)
+    nonisolated public func contentTransition(_ transition: ContentTransition) -> some View {
+        stubView()
+    }
 }
 
 extension View {
+    /* @inlinable nonisolated */ public func transition(_ t: AnyTransition) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.transition(SkipUI.AnyTransition(t.transition.Java_transition))
+        }
+    }
 
-    /// Associates a transition with the view.
-    ///
-    /// When this view appears or disappears, the transition will be applied to
-    /// it, allowing for animating it in and out.
-    ///
-    /// The following code will conditionally show MyView, and when it appears
-    /// or disappears, will use a slide transition to show it.
-    ///
-    ///     if isActive {
-    ///         MyView()
-    ///             .transition(.slide)
-    ///     }
-    ///     Button("Toggle") {
-    ///         withAnimation {
-    ///             isActive.toggle()
-    ///         }
-    ///     }
-    @inlinable nonisolated public func transition(_ t: AnyTransition) -> some View
-
-
-    /// Associates a transition with the view.
-    ///
-    /// When this view appears or disappears, the transition will be applied to
-    /// it, allowing for animating it in and out.
-    ///
-    /// The following code will conditionally show MyView, and when it appears
-    /// or disappears, will use a custom RotatingFadeTransition transition to
-    /// show it.
-    ///
-    ///     if isActive {
-    ///         MyView()
-    ///             .transition(RotatingFadeTransition())
-    ///     }
-    ///     Button("Toggle") {
-    ///         withAnimation {
-    ///             isActive.toggle()
-    ///         }
-    ///     }
-    @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-    nonisolated public func transition<T>(_ transition: T) -> some View where T : Transition
-
+    /* nonisolated */ public func transition<T>(_ transition: T) -> some View where T : Transition {
+        return self.transition(AnyTransition(transition))
+    }
 }
