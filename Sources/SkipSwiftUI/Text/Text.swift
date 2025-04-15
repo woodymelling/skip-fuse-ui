@@ -551,6 +551,50 @@ extension View {
 }
 
 extension Text {
+    @available(*, unavailable)
+    /* nonisolated */ public func accessibilityTextContentType(_ value: AccessibilityTextContentType) -> Text {
+        fatalError()
+    }
+
+    /* nonisolated */ public func accessibilityHeading(_ level: AccessibilityHeadingLevel) -> Text {
+        var text = self
+        text.modifierChain.append {
+            $0.accessibilityHeading(level)
+        }
+        return text
+    }
+
+    /* nonisolated */ public func accessibilityLabel(_ label: Text) -> Text {
+        var text = self
+        text.modifierChain.append {
+            $0.accessibilityLabel(label)
+        }
+        return text
+    }
+
+    /* nonisolated */ public func accessibilityLabel(_ labelKey: LocalizedStringKey) -> Text {
+        return accessibilityLabel(Text(labelKey))
+    }
+
+    @_disfavoredOverload /* nonisolated */ public func accessibilityLabel<S>(_ label: S) -> Text where S : StringProtocol {
+        return accessibilityLabel(Text(label))
+    }
+}
+
+extension View {
+    @available(*, unavailable)
+    @_disfavoredOverload /* nonisolated */ public func accessibilityTextContentType(_ value: AccessibilityTextContentType) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+        stubView()
+    }
+
+    @_disfavoredOverload /* nonisolated */ public func accessibilityHeading(_ level: AccessibilityHeadingLevel) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.accessibilityHeading(bridgedLevel: Int(level.rawValue))
+        }
+    }
+}
+
+extension Text {
     public struct Scale : /* Sendable, */ Hashable {
         public static let `default` = Text.Scale()
         public static let secondary = Text.Scale()
