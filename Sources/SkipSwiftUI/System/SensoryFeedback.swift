@@ -57,19 +57,19 @@ public struct SensoryFeedback : Equatable /*, Sendable */ {
 }
 
 extension View {
-    nonisolated public func sensoryFeedback<T>(_ feedback: SensoryFeedback, trigger: T) -> some View where T : Equatable {
+    /* nonisolated */ public func sensoryFeedback<T>(_ feedback: SensoryFeedback, trigger: T) -> some View where T : Equatable {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.sensoryFeedback(bridgedFeedback: feedback.identifier, trigger: SwiftEquatable(trigger))
         }
     }
 
-    nonisolated public func sensoryFeedback<T>(_ feedback: SensoryFeedback, trigger: T, condition: @escaping (_ oldValue: T, _ newValue: T) -> Bool) -> some View where T : Equatable {
+    /* nonisolated */ public func sensoryFeedback<T>(_ feedback: SensoryFeedback, trigger: T, condition: @escaping (_ oldValue: T, _ newValue: T) -> Bool) -> some View where T : Equatable {
         return self.sensoryFeedback(trigger: trigger) { oldValue, newValue in
             return condition(oldValue, newValue) ? feedback : nil
         }
     }
 
-    nonisolated public func sensoryFeedback<T>(trigger: T, _ feedback: @escaping (_ oldValue: T, _ newValue: T) -> SensoryFeedback?) -> some View where T : Equatable {
+    /* nonisolated */ public func sensoryFeedback<T>(trigger: T, _ feedback: @escaping (_ oldValue: T, _ newValue: T) -> SensoryFeedback?) -> some View where T : Equatable {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.sensoryFeedbackClosure(trigger: SwiftEquatable(trigger), bridgedFeedback: { oldValue, newValue in
                 let oldUnwrapped = (oldValue as? SwiftEquatable)?.base as! T
