@@ -4,9 +4,11 @@
 /* @MainActor */ @frozen /* @preconcurrency */ public struct EmptyModifier : ViewModifier /*, BitwiseCopyable, Sendable */ {
     /* @MainActor @preconcurrency */ public static let identity = EmptyModifier()
 
-    public typealias Body = Never
-    public typealias Content = Never
-
     @inlinable /* nonisolated */ public init() {
+    }
+
+//    public typealias Body = Never
+    public func body(content: Content) -> some View {
+        content
     }
 }

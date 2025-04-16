@@ -7,6 +7,7 @@ import SkipBridge
 @_exported import class SkipUI.EnvironmentSupport
 @_exported import class SkipUI.StateSupport
 @_exported import protocol SkipUI.View
+@_exported import protocol SkipUI.ViewModifier
 
 /// The base protocol for compiled `Views` to bridge to their corresponding `skip.ui.View` implementations.
 public protocol SkipUIBridging {
@@ -18,6 +19,29 @@ extension View {
     /// Return the bridging view if this view is `SkipUIBridging`, else `SkipUI.EmptyView`.
     var Java_viewOrEmpty: any SkipUI.View {
         return (self as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+    }
+}
+
+/// Provides a native wrapper around `SkipUI.Views` that are represented in Compose.
+public struct JavaBackedView : View, SkipUI.View, JObjectConvertible, SkipUIBridging, @unchecked Sendable {
+    public typealias Body = Never
+
+    let ptr: JavaObjectPointer
+
+    public init(_ ptr: JavaObjectPointer) {
+        self.ptr = ptr
+    }
+
+    public static func fromJavaObject(_ obj: JavaObjectPointer?, options: JConvertibleOptions) -> Self {
+        return JavaBackedView(obj!)
+    }
+
+    public func toJavaObject(options: JConvertibleOptions) -> JavaObjectPointer? {
+        return ptr
+    }
+
+    public var Java_view: any SkipUI.View {
+        return self
     }
 }
 

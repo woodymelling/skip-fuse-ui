@@ -1,13 +1,21 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
+import SkipUI
 
-//~~~ TODO: Support custom view modifiers
 /* @MainActor @preconcurrency */ public protocol ViewModifier {
     associatedtype Body : View
 
     @ViewBuilder @MainActor /* @preconcurrency */ func body(content: Self.Content) -> Self.Body
 
-    associatedtype Content : View
+    typealias Content = JavaBackedView
+
+    var Java_modifier: any SkipUI.ViewModifier { get }
+}
+
+extension ViewModifier {
+    public var Java_modifier: any SkipUI.ViewModifier {
+        return SkipUI.EmptyModifier()
+    }
 }
 
 extension ViewModifier where Self.Body == Never {
@@ -41,4 +49,12 @@ func stubViewModifier() -> EmptyModifier {
 
 extension Never : ViewModifier {
     public typealias Content = Never
+}
+
+extension View {
+    /* @inlinable nonisolated */ public func modifier<T>(_ modifier: T) -> some View /* ModifiedContent<Self, T> */ where T : ViewModifier {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.modifier(modifier.Java_modifier)
+        }
+    }
 }
