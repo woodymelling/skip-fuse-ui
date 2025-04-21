@@ -5,7 +5,7 @@ import SkipUI
 
 public final class BridgedAppStorageBox<Value> {
     private let create: () -> AppStorageSupport
-    private let get: (AppStorageSupport) -> Value
+    private let get: (AppStorageSupport) -> Value?
     private let set: (AppStorageSupport, Value) -> Void
 
     init(_ value: Bool, key: String, store: UserDefaults?) where Value == Bool {
@@ -53,28 +53,43 @@ public final class BridgedAppStorageBox<Value> {
     init(_ value: Date, key: String, store: UserDefaults?) where Value == Date {
         self._value = value
         self.create = { AppStorageSupport(Double(value.timeIntervalSince1970), key: key, store: store) }
-        self.get = { Date(timeIntervalSince1970: $0.doubleValue) }
+        self.get = {
+            guard let doubleValue = $0.doubleValue else {
+                return nil
+            }
+            return Date(timeIntervalSince1970: doubleValue)
+        }
         self.set = { $0.doubleValue = $1.timeIntervalSince1970 }
     }
 
     init(_ value: Value, key: String, store: UserDefaults?) where Value : RawRepresentable, Value.RawValue == Int {
         self._value = value
         self.create = { AppStorageSupport(value.rawValue, key: key, store: store) }
-        self.get = { Value.init(rawValue: $0.intValue)! }
+        self.get = {
+            guard let intValue = $0.intValue else {
+                return nil
+            }
+            return Value.init(rawValue: intValue)
+        }
         self.set = { $0.intValue = $1.rawValue }
     }
 
     init(_ value: Value, key: String, store: UserDefaults?) where Value : RawRepresentable, Value.RawValue == String {
         self._value = value
         self.create = { AppStorageSupport(value.rawValue, key: key, store: store) }
-        self.get = { Value.init(rawValue: $0.stringValue)! }
+        self.get = {
+            guard let stringValue = $0.stringValue else {
+                return nil
+            }
+            return Value.init(rawValue: stringValue)
+        }
         self.set = { $0.stringValue = $1.rawValue }
     }
 
     var value: Value {
         get {
             if let Java_stateSupport {
-                return get(Java_stateSupport)
+                return get(Java_stateSupport) ?? _value
             } else {
                 return _value
             }
@@ -96,7 +111,9 @@ public final class BridgedAppStorageBox<Value> {
     }
 
     public func Java_syncStateSupport(_ support: AppStorageSupport) {
-        _value = get(support)
+        if let stateValue = get(support) {
+            _value = stateValue
+        }
         Java_stateSupport = support
     }
 }

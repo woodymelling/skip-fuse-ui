@@ -53,6 +53,21 @@ extension ShapeStyle {
     }
 }
 
+extension ShapeStyle {
+    /* @inlinable */ public func opacity(_ opacity: Double) -> some ShapeStyle {
+        return OpacityShapeStyle(base: self, opacity: opacity)
+    }
+}
+
+struct OpacityShapeStyle<S> : ShapeStyle where S : ShapeStyle {
+    let base: S
+    let opacity: Double
+
+    var Java_view: any SkipUI.View {
+        return base.Java_view.opacity(opacity)
+    }
+}
+
 extension ShapeStyle where Self == AnyShapeStyle {
     @available(*, unavailable)
     public static func blendMode(_ mode: BlendMode) -> some ShapeStyle {
@@ -129,8 +144,12 @@ extension ShapeStyle where Self == ForegroundStyle {
 }
 
 extension ShapeStyle where Self == HierarchicalShapeStyle {
-    public static var primary: HierarchicalShapeStyle { HierarchicalShapeStyle.primary }
-    public static var secondary: HierarchicalShapeStyle { HierarchicalShapeStyle.secondary }
+    public static var primary: HierarchicalShapeStyle {
+        return HierarchicalShapeStyle.primary
+    }
+    public static var secondary: HierarchicalShapeStyle {
+        return HierarchicalShapeStyle.secondary
+    }
 
     @available(*, unavailable)
     public static var tertiary: HierarchicalShapeStyle { fatalError() }
