@@ -6,6 +6,7 @@ import SkipBridge
 @_exported import struct SkipUI.EmptyView
 @_exported import class SkipUI.EnvironmentSupport
 @_exported import class SkipUI.StateSupport
+@_exported import protocol SkipUI.ToolbarContent
 @_exported import protocol SkipUI.View
 @_exported import protocol SkipUI.ViewModifier
 
