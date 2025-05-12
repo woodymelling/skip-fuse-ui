@@ -218,6 +218,6 @@ extension View {
 extension View {
     @available(*, unavailable)
     @inlinable /* nonisolated */ public func menuIndicator(_ visibility: Visibility) -> some View {
-        fatalError()
+        stubView()
     }
 }
