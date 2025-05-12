@@ -10,7 +10,7 @@ public protocol View {
     @ViewBuilder @MainActor var body: Body { get }
 }
 
-func stubView() -> EmptyView {
+@usableFromInline func stubView() -> EmptyView {
     return EmptyView()
 }
 
