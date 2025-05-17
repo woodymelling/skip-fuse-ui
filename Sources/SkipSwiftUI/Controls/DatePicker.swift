@@ -20,42 +20,42 @@ extension DatePicker : SkipUIBridging {
 }
 
 extension DatePicker {
-    /* nonisolated */ public init(selection: Binding<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
+    nonisolated public init(selection: Binding<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
         self.selection = selection
         self.displayedComponents = displayedComponents
         self.label = label()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(selection: Binding<Date>, in range: ClosedRange<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
+    nonisolated public init(selection: Binding<Date>, in range: ClosedRange<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(selection: Binding<Date>, in range: PartialRangeFrom<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
+    nonisolated public init(selection: Binding<Date>, in range: PartialRangeFrom<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(selection: Binding<Date>, in range: PartialRangeThrough<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
+    nonisolated public init(selection: Binding<Date>, in range: PartialRangeThrough<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
         fatalError()
     }
 }
 
 extension DatePicker where Label == Text {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
         self.selection = selection
         self.displayedComponents = displayedComponents
         self.label = Text(titleKey)
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, in range: ClosedRange<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, in range: ClosedRange<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, in range: PartialRangeFrom<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, in range: PartialRangeFrom<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
         fatalError()
     }
 
@@ -203,7 +203,7 @@ public struct DatePickerStyleConfiguration {
 }
 
 extension View {
-    /* nonisolated */ public func datePickerStyle<S>(_ style: S) -> some View where S : DatePickerStyle {
+    nonisolated public func datePickerStyle<S>(_ style: S) -> some View where S : DatePickerStyle {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.datePickerStyle(bridgedStyle: style.identifier)
         }

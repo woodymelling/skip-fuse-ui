@@ -17,13 +17,13 @@ extension SecureField : SkipUIBridging {
 }
 
 extension SecureField where Label == Text {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?) {
         self.label = Text(titleKey)
         self.text = text
         self.prompt = prompt
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, text: Binding<String>, prompt: Text?) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, text: Binding<String>, prompt: Text?) where S : StringProtocol {
         self.label = Text(title)
         self.text = text
         self.prompt = prompt
@@ -31,7 +31,7 @@ extension SecureField where Label == Text {
 }
 
 extension SecureField {
-    /* nonisolated */ public init(text: Binding<String>, prompt: Text? = nil, @ViewBuilder label: () -> Label) {
+    nonisolated public init(text: Binding<String>, prompt: Text? = nil, @ViewBuilder label: () -> Label) {
         self.label = label()
         self.text = text
         self.prompt = prompt
@@ -39,13 +39,13 @@ extension SecureField {
 }
 
 extension SecureField where Label == Text {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>) {
         self.label = Text(titleKey)
         self.text = text
         self.prompt = nil
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, text: Binding<String>) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, text: Binding<String>) where S : StringProtocol {
         self.label = Text(title)
         self.text = text
         self.prompt = nil

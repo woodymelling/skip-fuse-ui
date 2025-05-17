@@ -3,7 +3,7 @@
 import SkipUI
 
 /* @MainActor */ @preconcurrency public struct Divider : View {
-    /* nonisolated */ public init() {
+    nonisolated public init() {
     }
 
     public typealias Body = Never

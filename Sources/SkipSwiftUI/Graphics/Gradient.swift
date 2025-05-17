@@ -65,17 +65,17 @@ extension AnyGradient {
     let startPoint: UnitPoint
     let endPoint: UnitPoint
 
-    /* nonisolated */ public init(gradient: Gradient, startPoint: UnitPoint, endPoint: UnitPoint) {
+    nonisolated public init(gradient: Gradient, startPoint: UnitPoint, endPoint: UnitPoint) {
         self.gradient = gradient
         self.startPoint = startPoint
         self.endPoint = endPoint
     }
 
-    /* nonisolated */ public init(colors: [Color], startPoint: UnitPoint, endPoint: UnitPoint) {
+    nonisolated public init(colors: [Color], startPoint: UnitPoint, endPoint: UnitPoint) {
         self.init(gradient: Gradient(colors: colors), startPoint: startPoint, endPoint: endPoint)
     }
 
-    /* nonisolated */ public init(stops: [Gradient.Stop], startPoint: UnitPoint, endPoint: UnitPoint) {
+    nonisolated public init(stops: [Gradient.Stop], startPoint: UnitPoint, endPoint: UnitPoint) {
         self.init(gradient: Gradient(stops: stops), startPoint: startPoint, endPoint: endPoint)
     }
 
@@ -117,18 +117,18 @@ extension ShapeStyle where Self == LinearGradient {
     let startRadius: CGFloat
     let endRadius: CGFloat
 
-    /* nonisolated */ public init(gradient: Gradient, center: UnitPoint, startRadius: CGFloat, endRadius: CGFloat) {
+    nonisolated public init(gradient: Gradient, center: UnitPoint, startRadius: CGFloat, endRadius: CGFloat) {
         self.gradient = gradient
         self.center = center
         self.startRadius = startRadius
         self.endRadius = endRadius
     }
 
-    /* nonisolated */ public init(colors: [Color], center: UnitPoint, startRadius: CGFloat, endRadius: CGFloat) {
+    nonisolated public init(colors: [Color], center: UnitPoint, startRadius: CGFloat, endRadius: CGFloat) {
         self.init(gradient: Gradient(colors: colors), center: center, startRadius: startRadius, endRadius: endRadius)
     }
 
-    /* nonisolated */ public init(stops: [Gradient.Stop], center: UnitPoint, startRadius: CGFloat, endRadius: CGFloat) {
+    nonisolated public init(stops: [Gradient.Stop], center: UnitPoint, startRadius: CGFloat, endRadius: CGFloat) {
         self.init(gradient: Gradient(stops: stops), center: center, startRadius: startRadius, endRadius: endRadius)
     }
 
@@ -170,18 +170,18 @@ extension ShapeStyle where Self == RadialGradient {
     let startFraction: CGFloat
     let endFraction: CGFloat
 
-    /* nonisolated */ public init(gradient: Gradient, center: UnitPoint = .center, startRadiusFraction: CGFloat = 0, endRadiusFraction: CGFloat = 0.5) {
+    nonisolated public init(gradient: Gradient, center: UnitPoint = .center, startRadiusFraction: CGFloat = 0, endRadiusFraction: CGFloat = 0.5) {
         self.gradient = gradient
         self.center = center
         self.startFraction = startRadiusFraction
         self.endFraction = endRadiusFraction
     }
 
-    /* nonisolated */ public init(colors: [Color], center: UnitPoint = .center, startRadiusFraction: CGFloat = 0, endRadiusFraction: CGFloat = 0.5) {
+    nonisolated public init(colors: [Color], center: UnitPoint = .center, startRadiusFraction: CGFloat = 0, endRadiusFraction: CGFloat = 0.5) {
         self.init(gradient: Gradient(colors: colors), center: center, startRadiusFraction: startRadiusFraction, endRadiusFraction: endRadiusFraction)
     }
 
-    /* nonisolated */ public init(stops: [Gradient.Stop], center: UnitPoint = .center, startRadiusFraction: CGFloat = 0, endRadiusFraction: CGFloat = 0.5) {
+    nonisolated public init(stops: [Gradient.Stop], center: UnitPoint = .center, startRadiusFraction: CGFloat = 0, endRadiusFraction: CGFloat = 0.5) {
         self.init(gradient: Gradient(stops: stops), center: center, startRadiusFraction: startRadiusFraction, endRadiusFraction: endRadiusFraction)
     }
 
@@ -219,32 +219,32 @@ extension ShapeStyle where Self == EllipticalGradient {
 
 /* @MainActor */ @frozen @preconcurrency public struct AngularGradient : ShapeStyle, View, Sendable {
     @available(*, unavailable)
-    /* nonisolated */ public init(gradient: Gradient, center: UnitPoint, startAngle: Angle = .zero, endAngle: Angle = .zero) {
+    nonisolated public init(gradient: Gradient, center: UnitPoint, startAngle: Angle = .zero, endAngle: Angle = .zero) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(colors: [Color], center: UnitPoint, startAngle: Angle, endAngle: Angle) {
+    nonisolated public init(colors: [Color], center: UnitPoint, startAngle: Angle, endAngle: Angle) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(stops: [Gradient.Stop], center: UnitPoint, startAngle: Angle, endAngle: Angle) {
+    nonisolated public init(stops: [Gradient.Stop], center: UnitPoint, startAngle: Angle, endAngle: Angle) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(gradient: Gradient, center: UnitPoint, angle: Angle = .zero) {
+    nonisolated public init(gradient: Gradient, center: UnitPoint, angle: Angle = .zero) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(colors: [Color], center: UnitPoint, angle: Angle = .zero) {
+    nonisolated public init(colors: [Color], center: UnitPoint, angle: Angle = .zero) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(stops: [Gradient.Stop], center: UnitPoint, angle: Angle = .zero) {
+    nonisolated public init(stops: [Gradient.Stop], center: UnitPoint, angle: Angle = .zero) {
         fatalError()
     }
 

@@ -27,13 +27,13 @@ extension Optional : Gesture where Wrapped : Gesture {
 }
 
 extension Gesture {
-    /* nonisolated */ public func onEnded(_ action: @escaping (Self.Value) -> Void) -> _EndedGesture<Self> {
+    nonisolated public func onEnded(_ action: @escaping (Self.Value) -> Void) -> _EndedGesture<Self> {
         return _EndedGesture(self, action: action)
     }
 }
 
 extension Gesture /* where Self.Value : Equatable */ {
-    /* nonisolated */ public func onChanged(_ action: @escaping (Self.Value) -> Void) -> _ChangedGesture<Self> {
+    nonisolated public func onChanged(_ action: @escaping (Self.Value) -> Void) -> _ChangedGesture<Self> {
         return _ChangedGesture(self, action: action)
     }
 }
@@ -270,7 +270,7 @@ extension ExclusiveGesture.Value : Equatable where First.Value : Equatable, Seco
     /* @MainActor */ @preconcurrency public var minimumDuration: Double
     /* @MainActor */ @preconcurrency public var maximumDistance: CGFloat
 
-    /* nonisolated */ public init(minimumDuration: Double = 0.5, maximumDistance: CGFloat = 10) {
+    nonisolated public init(minimumDuration: Double = 0.5, maximumDistance: CGFloat = 10) {
         self.minimumDuration = minimumDuration
         self.maximumDistance = maximumDistance
     }
@@ -405,7 +405,7 @@ extension SimultaneousGesture.Value : Hashable where First.Value : Hashable, Sec
 /* @MainActor */ @preconcurrency public struct TapGesture : Gesture {
     /* @MainActor */ @preconcurrency public var count: Int
 
-    /* nonisolated */ public init(count: Int = 1) {
+    nonisolated public init(count: Int = 1) {
         self.count = count
     }
 
@@ -437,7 +437,7 @@ extension SimultaneousGesture.Value : Hashable where First.Value : Hashable, Sec
 }
 
 extension View {
-    /* nonisolated */ public func onLongPressGesture(minimumDuration: Double = 0.5, maximumDistance: CGFloat = 10, perform action: @escaping () -> Void, onPressingChanged: ((Bool) -> Void)? = nil) -> some View {
+    nonisolated public func onLongPressGesture(minimumDuration: Double = 0.5, maximumDistance: CGFloat = 10, perform action: @escaping () -> Void, onPressingChanged: ((Bool) -> Void)? = nil) -> some View {
         return ModifierView(target: self) {
             if let onPressingChanged {
                 $0.Java_viewOrEmpty.onLongPressGesture(minimumDuration: minimumDuration, maximumDistance: maximumDistance, perform: action, onPressingChanged: onPressingChanged)
@@ -447,15 +447,15 @@ extension View {
         }
     }
 
-    @_disfavoredOverload /* nonisolated */ public func onLongPressGesture(minimumDuration: Double = 0.5, maximumDistance: CGFloat = 10, pressing: ((Bool) -> Void)? = nil, perform action: @escaping () -> Void) -> some View {
+    @_disfavoredOverload nonisolated public func onLongPressGesture(minimumDuration: Double = 0.5, maximumDistance: CGFloat = 10, pressing: ((Bool) -> Void)? = nil, perform action: @escaping () -> Void) -> some View {
         return onLongPressGesture(minimumDuration: minimumDuration, maximumDistance: maximumDistance, perform: action, onPressingChanged: pressing)
     }
 
-    /* nonisolated */ public func onTapGesture(count: Int = 1, perform action: @escaping () -> Void) -> some View {
+    nonisolated public func onTapGesture(count: Int = 1, perform action: @escaping () -> Void) -> some View {
         return onTapGesture(count: count, coordinateSpace: .local, perform: { _ in action() })
     }
 
-    @_disfavoredOverload /* nonisolated */ public func onTapGesture(count: Int = 1, coordinateSpace: CoordinateSpace = .local, perform action: @escaping (CGPoint) -> Void) -> some View {
+    @_disfavoredOverload nonisolated public func onTapGesture(count: Int = 1, coordinateSpace: CoordinateSpace = .local, perform action: @escaping (CGPoint) -> Void) -> some View {
         var name: SwiftHashable? = nil
         if case .named(let n) = coordinateSpace {
             name = Java_swiftHashable(for: n)
@@ -465,7 +465,7 @@ extension View {
         }
     }
 
-    /* nonisolated */ public func onTapGesture(count: Int = 1, coordinateSpace: some CoordinateSpaceProtocol = .local, perform action: @escaping (CGPoint) -> Void) -> some View {
+    nonisolated public func onTapGesture(count: Int = 1, coordinateSpace: some CoordinateSpaceProtocol = .local, perform action: @escaping (CGPoint) -> Void) -> some View {
         var name: SwiftHashable? = nil
         if case .named(let n) = coordinateSpace.coordinateSpace {
             name = Java_swiftHashable(for: n)
@@ -477,50 +477,50 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func gesture<T>(_ gesture: T, including mask: GestureMask = .all) -> some View where T : Gesture {
+    nonisolated public func gesture<T>(_ gesture: T, including mask: GestureMask = .all) -> some View where T : Gesture {
         // We only support masks of `.all` or `.none`
         return self.gesture(gesture, isEnabled: !mask.isEmpty)
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func highPriorityGesture<T>(_ gesture: T, including mask: GestureMask = .all) -> some View where T : Gesture {
+    nonisolated public func highPriorityGesture<T>(_ gesture: T, including mask: GestureMask = .all) -> some View where T : Gesture {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func simultaneousGesture<T>(_ gesture: T, including mask: GestureMask = .all) -> some View where T : Gesture {
+    nonisolated public func simultaneousGesture<T>(_ gesture: T, including mask: GestureMask = .all) -> some View where T : Gesture {
         stubView()
     }
 
-    /* nonisolated */ public func gesture<T>(_ gesture: T, isEnabled: Bool) -> some View where T : Gesture {
+    nonisolated public func gesture<T>(_ gesture: T, isEnabled: Bool) -> some View where T : Gesture {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.bridgedGesture(gesture.Java_gesture, isEnabled: isEnabled)
         }
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func highPriorityGesture<T>(_ gesture: T, isEnabled: Bool) -> some View where T : Gesture {
+    nonisolated public func highPriorityGesture<T>(_ gesture: T, isEnabled: Bool) -> some View where T : Gesture {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func simultaneousGesture<T>(_ gesture: T, isEnabled: Bool) -> some View where T : Gesture {
+    nonisolated public func simultaneousGesture<T>(_ gesture: T, isEnabled: Bool) -> some View where T : Gesture {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func gesture<T>(_ gesture: T, name: String, isEnabled: Bool = true) -> some View where T : Gesture {
+    nonisolated public func gesture<T>(_ gesture: T, name: String, isEnabled: Bool = true) -> some View where T : Gesture {
         return self.gesture(gesture, isEnabled: isEnabled)
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func highPriorityGesture<T>(_ gesture: T, name: String, isEnabled: Bool = true) -> some View where T : Gesture {
+    nonisolated public func highPriorityGesture<T>(_ gesture: T, name: String, isEnabled: Bool = true) -> some View where T : Gesture {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func simultaneousGesture<T>(_ gesture: T, name: String, isEnabled: Bool = true) -> some View where T : Gesture {
+    nonisolated public func simultaneousGesture<T>(_ gesture: T, name: String, isEnabled: Bool = true) -> some View where T : Gesture {
         stubView()
     }
 }

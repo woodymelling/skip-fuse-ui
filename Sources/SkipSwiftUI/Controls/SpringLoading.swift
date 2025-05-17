@@ -11,7 +11,7 @@ public struct SpringLoadingBehavior : Hashable, Sendable {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func springLoadingBehavior(_ behavior: SpringLoadingBehavior) -> some View {
+    nonisolated public func springLoadingBehavior(_ behavior: SpringLoadingBehavior) -> some View {
         stubView()
     }
 }

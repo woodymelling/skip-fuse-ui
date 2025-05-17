@@ -6,7 +6,7 @@ import SkipUI
     private let alignment: Alignment
     private let content: Content
 
-    /* @inlinable nonisolated */ public init(alignment: Alignment = .center, @ViewBuilder content: () -> Content) {
+    /* @inlinable */ nonisolated public init(alignment: Alignment = .center, @ViewBuilder content: () -> Content) {
         self.alignment = alignment
         self.content = content()
     }

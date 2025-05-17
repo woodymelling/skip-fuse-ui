@@ -7,7 +7,7 @@ public struct LabeledContent<Label, Content> {
 
 extension LabeledContent : View where Label : View, Content : View {
     @available(*, unavailable)
-    /* nonisolated */ public init(@ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
+    nonisolated public init(@ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
         fatalError()
     }
 
@@ -93,7 +93,7 @@ public struct LabeledContentStyleConfiguration {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func labeledContentStyle<S>(_ style: S) -> some View where S : LabeledContentStyle {
+    nonisolated public func labeledContentStyle<S>(_ style: S) -> some View where S : LabeledContentStyle {
         stubView()
     }
 }

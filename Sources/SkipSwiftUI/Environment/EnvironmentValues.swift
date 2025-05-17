@@ -177,7 +177,7 @@ extension EnvironmentValues {
 }
 
 extension View {
-    /* nonisolated */ public func environment<V>(_ keyPath: WritableKeyPath<EnvironmentValues, V>, _ value: V) -> some View {
+    nonisolated public func environment<V>(_ keyPath: WritableKeyPath<EnvironmentValues, V>, _ value: V) -> some View {
         return ModifierView(target: self) {
             let key = EnvironmentValues.key(for: keyPath)
             let view = $0.Java_viewOrEmpty
@@ -194,7 +194,7 @@ extension View {
     }
 
     @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-    /* nonisolated */ public func environment<T>(_ object: T?) -> some View where T : AnyObject, T : Observable {
+    nonisolated public func environment<T>(_ object: T?) -> some View where T : AnyObject, T : Observable {
         return ModifierView(target: self) {
             let view = $0.Java_viewOrEmpty
             let key = EnvironmentValues.key(for: T.self)

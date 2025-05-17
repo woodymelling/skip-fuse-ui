@@ -9,7 +9,7 @@ import SkipUI
     private let pinnedViews: PinnedScrollableViews
     private let content: Content
 
-    /* nonisolated */ public init(rows: [GridItem], alignment: VerticalAlignment = .center, spacing: CGFloat? = nil, pinnedViews: PinnedScrollableViews = .init(), @ViewBuilder content: () -> Content) {
+    nonisolated public init(rows: [GridItem], alignment: VerticalAlignment = .center, spacing: CGFloat? = nil, pinnedViews: PinnedScrollableViews = .init(), @ViewBuilder content: () -> Content) {
         self.rows = rows
         self.alignment = alignment
         self.spacing = spacing

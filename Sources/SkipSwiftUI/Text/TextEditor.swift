@@ -5,13 +5,13 @@ import SkipUI
 /* @MainActor */ @preconcurrency public struct TextEditor : View {
     private let text: Binding<String>
 
-    /* nonisolated */ public init(text: Binding<String>) {
+    nonisolated public init(text: Binding<String>) {
         self.text = text
     }
 
     #if compiler(>=6.0)
     @available(*, unavailable)
-    /* nonisolated */ public init(text: Binding<String>, selection: Binding<TextSelection?>) {
+    nonisolated public init(text: Binding<String>, selection: Binding<TextSelection?>) {
         fatalError()
     }
     #endif
@@ -83,24 +83,24 @@ public struct TextEditorStyleConfiguration {
 }
 
 extension View {
-    /* nonisolated */ public func textEditorStyle(_ style: some TextEditorStyle) -> some View {
+    nonisolated public func textEditorStyle(_ style: some TextEditorStyle) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.textEditorStyle(bridgedStyle: style.identifier)
         }
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func findNavigator(isPresented: Binding<Bool>) -> some View {
+    nonisolated public func findNavigator(isPresented: Binding<Bool>) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func findDisabled(_ isDisabled: Bool = true) -> some View {
+    nonisolated public func findDisabled(_ isDisabled: Bool = true) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func replaceDisabled(_ isDisabled: Bool = true) -> some View {
+    nonisolated public func replaceDisabled(_ isDisabled: Bool = true) -> some View {
         stubView()
     }
 }

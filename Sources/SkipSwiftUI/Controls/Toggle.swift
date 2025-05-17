@@ -6,12 +6,12 @@ import SkipUI
     private let isOn: Binding<Bool>
     private let label: Label
 
-    /* nonisolated */ public init(isOn: Binding<Bool>, @ViewBuilder label: () -> Label) {
+    nonisolated public init(isOn: Binding<Bool>, @ViewBuilder label: () -> Label) {
         self.isOn = isOn
         self.label = label()
     }
 
-    /* nonisolated */ public init<C>(sources: C, isOn: KeyPath<C.Element, Binding<Bool>>, @ViewBuilder label: () -> Label) where C : RandomAccessCollection {
+    nonisolated public init<C>(sources: C, isOn: KeyPath<C.Element, Binding<Bool>>, @ViewBuilder label: () -> Label) where C : RandomAccessCollection {
         let getIsOn: () -> Bool = { sources.allSatisfy { $0[keyPath: isOn].wrappedValue } }
         let setIsOn: (Bool) -> Void = { value in sources.forEach { $0[keyPath: isOn].wrappedValue = value } }
         self.isOn = Binding(get: getIsOn, set: setIsOn)
@@ -29,43 +29,43 @@ extension Toggle : SkipUIBridging {
 
 extension Toggle where Label == ToggleStyleConfiguration.Label {
     @available(*, unavailable)
-    /* nonisolated */ public init(_ configuration: ToggleStyleConfiguration) {
+    nonisolated public init(_ configuration: ToggleStyleConfiguration) {
         fatalError()
     }
 }
 
 extension Toggle where Label == Text {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, isOn: Binding<Bool>) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, isOn: Binding<Bool>) {
         self.init(isOn: isOn, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, isOn: Binding<Bool>) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, isOn: Binding<Bool>) where S : StringProtocol {
         self.init(isOn: isOn, label: { Text(title) })
     }
 
-    /* nonisolated */ public init<C>(_ titleKey: LocalizedStringKey, sources: C, isOn: KeyPath<C.Element, Binding<Bool>>) where C : RandomAccessCollection {
+    nonisolated public init<C>(_ titleKey: LocalizedStringKey, sources: C, isOn: KeyPath<C.Element, Binding<Bool>>) where C : RandomAccessCollection {
         self.init(sources: sources, isOn: isOn, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S, C>(_ title: S, sources: C, isOn: KeyPath<C.Element, Binding<Bool>>) where S : StringProtocol, C : RandomAccessCollection {
+    @_disfavoredOverload nonisolated public init<S, C>(_ title: S, sources: C, isOn: KeyPath<C.Element, Binding<Bool>>) where S : StringProtocol, C : RandomAccessCollection {
         self.init(sources: sources, isOn: isOn, label: { Text(title) })
     }
 }
 
 extension Toggle where Label == SkipSwiftUI.Label<Text, Image> {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, systemImage: String, isOn: Binding<Bool>) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, systemImage: String, isOn: Binding<Bool>) {
         self.init(isOn: isOn, label: { SkipSwiftUI.Label(titleKey, systemImage: systemImage) })
     }
 
-    @_disfavoredOverload /*nonisolated */ public init<S>(_ title: S, systemImage: String, isOn: Binding<Bool>) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, systemImage: String, isOn: Binding<Bool>) where S : StringProtocol {
         self.init(isOn: isOn, label: { SkipSwiftUI.Label(title, systemImage: systemImage) })
     }
 
-    /* nonisolated */ public init<C>(_ titleKey: LocalizedStringKey, systemImage: String, sources: C, isOn: KeyPath<C.Element, Binding<Bool>>) where C : RandomAccessCollection {
+    nonisolated public init<C>(_ titleKey: LocalizedStringKey, systemImage: String, sources: C, isOn: KeyPath<C.Element, Binding<Bool>>) where C : RandomAccessCollection {
         self.init(sources: sources, isOn: isOn, label: { SkipSwiftUI.Label(titleKey, systemImage: systemImage) })
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S, C>(_ title: S, systemImage: String, sources: C, isOn: KeyPath<C.Element, Binding<Bool>>) where S : StringProtocol, C : RandomAccessCollection {
+    @_disfavoredOverload nonisolated public init<S, C>(_ title: S, systemImage: String, sources: C, isOn: KeyPath<C.Element, Binding<Bool>>) where S : StringProtocol, C : RandomAccessCollection {
         self.init(sources: sources, isOn: isOn, label: { SkipSwiftUI.Label(title, systemImage: systemImage) })
     }
 }
@@ -149,7 +149,7 @@ public struct ToggleStyleConfiguration {
 }
 
 extension View {
-    /* nonisolated */ public func toggleStyle<S>(_ style: S) -> some View where S : ToggleStyle {
+    nonisolated public func toggleStyle<S>(_ style: S) -> some View where S : ToggleStyle {
         // Only automatic is @available, so safe to return self
         return self
     }

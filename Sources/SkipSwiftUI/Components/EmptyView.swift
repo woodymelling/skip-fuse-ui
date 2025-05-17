@@ -3,7 +3,7 @@
 import SkipUI
 
 /* @MainActor */ @frozen @preconcurrency public struct EmptyView : View {
-    @inlinable /* nonisolated */ public init() {
+    @inlinable nonisolated public init() {
     }
 
     public typealias Body = Never

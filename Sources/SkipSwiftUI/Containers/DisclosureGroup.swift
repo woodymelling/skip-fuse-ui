@@ -8,11 +8,11 @@ import SkipUI
     private let content: Content
 
     @available(*, unavailable)
-    /* nonisolated */ public init(@ViewBuilder content: @escaping () -> Content, @ViewBuilder label: () -> Label) {
+    nonisolated public init(@ViewBuilder content: @escaping () -> Content, @ViewBuilder label: () -> Label) {
         fatalError()
     }
 
-    /* nonisolated */ public init(isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content, @ViewBuilder label: () -> Label) {
+    nonisolated public init(isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content, @ViewBuilder label: () -> Label) {
         self.isExpanded = isExpanded
         self.content = content()
         self.label = label()
@@ -29,20 +29,20 @@ extension DisclosureGroup : SkipUIBridging {
 
 extension DisclosureGroup where Label == Text {
     @available(*, unavailable)
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, @ViewBuilder content: @escaping () -> Content) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, @ViewBuilder content: @escaping () -> Content) {
         fatalError()
     }
 
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
         self.init(isExpanded: isExpanded, content: content, label: { Text(titleKey) })
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S>(_ label: S, @ViewBuilder content: @escaping () -> Content) where S : StringProtocol {
+    nonisolated public init<S>(_ label: S, @ViewBuilder content: @escaping () -> Content) where S : StringProtocol {
         fatalError()
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ label: S, isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ label: S, isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) where S : StringProtocol {
         self.init(isExpanded: isExpanded, content: content, label: { Text(label) })
     }
 }
@@ -87,7 +87,7 @@ public struct DisclosureGroupStyleConfiguration {
 }
 
 extension View {
-    /* nonisolated */ public func disclosureGroupStyle<S>(_ style: S) -> some View where S : DisclosureGroupStyle {
+    nonisolated public func disclosureGroupStyle<S>(_ style: S) -> some View where S : DisclosureGroupStyle {
         // We only support .automatic style
         return self
     }

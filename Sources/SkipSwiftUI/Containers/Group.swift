@@ -9,7 +9,7 @@ import SkipUI
 }
 
 extension Group : View where Content : View {
-    /* @inlinable nonisolated */ public init(@ViewBuilder content: () -> Content) {
+    /* @inlinable */ nonisolated public init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
 }

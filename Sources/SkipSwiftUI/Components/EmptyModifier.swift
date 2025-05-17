@@ -4,7 +4,7 @@
 /* @MainActor */ @frozen @preconcurrency public struct EmptyModifier : ViewModifier /*, BitwiseCopyable, Sendable */ {
     /* @MainActor */ @preconcurrency public static let identity = EmptyModifier()
 
-    @inlinable /* nonisolated */ public init() {
+    @inlinable nonisolated public init() {
     }
 
 //    public typealias Body = Never

@@ -490,7 +490,7 @@ public func withAnimation<Result>(_ animation: Animation? = .default, completion
 }
 
 extension View {
-    /* @inlinable nonisolated */ public func animation<V>(_ animation: Animation?, value: V) -> some View where V : Equatable {
+    /* @inlinable */ nonisolated public func animation<V>(_ animation: Animation?, value: V) -> some View where V : Equatable {
         let bridgedValue = Java_swiftEquatable(for: value)
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.animation(animation?.Java_animation, value: bridgedValue)
@@ -499,7 +499,7 @@ extension View {
 }
 
 extension View where Self : Equatable {
-    @inlinable /* nonisolated */ public func animation(_ animation: Animation?) -> some View {
+    @inlinable nonisolated public func animation(_ animation: Animation?) -> some View {
         return self.animation(animation, value: self)
     }
 }

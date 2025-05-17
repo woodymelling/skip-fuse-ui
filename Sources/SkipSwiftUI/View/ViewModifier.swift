@@ -26,14 +26,14 @@ extension ViewModifier where Self.Body == Never {
 
 extension ViewModifier {
     @available(*, unavailable)
-    @inlinable /* nonisolated */ public func concat<T>(_ modifier: T) -> Any /* ModifiedContent<Self, T> */ {
+    @inlinable nonisolated public func concat<T>(_ modifier: T) -> Any /* ModifiedContent<Self, T> */ {
         fatalError()
     }
 }
 
 extension ViewModifier {
     @available(*, unavailable)
-    /* @inlinable nonisolated */ public func transaction(_ transform: @escaping (inout Transaction) -> Void) -> some ViewModifier {
+    /* @inlinable */ nonisolated public func transaction(_ transform: @escaping (inout Transaction) -> Void) -> some ViewModifier {
         stubViewModifier()
     }
 
@@ -52,7 +52,7 @@ extension Never : ViewModifier {
 }
 
 extension View {
-    /* @inlinable nonisolated */ public func modifier<T>(_ modifier: T) -> some View /* ModifiedContent<Self, T> */ where T : ViewModifier {
+    /* @inlinable */ nonisolated public func modifier<T>(_ modifier: T) -> some View /* ModifiedContent<Self, T> */ where T : ViewModifier {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.modifier(modifier.Java_modifier)
         }

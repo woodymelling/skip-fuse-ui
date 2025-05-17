@@ -12,13 +12,13 @@ import SkipUI
     private let getData: (() -> [Any /* SwiftHashable */])?
     private let setData: (([Any /* SwiftHashable */]) -> Void)?
 
-    /* nonisolated */ public init(@ViewBuilder root: () -> Root) where Data == NavigationPath {
+    nonisolated public init(@ViewBuilder root: () -> Root) where Data == NavigationPath {
         self.root = root()
         getData = nil
         setData = nil
     }
 
-    /* nonisolated */ public init(path: Binding<NavigationPath>, @ViewBuilder root: () -> Root) where Data == NavigationPath {
+    nonisolated public init(path: Binding<NavigationPath>, @ViewBuilder root: () -> Root) where Data == NavigationPath {
         self.root = root()
         self.getData = {
             let boundPath = path.wrappedValue
@@ -33,7 +33,7 @@ import SkipUI
         }
     }
 
-    /* nonisolated */ public init(path: Binding<Data>, @ViewBuilder root: () -> Root) where Data : MutableCollection, Data : RandomAccessCollection, Data : RangeReplaceableCollection, Data.Element : Hashable {
+    nonisolated public init(path: Binding<Data>, @ViewBuilder root: () -> Root) where Data : MutableCollection, Data : RandomAccessCollection, Data : RangeReplaceableCollection, Data.Element : Hashable {
         self.root = root()
         self.getData = {
             return path.wrappedValue.map { Java_swiftHashable(for: $0) }
@@ -64,13 +64,13 @@ extension NavigationStack : SkipUIBridging {
     private let value: AnyHashable?
     private let label: Label
 
-    /* nonisolated */ public init(@ViewBuilder destination: () -> Destination, @ViewBuilder label: () -> Label) {
+    nonisolated public init(@ViewBuilder destination: () -> Destination, @ViewBuilder label: () -> Label) {
         self.destination = destination()
         self.value = nil
         self.label = label()
     }
 
-    /* nonisolated */ public init(destination: Destination, @ViewBuilder label: () -> Label) {
+    nonisolated public init(destination: Destination, @ViewBuilder label: () -> Label) {
         self.init(destination: { destination }, label: label)
     }
 
@@ -85,17 +85,17 @@ extension NavigationLink : SkipUIBridging {
 }
 
 extension NavigationLink where Destination == Never {
-    /* nonisolated */ public init<P>(value: P?, @ViewBuilder label: () -> Label) where P : Hashable {
+    nonisolated public init<P>(value: P?, @ViewBuilder label: () -> Label) where P : Hashable {
         self.value = value
         self.label = label()
         self.destination = nil
     }
 
-    /* nonisolated */ public init<P>(_ titleKey: LocalizedStringKey, value: P?) where Label == Text, P : Hashable {
+    nonisolated public init<P>(_ titleKey: LocalizedStringKey, value: P?) where Label == Text, P : Hashable {
         self.init(value: value, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S, P>(_ title: S, value: P?) where Label == Text, S : StringProtocol, P : Hashable {
+    @_disfavoredOverload nonisolated public init<S, P>(_ title: S, value: P?) where Label == Text, S : StringProtocol, P : Hashable {
         self.init(value: value, label: { Text(title) })
     }
 
@@ -107,19 +107,19 @@ extension NavigationLink where Destination == Never {
 }
 
 extension NavigationLink where Label == Text {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, @ViewBuilder destination: () -> Destination) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, @ViewBuilder destination: () -> Destination) {
         self.init(destination: destination, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, @ViewBuilder destination: () -> Destination) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, @ViewBuilder destination: () -> Destination) where S : StringProtocol {
         self.init(destination: destination, label: { Text(title) })
     }
 
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, destination: Destination) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, destination: Destination) {
         self.init(destination: { destination }, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, destination: Destination) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, destination: Destination) where S : StringProtocol {
         self.init(title, destination: { destination })
     }
 }
@@ -204,7 +204,7 @@ extension NavigationPath.CodableRepresentation : Equatable {
 }
 
 extension View {
-    /* nonisolated */ public func navigationDestination<D, C>(for data: D.Type, @ViewBuilder destination: @escaping (D) -> C) -> some View where D : Hashable, C : View {
+    nonisolated public func navigationDestination<D, C>(for data: D.Type, @ViewBuilder destination: @escaping (D) -> C) -> some View where D : Hashable, C : View {
         return ModifierView(target: self) {
             let bridgedDestination: (Any) -> any SkipUI.View = {
                 let data = ($0 as! SwiftHashable).base as! D
@@ -214,7 +214,7 @@ extension View {
         }
     }
 
-    /* nonisolated */ public func navigationDestination<V>(isPresented: Binding<Bool>, @ViewBuilder destination: () -> V) -> some View where V : View {
+    nonisolated public func navigationDestination<V>(isPresented: Binding<Bool>, @ViewBuilder destination: () -> V) -> some View where V : View {
         let destinationView = destination()
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.navigationDestination(getIsPresented: { isPresented.wrappedValue }, setIsPresented: { isPresented.wrappedValue = $0 }, bridgedDestination: destinationView.Java_viewOrEmpty)
@@ -231,30 +231,30 @@ public struct NavigationBarItem : Sendable {
 }
 
 extension View {
-    /* nonisolated */ public func navigationTitle(_ title: Text) -> some View {
+    nonisolated public func navigationTitle(_ title: Text) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.navigationTitle(title.Java_view as? SkipUI.Text ?? SkipUI.Text(verbatim: ""))
         }
     }
 
-    /* nonisolated */ public func navigationTitle(_ titleKey: LocalizedStringKey) -> some View {
+    nonisolated public func navigationTitle(_ titleKey: LocalizedStringKey) -> some View {
         return navigationTitle(Text(titleKey))
     }
 
-    @_disfavoredOverload /* nonisolated */ public func navigationTitle<S>(_ title: S) -> some View where S : StringProtocol {
+    @_disfavoredOverload nonisolated public func navigationTitle<S>(_ title: S) -> some View where S : StringProtocol {
         return navigationTitle(Text(title))
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func navigationTitle(_ title: Binding<String>) -> some View {
+    nonisolated public func navigationTitle(_ title: Binding<String>) -> some View {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func navigationBarTitleDisplayMode(_ displayMode: NavigationBarItem.TitleDisplayMode) -> some View {
+    nonisolated public func navigationBarTitleDisplayMode(_ displayMode: NavigationBarItem.TitleDisplayMode) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.navigationBarTitleDisplayMode(bridgedDisplayMode: displayMode.rawValue)
         }
@@ -263,29 +263,29 @@ extension View {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func navigationDestination<D, C>(item: Binding<D?>, @ViewBuilder destination: @escaping (D) -> C) -> some View where D : Hashable, C : View {
+    nonisolated public func navigationDestination<D, C>(item: Binding<D?>, @ViewBuilder destination: @escaping (D) -> C) -> some View where D : Hashable, C : View {
         stubView()
     }
 }
 
 /* @MainActor */ @preconcurrency public struct NavigationSplitView<Sidebar, Content, Detail> : View where Sidebar : View, Content : View, Detail : View {
     @available(*, unavailable)
-    /* nonisolated */ public init(@ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
+    nonisolated public init(@ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(columnVisibility: Binding<NavigationSplitViewVisibility>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
+    nonisolated public init(columnVisibility: Binding<NavigationSplitViewVisibility>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(@ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
+    nonisolated public init(@ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(columnVisibility: Binding<NavigationSplitViewVisibility>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
+    nonisolated public init(columnVisibility: Binding<NavigationSplitViewVisibility>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
         fatalError()
     }
 
@@ -294,22 +294,22 @@ extension View {
 
 extension NavigationSplitView {
     @available(*, unavailable)
-    /* nonisolated */ public init(preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
+    nonisolated public init(preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
+    nonisolated public init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
+    nonisolated public init(preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
+    nonisolated public init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
         fatalError()
     }
 }
@@ -333,12 +333,12 @@ public struct NavigationSplitViewColumn : Hashable, Sendable {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func navigationSplitViewColumnWidth(_ width: CGFloat) -> some View {
+    nonisolated public func navigationSplitViewColumnWidth(_ width: CGFloat) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func navigationSplitViewColumnWidth(min: CGFloat? = nil, ideal: CGFloat, max: CGFloat? = nil) -> some View {
+    nonisolated public func navigationSplitViewColumnWidth(min: CGFloat? = nil, ideal: CGFloat, max: CGFloat? = nil) -> some View {
         stubView()
     }
 }
@@ -353,7 +353,7 @@ extension View {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func navigationSplitViewStyle<S>(_ style: S) -> some View where S : NavigationSplitViewStyle {
+    nonisolated public func navigationSplitViewStyle<S>(_ style: S) -> some View where S : NavigationSplitViewStyle {
         stubView()
     }
 }
@@ -436,7 +436,7 @@ public protocol NavigationTransition {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func navigationTransition(_ style: some NavigationTransition) -> some View {
+    nonisolated public func navigationTransition(_ style: some NavigationTransition) -> some View {
         stubView()
     }
 }
@@ -468,56 +468,56 @@ public struct ZoomNavigationTransition : NavigationTransition {
 }
 
 extension View {
-    /* nonisolated */ public func navigationBarItems<L, T>(leading: L, trailing: T) -> some View where L : View, T : View {
+    nonisolated public func navigationBarItems<L, T>(leading: L, trailing: T) -> some View where L : View, T : View {
         return toolbar {
             ToolbarItem(placement: .navigationBarLeading) { leading }
             ToolbarItem(placement: .navigationBarTrailing) { trailing }
         }
     }
 
-    /* nonisolated */ public func navigationBarItems<L>(leading: L) -> some View where L : View {
+    nonisolated public func navigationBarItems<L>(leading: L) -> some View where L : View {
         return toolbar {
             ToolbarItem(placement: .navigationBarLeading) { leading }
         }
     }
 
-    /* nonisolated */ public func navigationBarItems<T>(trailing: T) -> some View where T : View {
+    nonisolated public func navigationBarItems<T>(trailing: T) -> some View where T : View {
         return toolbar {
             ToolbarItem(placement: .navigationBarTrailing) { trailing }
         }
     }
 
-    /* nonisolated */ public func navigationBarHidden(_ hidden: Bool) -> some View {
+    nonisolated public func navigationBarHidden(_ hidden: Bool) -> some View {
         return toolbarVisibility(.hidden, for: .navigationBar)
     }
 }
 
 extension View {
-    /* nonisolated */ public func navigationBarTitle(_ title: Text) -> some View {
+    nonisolated public func navigationBarTitle(_ title: Text) -> some View {
         return navigationTitle(title)
     }
 
-    /* nonisolated */ public func navigationBarTitle(_ titleKey: LocalizedStringKey) -> some View {
+    nonisolated public func navigationBarTitle(_ titleKey: LocalizedStringKey) -> some View {
         return navigationTitle(titleKey)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func navigationBarTitle<S>(_ title: S) -> some View where S : StringProtocol {
+    @_disfavoredOverload nonisolated public func navigationBarTitle<S>(_ title: S) -> some View where S : StringProtocol {
         return navigationTitle(title)
     }
 
-    /* nonisolated */ public func navigationBarTitle(_ title: Text, displayMode: NavigationBarItem.TitleDisplayMode) -> some View {
+    nonisolated public func navigationBarTitle(_ title: Text, displayMode: NavigationBarItem.TitleDisplayMode) -> some View {
         return navigationTitle(title).navigationBarTitleDisplayMode(displayMode)
     }
 
-    /* nonisolated */ public func navigationBarTitle(_ titleKey: LocalizedStringKey, displayMode: NavigationBarItem.TitleDisplayMode) -> some View {
+    nonisolated public func navigationBarTitle(_ titleKey: LocalizedStringKey, displayMode: NavigationBarItem.TitleDisplayMode) -> some View {
         return navigationBarTitle(Text(titleKey), displayMode: displayMode)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func navigationBarTitle<S>(_ title: S, displayMode: NavigationBarItem.TitleDisplayMode) -> some View where S : StringProtocol {
+    @_disfavoredOverload nonisolated public func navigationBarTitle<S>(_ title: S, displayMode: NavigationBarItem.TitleDisplayMode) -> some View where S : StringProtocol {
         return navigationBarTitle(Text(title), displayMode: displayMode)
     }
 
-    /* nonisolated */ public func navigationBarBackButtonHidden(_ hidesBackButton: Bool = true) -> some View {
+    nonisolated public func navigationBarBackButtonHidden(_ hidesBackButton: Bool = true) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.navigationBarBackButtonHidden(hidesBackButton)
         }
@@ -526,12 +526,12 @@ extension View {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func navigationDocument /* <D> */(_ document: Any /* D */) -> some View /* where D : Transferable */ {
+    nonisolated public func navigationDocument /* <D> */(_ document: Any /* D */) -> some View /* where D : Transferable */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func navigationDocument /* <D> */(_ document: Any /* D */, preview: Any /* SharePreview<Never, Never> */) -> some View /* where D : Transferable */ {
+    nonisolated public func navigationDocument /* <D> */(_ document: Any /* D */, preview: Any /* SharePreview<Never, Never> */) -> some View /* where D : Transferable */ {
         stubView()
     }
 
@@ -542,7 +542,7 @@ extension View {
 //    nonisolated public func navigationDocument<D, I1, I2>(_ document: D, preview: SharePreview<I1, I2>) -> some View where D : Transferable, I1 : Transferable, I2 : Transferable
 
     @available(*, unavailable)
-    /* nonisolated */ public func navigationDocument(_ url: URL) -> some View {
+    nonisolated public func navigationDocument(_ url: URL) -> some View {
         stubView()
     }
 }

@@ -132,7 +132,7 @@ extension ForEach {
 }
 
 extension DynamicViewContent {
-    /* @inlinable nonisolated */ public func onMove(perform action: ((IndexSet, Int) -> Void)?) -> some DynamicViewContent {
+    /* @inlinable */ nonisolated public func onMove(perform action: ((IndexSet, Int) -> Void)?) -> some DynamicViewContent {
         if var forEach = self as? any ForEachProtocol {
             forEach.onMove = action
             return forEach as! Self
@@ -143,7 +143,7 @@ extension DynamicViewContent {
 }
 
 extension View {
-    /* @inlinable nonisolated */ public func moveDisabled(_ isDisabled: Bool) -> some View {
+    /* @inlinable */ nonisolated public func moveDisabled(_ isDisabled: Bool) -> some View {
         return ModifierView(target: self) {
             return $0.Java_viewOrEmpty.moveDisabled(isDisabled)
         }
@@ -151,7 +151,7 @@ extension View {
 }
 
 extension DynamicViewContent {
-    /* @inlinable nonisolated */ public func onDelete(perform action: ((IndexSet) -> Void)?) -> some DynamicViewContent {
+    /* @inlinable */ nonisolated public func onDelete(perform action: ((IndexSet) -> Void)?) -> some DynamicViewContent {
         if var forEach = self as? any ForEachProtocol {
             forEach.onDelete = action
             return forEach as! Self
@@ -162,7 +162,7 @@ extension DynamicViewContent {
 }
 
 extension View {
-    /* @inlinable nonisolated */ public func deleteDisabled(_ isDisabled: Bool) -> some View {
+    /* @inlinable */ nonisolated public func deleteDisabled(_ isDisabled: Bool) -> some View {
         return ModifierView(target: self) {
             return $0.Java_viewOrEmpty.deleteDisabled(isDisabled)
         }

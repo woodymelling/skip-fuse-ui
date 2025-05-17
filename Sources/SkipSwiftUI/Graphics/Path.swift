@@ -91,7 +91,7 @@ import SkipUI
 }
 
 extension Path : Shape {
-    /* nonisolated */ public func path(in _: CGRect) -> Path {
+    nonisolated public func path(in _: CGRect) -> Path {
         return self
     }
 

@@ -412,13 +412,13 @@ extension View {
 }
 
 extension View {
-    /* @inlinable nonisolated */ public func transition(_ t: AnyTransition) -> some View {
+    /* @inlinable */ nonisolated public func transition(_ t: AnyTransition) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.transition(SkipUI.AnyTransition(t.transition.Java_transition))
         }
     }
 
-    /* nonisolated */ public func transition<T>(_ transition: T) -> some View where T : Transition {
+    nonisolated public func transition<T>(_ transition: T) -> some View where T : Transition {
         return self.transition(AnyTransition(transition))
     }
 }

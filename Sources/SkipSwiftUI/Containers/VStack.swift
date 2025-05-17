@@ -10,7 +10,7 @@ import SkipUI
     private let spacing: CGFloat?
     private let content: Content
 
-    /* @inlinable nonisolated */ public init(alignment: HorizontalAlignment = .center, spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
+    /* @inlinable */ nonisolated public init(alignment: HorizontalAlignment = .center, spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
         self.alignment = alignment
         self.spacing = spacing
         self.content = content()

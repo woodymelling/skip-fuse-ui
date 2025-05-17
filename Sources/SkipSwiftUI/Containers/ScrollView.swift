@@ -11,7 +11,7 @@ import SkipUI
     /* @MainActor */ @preconcurrency public var axes: Axis.Set
     /* @MainActor */ @preconcurrency public var showsIndicators = true
 
-    /* nonisolated */ public init(_ axes: Axis.Set = .vertical, showsIndicators: Bool = true, @ViewBuilder content: () -> Content) {
+    nonisolated public init(_ axes: Axis.Set = .vertical, showsIndicators: Bool = true, @ViewBuilder content: () -> Content) {
         self.axes = axes
         self.showsIndicators = showsIndicators
         self.content = content()
@@ -480,7 +480,7 @@ public struct ScrollViewProxy {
 /* @MainActor */ @frozen @preconcurrency public struct ScrollViewReader<Content> : View where Content : View {
     /* @MainActor */ @preconcurrency public var content: (ScrollViewProxy) -> Content
 
-    @inlinable /* nonisolated */ public init(@ViewBuilder content: @escaping (ScrollViewProxy) -> Content) {
+    @inlinable nonisolated public init(@ViewBuilder content: @escaping (ScrollViewProxy) -> Content) {
         self.content = content
     }
 
@@ -512,78 +512,78 @@ public struct PinnedScrollableViews : OptionSet, Sendable {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func contentMargins(_ edges: Edge.Set = .all, _ insets: EdgeInsets, for placement: ContentMarginPlacement = .automatic) -> some View {
+    nonisolated public func contentMargins(_ edges: Edge.Set = .all, _ insets: EdgeInsets, for placement: ContentMarginPlacement = .automatic) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func contentMargins(_ edges: Edge.Set = .all, _ length: CGFloat?, for placement: ContentMarginPlacement = .automatic) -> some View {
+    nonisolated public func contentMargins(_ edges: Edge.Set = .all, _ length: CGFloat?, for placement: ContentMarginPlacement = .automatic) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func contentMargins(_ length: CGFloat, for placement: ContentMarginPlacement = .automatic) -> some View {
+    nonisolated public func contentMargins(_ length: CGFloat, for placement: ContentMarginPlacement = .automatic) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func scrollBounceBehavior(_ behavior: ScrollBounceBehavior, axes: Axis.Set = [.vertical]) -> some View {
+    nonisolated public func scrollBounceBehavior(_ behavior: ScrollBounceBehavior, axes: Axis.Set = [.vertical]) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func scrollClipDisabled(_ disabled: Bool = true) -> some View {
+    nonisolated public func scrollClipDisabled(_ disabled: Bool = true) -> some View {
         stubView()
     }
 
-    /* nonisolated */ public func scrollContentBackground(_ visibility: Visibility) -> some View {
+    nonisolated public func scrollContentBackground(_ visibility: Visibility) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.scrollContentBackground(bridgedVisibility: visibility.rawValue)
         }
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func scrollDismissesKeyboard(_ mode: ScrollDismissesKeyboardMode) -> some View {
+    nonisolated public func scrollDismissesKeyboard(_ mode: ScrollDismissesKeyboardMode) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func scrollDisabled(_ disabled: Bool) -> some View {
+    nonisolated public func scrollDisabled(_ disabled: Bool) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func scrollIndicators(_ visibility: ScrollIndicatorVisibility, axes: Axis.Set = [.vertical, .horizontal]) -> some View {
+    nonisolated public func scrollIndicators(_ visibility: ScrollIndicatorVisibility, axes: Axis.Set = [.vertical, .horizontal]) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func scrollIndicatorsFlash(trigger value: some Equatable) -> some View {
+    nonisolated public func scrollIndicatorsFlash(trigger value: some Equatable) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func scrollIndicatorsFlash(onAppear: Bool) -> some View {
+    nonisolated public func scrollIndicatorsFlash(onAppear: Bool) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func scrollPosition(_ position: Binding<ScrollPosition>, anchor: UnitPoint? = nil) -> some View {
+    nonisolated public func scrollPosition(_ position: Binding<ScrollPosition>, anchor: UnitPoint? = nil) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func scrollPosition(id: Binding<(some Hashable)?>, anchor: UnitPoint? = nil) -> some View {
+    nonisolated public func scrollPosition(id: Binding<(some Hashable)?>, anchor: UnitPoint? = nil) -> some View {
         stubView()
     }
 
-    /* nonisolated */ public func scrollTargetBehavior(_ behavior: some ScrollTargetBehavior) -> some View {
+    nonisolated public func scrollTargetBehavior(_ behavior: some ScrollTargetBehavior) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.scrollTargetBehavior(behavior.Java_scrollTargetBehavior)
         }
     }
 
-    /* nonisolated */ public func scrollTargetLayout(isEnabled: Bool = true) -> some View {
+    nonisolated public func scrollTargetLayout(isEnabled: Bool = true) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.scrollTargetLayout(isEnabled: isEnabled)
         }

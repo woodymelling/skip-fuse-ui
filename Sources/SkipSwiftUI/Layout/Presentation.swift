@@ -110,26 +110,26 @@ extension CustomPresentationDetent {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func alert<Item>(item: Binding<Item?>, content: (Item) -> Any /* Alert */) -> some View where Item : Identifiable {
+    nonisolated public func alert<Item>(item: Binding<Item?>, content: (Item) -> Any /* Alert */) -> some View where Item : Identifiable {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func alert(isPresented: Binding<Bool>, content: () -> Any /* Alert */) -> some View {
+    nonisolated public func alert(isPresented: Binding<Bool>, content: () -> Any /* Alert */) -> some View {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func alert<A>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A) -> some View where A : View {
+    nonisolated public func alert<A>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A) -> some View where A : View {
         return alert(Text(titleKey), isPresented: isPresented, actions: actions)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func alert<S, A>(_ title: S, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A) -> some View where S : StringProtocol, A : View {
+    @_disfavoredOverload nonisolated public func alert<S, A>(_ title: S, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A) -> some View where S : StringProtocol, A : View {
         return alert(Text(title), isPresented: isPresented, actions: actions)
     }
 
-    /* nonisolated */ public func alert<A>(_ title: Text, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A) -> some View where A : View {
+    nonisolated public func alert<A>(_ title: Text, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A) -> some View where A : View {
         let actions = actions()
         return ModifierView(target: self) {
             let javaTitle = title.Java_view as? SkipUI.Text ?? SkipUI.Text(verbatim: "")
@@ -139,15 +139,15 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func alert<A, M>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where A : View, M : View {
+    nonisolated public func alert<A, M>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where A : View, M : View {
         return alert(Text(titleKey), isPresented: isPresented, actions: actions, message: message)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func alert<S, A, M>(_ title: S, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where S : StringProtocol, A : View, M : View {
+    @_disfavoredOverload nonisolated public func alert<S, A, M>(_ title: S, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where S : StringProtocol, A : View, M : View {
         return alert(Text(title), isPresented: isPresented, actions: actions, message: message)
     }
 
-    /* nonisolated */ public func alert<A, M>(_ title: Text, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where A : View, M : View {
+    nonisolated public func alert<A, M>(_ title: Text, isPresented: Binding<Bool>, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where A : View, M : View {
         let actions = actions()
         let message = message()
         return ModifierView(target: self) {
@@ -158,15 +158,15 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func alert<A, T>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where A : View {
+    nonisolated public func alert<A, T>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where A : View {
         return alert(Text(titleKey), isPresented: isPresented, presenting: data, actions: actions)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func alert<S, A, T>(_ title: S, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where S : StringProtocol, A : View {
+    @_disfavoredOverload nonisolated public func alert<S, A, T>(_ title: S, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where S : StringProtocol, A : View {
         return alert(Text(title), isPresented: isPresented, presenting: data, actions: actions)
     }
 
-    /* nonisolated */ public func alert<A, T>(_ title: Text, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where A : View {
+    nonisolated public func alert<A, T>(_ title: Text, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where A : View {
         let actionsView: any View
         if let data {
             actionsView = actions(data)
@@ -181,15 +181,15 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func alert<A, M, T>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where A : View, M : View {
+    nonisolated public func alert<A, M, T>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where A : View, M : View {
         return alert(Text(titleKey), isPresented: isPresented, presenting: data, actions: actions, message: message)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func alert<S, A, M, T>(_ title: S, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where S : StringProtocol, A : View, M : View {
+    @_disfavoredOverload nonisolated public func alert<S, A, M, T>(_ title: S, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where S : StringProtocol, A : View, M : View {
         return alert(Text(title), isPresented: isPresented, presenting: data, actions: actions, message: message)
     }
 
-    /* nonisolated */ public func alert<A, M, T>(_ title: Text, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where A : View, M : View {
+    nonisolated public func alert<A, M, T>(_ title: Text, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where A : View, M : View {
         let actionsView: any View
         let messageView: any View
         if let data {
@@ -207,7 +207,7 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func alert<E, A>(isPresented: Binding<Bool>, error: E?, @ViewBuilder actions: () -> A) -> some View where E : LocalizedError, A : View {
+    nonisolated public func alert<E, A>(isPresented: Binding<Bool>, error: E?, @ViewBuilder actions: () -> A) -> some View where E : LocalizedError, A : View {
         if let error {
             return AnyView(alert(Text(error.localizedDescription), isPresented: isPresented, actions: actions))
         } else {
@@ -215,7 +215,7 @@ extension View {
         }
     }
 
-    /* nonisolated */ public func alert<E, A, M>(isPresented: Binding<Bool>, error: E?, @ViewBuilder actions: (E) -> A, @ViewBuilder message: (E) -> M) -> some View where E : LocalizedError, A : View, M : View {
+    nonisolated public func alert<E, A, M>(isPresented: Binding<Bool>, error: E?, @ViewBuilder actions: (E) -> A, @ViewBuilder message: (E) -> M) -> some View where E : LocalizedError, A : View, M : View {
         if let error {
             return AnyView(alert(Text(error.localizedDescription), isPresented: isPresented, actions: { actions(error) }, message: { message(error) }))
         } else {
@@ -225,15 +225,15 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func confirmationDialog<A>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A) -> some View where A : View {
+    nonisolated public func confirmationDialog<A>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A) -> some View where A : View {
         return confirmationDialog(Text(titleKey), isPresented: isPresented, titleVisibility: titleVisibility, actions: actions)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func confirmationDialog<S, A>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A) -> some View where S : StringProtocol, A : View {
+    @_disfavoredOverload nonisolated public func confirmationDialog<S, A>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A) -> some View where S : StringProtocol, A : View {
         return confirmationDialog(Text(title), isPresented: isPresented, titleVisibility: titleVisibility, actions: actions)
     }
 
-    /* nonisolated */ public func confirmationDialog<A>(_ title: Text, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A) -> some View where A : View {
+    nonisolated public func confirmationDialog<A>(_ title: Text, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A) -> some View where A : View {
         let actions = actions()
         return ModifierView(target: self) {
             let javaTitle = title.Java_view as? SkipUI.Text ?? SkipUI.Text(verbatim: "")
@@ -243,15 +243,15 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func confirmationDialog<A, M>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where A : View, M : View {
+    nonisolated public func confirmationDialog<A, M>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where A : View, M : View {
         return confirmationDialog(Text(titleKey), isPresented: isPresented, titleVisibility: titleVisibility, actions: actions, message: message)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func confirmationDialog<S, A, M>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where S : StringProtocol, A : View, M : View {
+    @_disfavoredOverload nonisolated public func confirmationDialog<S, A, M>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where S : StringProtocol, A : View, M : View {
         return confirmationDialog(Text(title), isPresented: isPresented, titleVisibility: titleVisibility, actions: actions, message: message)
     }
 
-    /* nonisolated */ public func confirmationDialog<A, M>(_ title: Text, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where A : View, M : View {
+    nonisolated public func confirmationDialog<A, M>(_ title: Text, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View where A : View, M : View {
         let actions = actions()
         let message = message()
         return ModifierView(target: self) {
@@ -262,15 +262,15 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func confirmationDialog<A, T>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where A : View {
+    nonisolated public func confirmationDialog<A, T>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where A : View {
         return confirmationDialog(Text(titleKey), isPresented: isPresented, titleVisibility: titleVisibility, presenting: data, actions: actions)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func confirmationDialog<S, A, T>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where S : StringProtocol, A : View {
+    @_disfavoredOverload nonisolated public func confirmationDialog<S, A, T>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where S : StringProtocol, A : View {
         return confirmationDialog(Text(title), isPresented: isPresented, titleVisibility: titleVisibility, presenting: data, actions: actions)
     }
 
-    /* nonisolated */ public func confirmationDialog<A, T>(_ title: Text, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where A : View {
+    nonisolated public func confirmationDialog<A, T>(_ title: Text, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where A : View {
         let actionsView: any View
         if let data {
             actionsView = actions(data)
@@ -285,15 +285,15 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func confirmationDialog<A, M, T>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where A : View, M : View {
+    nonisolated public func confirmationDialog<A, M, T>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where A : View, M : View {
         return confirmationDialog(Text(titleKey), isPresented: isPresented, titleVisibility: titleVisibility, presenting: data, actions: actions, message: message)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func confirmationDialog<S, A, M, T>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where S : StringProtocol, A : View, M : View {
+    @_disfavoredOverload nonisolated public func confirmationDialog<S, A, M, T>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where S : StringProtocol, A : View, M : View {
         return confirmationDialog(Text(title), isPresented: isPresented, titleVisibility: titleVisibility, presenting: data, actions: actions, message: message)
     }
 
-    /* nonisolated */ public func confirmationDialog<A, M, T>(_ title: Text, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where A : View, M : View {
+    nonisolated public func confirmationDialog<A, M, T>(_ title: Text, isPresented: Binding<Bool>, titleVisibility: Visibility = .automatic, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where A : View, M : View {
         let actionsView: any View
         let messageView: any View
         if let data {
@@ -311,7 +311,7 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func fullScreenCover<Item, Content>(item: Binding<Item?>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : Identifiable, Content : View {
+    nonisolated public func fullScreenCover<Item, Content>(item: Binding<Item?>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : Identifiable, Content : View {
         let isPresented = Binding<Bool>(
             get: {
                 return item.wrappedValue != nil
@@ -329,7 +329,7 @@ extension View {
         }
     }
 
-    /* nonisolated */ public func fullScreenCover<Content>(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping () -> Content) -> some View where Content : View {
+    nonisolated public func fullScreenCover<Content>(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping () -> Content) -> some View where Content : View {
         let content = content()
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.fullScreenCover(getIsPresented: { isPresented.wrappedValue }, setIsPresented: { isPresented.wrappedValue = $0 }, onDismiss: onDismiss, bridgedContent: content.Java_viewOrEmpty)
@@ -338,7 +338,7 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func sheet<Item, Content>(item: Binding<Item?>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : Identifiable, Content : View {
+    nonisolated public func sheet<Item, Content>(item: Binding<Item?>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : Identifiable, Content : View {
         let isPresented = Binding<Bool>(
             get: {
                 return item.wrappedValue != nil
@@ -356,7 +356,7 @@ extension View {
         }
     }
 
-    /* nonisolated */ public func sheet<Content>(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping () -> Content) -> some View where Content : View {
+    nonisolated public func sheet<Content>(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping () -> Content) -> some View where Content : View {
         let content = content()
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.sheet(getIsPresented: { isPresented.wrappedValue }, setIsPresented: { isPresented.wrappedValue = $0 }, onDismiss: onDismiss, bridgedContent: content.Java_viewOrEmpty)
@@ -365,7 +365,7 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func interactiveDismissDisabled(_ isDisabled: Bool = true) -> some View {
+    nonisolated public func interactiveDismissDisabled(_ isDisabled: Bool = true) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.interactiveDismissDisabled(isDisabled)
         }
@@ -382,7 +382,7 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func presentationDetents(_ detents: Set<PresentationDetent>) -> some View {
+    nonisolated public func presentationDetents(_ detents: Set<PresentationDetent>) -> some View {
         var detentIdentifiers: [Int] = []
         var detentValues: [CGFloat] = []
         for detent in detents {
@@ -395,38 +395,38 @@ extension View {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func presentationDetents(_ detents: Set<PresentationDetent>, selection: Binding<PresentationDetent>) -> some View {
+    nonisolated public func presentationDetents(_ detents: Set<PresentationDetent>, selection: Binding<PresentationDetent>) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func presentationDragIndicator(_ visibility: Visibility) -> some View {
+    nonisolated public func presentationDragIndicator(_ visibility: Visibility) -> some View {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func presentationBackgroundInteraction(_ interaction: PresentationBackgroundInteraction) -> some View {
+    nonisolated public func presentationBackgroundInteraction(_ interaction: PresentationBackgroundInteraction) -> some View {
         // Only .automatic is @available, so we can return self
         return self
     }
 
-    /* nonisolated */ public func presentationCompactAdaptation(_ adaptation: PresentationAdaptation) -> some View {
+    nonisolated public func presentationCompactAdaptation(_ adaptation: PresentationAdaptation) -> some View {
         // Only .automatic is @available, so we can return self
         return self
     }
 
-    /* nonisolated */ public func presentationCompactAdaptation(horizontal horizontalAdaptation: PresentationAdaptation, vertical verticalAdaptation: PresentationAdaptation) -> some View {
+    nonisolated public func presentationCompactAdaptation(horizontal horizontalAdaptation: PresentationAdaptation, vertical verticalAdaptation: PresentationAdaptation) -> some View {
         // Only .automatic is @available, so we can return self
         return self
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func presentationCornerRadius(_ cornerRadius: CGFloat?) -> some View {
+    nonisolated public func presentationCornerRadius(_ cornerRadius: CGFloat?) -> some View {
         stubView()
     }
 
-    /* nonisolated */ public func presentationContentInteraction(_ behavior: PresentationContentInteraction) -> some View {
+    nonisolated public func presentationContentInteraction(_ behavior: PresentationContentInteraction) -> some View {
         // Only .automatic is @available, so we can return self
         return self
     }
@@ -434,11 +434,11 @@ extension View {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func presentationBackground<S>(_ style: S) -> some View where S : ShapeStyle {
+    nonisolated public func presentationBackground<S>(_ style: S) -> some View where S : ShapeStyle {
         stubView()
     }
 
-    /* nonisolated */ public func presentationBackground<V>(alignment: Alignment = .center, @ViewBuilder content: () -> V) -> some View where V : View {
+    nonisolated public func presentationBackground<V>(alignment: Alignment = .center, @ViewBuilder content: () -> V) -> some View where V : View {
         stubView()
     }
 }

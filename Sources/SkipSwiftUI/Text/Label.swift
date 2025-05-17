@@ -6,7 +6,7 @@ import SkipUI
     private let title: Title
     private let icon: Icon
 
-    /* nonisolated */ public init(@ViewBuilder title: () -> Title, @ViewBuilder icon: () -> Icon) {
+    nonisolated public init(@ViewBuilder title: () -> Title, @ViewBuilder icon: () -> Icon) {
         self.title = title()
         self.icon = icon()
     }
@@ -21,22 +21,22 @@ extension Label : SkipUIBridging {
 }
 
 extension Label where Title == Text, Icon == Image {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, image name: String) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, image name: String) {
         self.title = Text(titleKey)
         self.icon = Image(name, bundle: .main)
     }
 
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, systemImage name: String) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, systemImage name: String) {
         self.title = Text(titleKey)
         self.icon = Image(systemName: name)
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, image name: String) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, image name: String) where S : StringProtocol {
         self.title = Text(title)
         self.icon = Image(name, bundle: .main)
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, systemImage name: String) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, systemImage name: String) where S : StringProtocol {
         self.title = Text(title)
         self.icon = Image(systemName: name)
     }
@@ -50,7 +50,7 @@ extension Label where Title == Text, Icon == Image {
 
 extension Label where Title == LabelStyleConfiguration.Title, Icon == LabelStyleConfiguration.Icon {
     @available(*, unavailable)
-    /* nonisolated */ public init(_ configuration: LabelStyleConfiguration) {
+    nonisolated public init(_ configuration: LabelStyleConfiguration) {
         fatalError()
     }
 }
@@ -158,7 +158,7 @@ public struct LabelStyleConfiguration {
 }
 
 extension View {
-    /* nonisolated */ public func labelStyle<S>(_ style: S) -> some View where S : LabelStyle {
+    nonisolated public func labelStyle<S>(_ style: S) -> some View where S : LabelStyle {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.labelStyle(bridgedStyle: style.identifier)
         }

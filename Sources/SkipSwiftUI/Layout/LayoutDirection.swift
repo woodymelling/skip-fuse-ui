@@ -17,7 +17,7 @@ public enum LayoutDirectionBehavior : Hashable, Sendable {
 
 extension View {
     @available(*, unavailable)
-    /* @inlinable nonisolated */ public func layoutDirectionBehavior(_ behavior: LayoutDirectionBehavior) -> some View {
+    /* @inlinable */ nonisolated public func layoutDirectionBehavior(_ behavior: LayoutDirectionBehavior) -> some View {
         stubView()
     }
 }

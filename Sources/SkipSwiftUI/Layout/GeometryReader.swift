@@ -50,7 +50,7 @@ extension GeometryProxy {
 /* @MainActor */ @frozen @preconcurrency public struct GeometryReader<Content> : View where Content : View {
     /* @MainActor */ @preconcurrency public var content: (GeometryProxy) -> Content
 
-    @inlinable /* nonisolated */ public init(@ViewBuilder content: @escaping (GeometryProxy) -> Content) {
+    @inlinable nonisolated public init(@ViewBuilder content: @escaping (GeometryProxy) -> Content) {
         self.content = content
     }
 

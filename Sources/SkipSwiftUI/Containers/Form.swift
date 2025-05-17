@@ -5,7 +5,7 @@ import SkipUI
 /* @MainActor */ @preconcurrency public struct Form<Content> : View where Content : View {
     private let content: Content
 
-    /* nonisolated */ public init(@ViewBuilder content: () -> Content) {
+    nonisolated public init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
 
@@ -20,7 +20,7 @@ extension Form : SkipUIBridging {
 
 extension Form where Content == FormStyleConfiguration.Content {
     @available(*, unavailable)
-    /* nonisolated */ public init(_ configuration: FormStyleConfiguration) {
+    nonisolated public init(_ configuration: FormStyleConfiguration) {
         fatalError()
     }
 }
@@ -93,7 +93,7 @@ public struct FormStyleConfiguration {
 }
 
 extension View {
-    /* nonisolated */ public func formStyle<S>(_ style: S) -> some View where S : FormStyle {
+    nonisolated public func formStyle<S>(_ style: S) -> some View where S : FormStyle {
         return self
     }
 }

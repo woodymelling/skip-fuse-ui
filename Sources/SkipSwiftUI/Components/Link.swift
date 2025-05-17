@@ -7,7 +7,7 @@ import SkipUI
     private let destination: URL
     private let label: Label
 
-    /* nonisolated */ public init(destination: URL, @ViewBuilder label: () -> Label) {
+    nonisolated public init(destination: URL, @ViewBuilder label: () -> Label) {
         self.destination = destination
         self.label = label()
     }
@@ -22,11 +22,11 @@ extension Link : SkipUIBridging {
 }
 
 extension Link where Label == Text {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, destination: URL) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, destination: URL) {
         self.init(destination: destination, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, destination: URL) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, destination: URL) where S : StringProtocol {
         self.init(destination: destination, label: { Text(title) })
     }
 }

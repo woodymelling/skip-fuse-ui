@@ -11,7 +11,7 @@ import SkipUI
     private let pinnedViews: PinnedScrollableViews
     private let content: Content
 
-    /* nonisolated */ public init(alignment: VerticalAlignment = .center, spacing: CGFloat? = nil, pinnedViews: PinnedScrollableViews = .init(), @ViewBuilder content: () -> Content) {
+    nonisolated public init(alignment: VerticalAlignment = .center, spacing: CGFloat? = nil, pinnedViews: PinnedScrollableViews = .init(), @ViewBuilder content: () -> Content) {
         self.alignment = alignment
         self.spacing = spacing
         self.pinnedViews = pinnedViews

@@ -12,23 +12,23 @@ func stubCommands() -> EmptyCommands {
 }
 
 /* @MainActor */ @preconcurrency public struct EmptyCommands : Commands {
-    /* nonisolated */ public init() {
+    nonisolated public init() {
     }
 }
 
 /* @MainActor */ @preconcurrency public struct CommandGroup<Content> : Commands where Content : View {
     @available(*, unavailable)
-    /* nonisolated */ public init(before group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
+    nonisolated public init(before group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(after group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
+    nonisolated public init(after group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(replacing group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
+    nonisolated public init(replacing group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
         fatalError()
     }
 
@@ -77,17 +77,17 @@ public struct CommandGroupPlacement : Sendable {
 
 /* @MainActor */ @preconcurrency public struct CommandMenu<Content> : Commands where Content : View {
     @available(*, unavailable)
-    /* nonisolated */ public init(_ nameKey: LocalizedStringKey, @ViewBuilder content: () -> Content) {
+    nonisolated public init(_ nameKey: LocalizedStringKey, @ViewBuilder content: () -> Content) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(_ name: Text, @ViewBuilder content: () -> Content) {
+    nonisolated public init(_ name: Text, @ViewBuilder content: () -> Content) {
         fatalError()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ name: S, @ViewBuilder content: () -> Content) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ name: S, @ViewBuilder content: () -> Content) where S : StringProtocol {
         fatalError()
     }
 

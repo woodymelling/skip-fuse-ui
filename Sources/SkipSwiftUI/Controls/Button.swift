@@ -7,7 +7,7 @@ import SkipUI
     private let action: @MainActor () -> Void
     private let role: ButtonRole?
 
-    @preconcurrency /* nonisolated */ public init(action: @escaping @MainActor () -> Void, @ViewBuilder label: () -> Label) {
+    @preconcurrency nonisolated public init(action: @escaping @MainActor () -> Void, @ViewBuilder label: () -> Label) {
         self.init(role: nil, action: action, label: label)
     }
 
@@ -27,21 +27,21 @@ extension Button : SkipUIBridging {
 }
 
 extension Button where Label == Text {
-    @preconcurrency /* nonisolated */ public init(_ titleKey: LocalizedStringKey, action: @escaping @MainActor () -> Void) {
+    @preconcurrency nonisolated public init(_ titleKey: LocalizedStringKey, action: @escaping @MainActor () -> Void) {
         self.init(action: action, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload @preconcurrency /* nonisolated */ public init<S>(_ title: S, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload @preconcurrency nonisolated public init<S>(_ title: S, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(action: action, label: { Text(title) })
     }
 }
 
 extension Button where Label == SkipSwiftUI.Label<Text, Image> {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, systemImage: String, action: @escaping @MainActor () -> Void) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, systemImage: String, action: @escaping @MainActor () -> Void) {
         self.init(action: action, label: { SkipSwiftUI.Label(titleKey, systemImage: systemImage) })
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, systemImage: String, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, systemImage: String, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(action: action, label: { SkipSwiftUI.Label(title, systemImage: systemImage) })
     }
 }
@@ -60,7 +60,7 @@ extension Button where Label == PrimitiveButtonStyleConfiguration.Label {
 }
 
 extension Button {
-    @preconcurrency /* nonisolated */ public init(role: ButtonRole?, action: @escaping @MainActor () -> Void, @ViewBuilder label: () -> Label) {
+    @preconcurrency nonisolated public init(role: ButtonRole?, action: @escaping @MainActor () -> Void, @ViewBuilder label: () -> Label) {
         self.role = role
         self.action = action
         self.label = label()
@@ -78,11 +78,11 @@ extension Button where Label == Text {
 }
 
 extension Button where Label == SkipSwiftUI.Label<Text, Image> {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, systemImage: String, role: ButtonRole?, action: @escaping @MainActor () -> Void) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, systemImage: String, role: ButtonRole?, action: @escaping @MainActor () -> Void) {
         self.init(role: role, action: action, label: { SkipSwiftUI.Label(titleKey, systemImage: systemImage) })
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, systemImage: String, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, systemImage: String, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(role: role, action: action, label: { SkipSwiftUI.Label(title, systemImage: systemImage) })
     }
 }
@@ -249,11 +249,11 @@ public struct PrimitiveButtonStyleConfiguration {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func buttonRepeatBehavior(_ behavior: ButtonRepeatBehavior) -> some View {
+    nonisolated public func buttonRepeatBehavior(_ behavior: ButtonRepeatBehavior) -> some View {
         stubView()
     }
 
-    /* nonisolated */ public func buttonStyle<S>(_ style: S) -> some View where S : PrimitiveButtonStyle {
+    nonisolated public func buttonStyle<S>(_ style: S) -> some View where S : PrimitiveButtonStyle {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.buttonStyle(bridgedStyle: style.identifier)
         }
