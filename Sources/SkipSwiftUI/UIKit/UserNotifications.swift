@@ -1,7 +1,7 @@
 // Copyright 2023–2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
-/*
 import Foundation
+import SkipBridge
 import SkipUI
 
 public final class UNUserNotificationCenter {
@@ -27,13 +27,29 @@ public final class UNUserNotificationCenter {
         return try await SkipUI.UNUserNotificationCenter.current().requestAuthorization(bridgedOptions: options.rawValue)
     }
 
-    //~~~ Don't require delegate to be bridgable - build custom box
     public var delegate: (any UNUserNotificationCenterDelegate)? {
         get {
-            return SkipUI.UNUserNotificationCenter.current().delegate as? UNUserNotificationCenterDelegate
+            guard let skipUIDelegate = SkipUI.UNUserNotificationCenter.current().delegate else {
+                return nil
+            }
+            if let delegate = skipUIDelegate as? SkipUIUNUserNotificationCenterDelegate {
+                return delegate.delegate
+            } else if let delegate = skipUIDelegate as? UNUserNotificationCenterDelegate {
+                return delegate
+            } else {
+                return nil
+            }
         }
         set {
-            SkipUI.UNUserNotificationCenter.current().delegate = newValue
+            let skipUIDelegate: SkipUI.UNUserNotificationCenterDelegate?
+            if let delegate = newValue as? SkipUI.UNUserNotificationCenterDelegate {
+                skipUIDelegate = delegate
+            } else if let newValue {
+                skipUIDelegate = SkipUIUNUserNotificationCenterDelegate(newValue)
+            } else {
+                skipUIDelegate = nil
+            }
+            SkipUI.UNUserNotificationCenter.current().delegate = skipUIDelegate
         }
     }
 
@@ -42,7 +58,6 @@ public final class UNUserNotificationCenter {
         fatalError()
     }
 
-    @MainActor
     public func add(_ request: UNNotificationRequest) async throws {
         try await SkipUI.UNUserNotificationCenter.current().add(request.Java_request)
     }
@@ -83,8 +98,7 @@ public final class UNUserNotificationCenter {
     }
 }
 
-@MainActor
-public protocol UNUserNotificationCenterDelegate : SkipUI.UNUserNotificationCenterDelegate {
+public protocol UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive notification: UNNotificationResponse) async
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions
@@ -102,18 +116,27 @@ extension UNUserNotificationCenterDelegate {
 
     public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
     }
+}
 
-    public func userNotificationCenter(_ center: SkipUI.UNUserNotificationCenter, didReceive notification: SkipUI.UNNotificationResponse) async {
-        await self.userNotificationCenter(UNUserNotificationCenter.current(), didReceive: UNNotificationResponse(Java_response: notification))
+// SKIP @bridge
+final class SkipUIUNUserNotificationCenterDelegate : SkipUI.UNUserNotificationCenterDelegate {
+    let delegate: any UNUserNotificationCenterDelegate
+
+    init(_ delegate: any UNUserNotificationCenterDelegate) {
+        self.delegate = delegate
     }
 
-    public func userNotificationCenter(_ center: SkipUI.UNUserNotificationCenter, willPresent notification: SkipUI.UNNotification) async -> SkipUI.UNNotificationPresentationOptions {
-        let options = await self.userNotificationCenter(UNUserNotificationCenter.current(), willPresent: UNNotification(Java_notification: notification))
+    func userNotificationCenter(_ center: SkipUI.UNUserNotificationCenter, didReceive notification: SkipUI.UNNotificationResponse) async {
+        await delegate.userNotificationCenter(UNUserNotificationCenter.current(), didReceive: UNNotificationResponse(Java_response: notification))
+    }
+
+    func userNotificationCenter(_ center: SkipUI.UNUserNotificationCenter, willPresent notification: SkipUI.UNNotification) async -> SkipUI.UNNotificationPresentationOptions {
+        let options = await delegate.userNotificationCenter(UNUserNotificationCenter.current(), willPresent: UNNotification(Java_notification: notification))
         return SkipUI.UNNotificationPresentationOptions(rawValue: options.rawValue)
     }
 
-    public func userNotificationCenter(_ center: SkipUI.UNUserNotificationCenter, openSettingsFor notification: SkipUI.UNNotification?) {
-        self.userNotificationCenter(UNUserNotificationCenter.current(), openSettingsFor: notification == nil ? nil : UNNotification(Java_notification: notification!))
+    func userNotificationCenter(_ center: SkipUI.UNUserNotificationCenter, openSettingsFor notification: SkipUI.UNNotification?) {
+        self.delegate.userNotificationCenter(UNUserNotificationCenter.current(), openSettingsFor: notification == nil ? nil : UNNotification(Java_notification: notification!))
     }
 }
 
@@ -438,4 +461,3 @@ public final class UNPushNotificationTrigger: UNNotificationTrigger {
         super.init(repeats: repeats)
     }
 }
-*/
