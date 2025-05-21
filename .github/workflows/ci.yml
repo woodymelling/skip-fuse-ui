@@ -19,4 +19,6 @@ jobs:
       #runs-on: "['macos-15']"
       # cannot run local tests on macos-13 because they require macos-14+
       run-local-tests: false
+      # concurrency errors due to running on macos-13
+      run-export: false
 
