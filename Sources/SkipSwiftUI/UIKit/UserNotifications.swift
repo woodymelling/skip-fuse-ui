@@ -27,13 +27,13 @@ public final class UNUserNotificationCenter {
         return try await SkipUI.UNUserNotificationCenter.current().requestAuthorization(bridgedOptions: options.rawValue)
     }
 
-    public var delegate: (any UNUserNotificationCenterDelegate)? {
+    public weak var delegate: (any UNUserNotificationCenterDelegate)? {
         get {
             guard let skipUIDelegate = SkipUI.UNUserNotificationCenter.current().delegate else {
                 return nil
             }
-            if let delegate = skipUIDelegate as? SkipUIUNUserNotificationCenterDelegate {
-                return delegate.delegate
+            if skipUIDelegate is SkipUI.UserNotificationCenterDelegateSupport {
+                return _delegate // Using native delegate
             } else if let delegate = skipUIDelegate as? UNUserNotificationCenterDelegate {
                 return delegate
             } else {
@@ -43,15 +43,46 @@ public final class UNUserNotificationCenter {
         set {
             let skipUIDelegate: SkipUI.UNUserNotificationCenterDelegate?
             if let delegate = newValue as? SkipUI.UNUserNotificationCenterDelegate {
+                _delegate = nil
                 skipUIDelegate = delegate
             } else if let newValue {
-                skipUIDelegate = SkipUIUNUserNotificationCenterDelegate(newValue)
+                _delegate = newValue
+                skipUIDelegate = UserNotificationCenterDelegateSupport(didReceive: { [weak newValue] response, completion in
+                    guard let newValue else {
+                        completion.run()
+                        return
+                    }
+                    let responseBox = UncheckedSendableBox(UNNotificationResponse(Java_response: response))
+                    let delegateBox = UncheckedSendableBox(newValue)
+                    Task {
+                        await delegateBox.wrappedValue.userNotificationCenter(UNUserNotificationCenter.current(), didReceive: responseBox.wrappedValue)
+                    }
+                }, willPresent: { [weak newValue] notification, completion in
+                    guard let newValue else {
+                        completion.run(0)
+                        return
+                    }
+                    let notificationBox = UncheckedSendableBox(UNNotification(Java_notification: notification))
+                    let delegateBox = UncheckedSendableBox(newValue)
+                    Task {
+                        let options = await delegateBox.wrappedValue.userNotificationCenter(UNUserNotificationCenter.current(), willPresent: notificationBox.wrappedValue)
+                        completion.run(options.rawValue)
+                    }
+                }, openSettings: { [weak newValue] notification in
+                    guard let newValue else {
+                        return
+                    }
+                    let swiftNotification = notification == nil ? nil : UNNotification(Java_notification: notification!)
+                    newValue.userNotificationCenter(UNUserNotificationCenter.current(), openSettingsFor: swiftNotification)
+                })
             } else {
+                _delegate = nil
                 skipUIDelegate = nil
             }
             SkipUI.UNUserNotificationCenter.current().delegate = skipUIDelegate
         }
     }
+    private weak var _delegate: (any UNUserNotificationCenterDelegate)?
 
     @available(*, unavailable)
     public var supportsContentExtensions: Bool {
@@ -98,7 +129,7 @@ public final class UNUserNotificationCenter {
     }
 }
 
-public protocol UNUserNotificationCenterDelegate {
+public protocol UNUserNotificationCenterDelegate : AnyObject {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive notification: UNNotificationResponse) async
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions
@@ -115,28 +146,6 @@ extension UNUserNotificationCenterDelegate {
     }
 
     public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
-    }
-}
-
-// SKIP @bridge
-final class SkipUIUNUserNotificationCenterDelegate : SkipUI.UNUserNotificationCenterDelegate {
-    let delegate: any UNUserNotificationCenterDelegate
-
-    init(_ delegate: any UNUserNotificationCenterDelegate) {
-        self.delegate = delegate
-    }
-
-    func userNotificationCenter(_ center: SkipUI.UNUserNotificationCenter, didReceive notification: SkipUI.UNNotificationResponse) async {
-        await delegate.userNotificationCenter(UNUserNotificationCenter.current(), didReceive: UNNotificationResponse(Java_response: notification))
-    }
-
-    func userNotificationCenter(_ center: SkipUI.UNUserNotificationCenter, willPresent notification: SkipUI.UNNotification) async -> SkipUI.UNNotificationPresentationOptions {
-        let options = await delegate.userNotificationCenter(UNUserNotificationCenter.current(), willPresent: UNNotification(Java_notification: notification))
-        return SkipUI.UNNotificationPresentationOptions(rawValue: options.rawValue)
-    }
-
-    func userNotificationCenter(_ center: SkipUI.UNUserNotificationCenter, openSettingsFor notification: SkipUI.UNNotification?) {
-        self.delegate.userNotificationCenter(UNUserNotificationCenter.current(), openSettingsFor: notification == nil ? nil : UNNotification(Java_notification: notification!))
     }
 }
 
@@ -270,7 +279,7 @@ public class UNNotificationContent {
         self.badge = Java_content.bridgedBadge
         self.sound = Java_content.sound == nil ? nil : UNNotificationSound(Java_sound: Java_content.sound!)
         self.launchImageName = Java_content.launchImageName
-        self.userInfo = Java_content.userInfo
+        self.userInfo = Java_content.bridgedUserInfo
         self.attachments = Java_content.attachments.map { UNNotificationAttachment(Java_attachment: $0) }
         self.categoryIdentifier = Java_content.categoryIdentifier
         self.threadIdentifier = Java_content.threadIdentifier
