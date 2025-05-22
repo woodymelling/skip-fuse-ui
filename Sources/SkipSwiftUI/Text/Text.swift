@@ -6,9 +6,9 @@ import CoreGraphics
 import Foundation
 import SkipUI
 
-/* @frozen */ public struct Text : Equatable /*, Sendable */ {
+/* @frozen */ public struct Text : Equatable, Sendable {
     let spec: TextSpec
-    var modifierChain: [(any View) -> any View] = []
+    var modifierChain: [@Sendable (any View) -> any View] = []
 
     init(spec: TextSpec) {
         self.spec = spec
@@ -28,7 +28,7 @@ import SkipUI
 }
 
 /// Define text content.
-struct TextSpec : Equatable {
+struct TextSpec : Equatable, @unchecked Sendable {
     var verbatim: String?
     var key: LocalizedStringKey?
     var tableName: String?
@@ -78,11 +78,11 @@ extension Text {
 //}
 
 extension Text {
-    public struct LineStyle : Hashable /* , Sendable */ {
+    public struct LineStyle : Hashable, Sendable {
         public init(pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) {
         }
 
-        public struct Pattern /* : Sendable */ {
+        public struct Pattern : Sendable {
             public static let solid = Text.LineStyle.Pattern()
             public static let dot = Text.LineStyle.Pattern()
             public static let dash = Text.LineStyle.Pattern()
@@ -131,7 +131,7 @@ extension Text {
 }
 
 extension Text {
-    public struct DateStyle : Equatable /*, Sendable */ {
+    public struct DateStyle : Equatable, Sendable {
         public static let time: DateStyle = {
             let formatter = DateFormatter()
             formatter.timeStyle = .medium
@@ -164,9 +164,9 @@ extension Text {
         }
 
         private let identifier: Int
-        let format: (Date) -> String
+        let format: @Sendable (Date) -> String
 
-        private init(identifier: Int, format: @escaping (Date) -> String) {
+        private init(identifier: Int, format: @escaping @Sendable (Date) -> String) {
             self.identifier = identifier
             self.format = format
         }
@@ -219,13 +219,13 @@ extension Text {
 }
 
 extension Text {
-    public enum TruncationMode : Hashable /* : Sendable */ {
+    public enum TruncationMode : Hashable, Sendable {
         case head
         case tail
         case middle
     }
 
-    public enum Case : Int, Hashable /* : Sendable */ {
+    public enum Case : Int, Hashable, Sendable {
         case uppercase = 0 // For bridging
         case lowercase = 1 // For bridging
     }
@@ -248,7 +248,7 @@ extension Text {
 }
 
 extension Text {
-    /* nonisolated */ public func foregroundColor(_ color: Color?) -> Text {
+    nonisolated public func foregroundColor(_ color: Color?) -> Text {
         var text = self
         text.modifierChain.append {
             $0.foregroundColor(color)
@@ -256,7 +256,7 @@ extension Text {
         return text
     }
 
-    /* nonisolated */ public func foregroundStyle<S>(_ style: S) -> Text where S : ShapeStyle {
+    nonisolated public func foregroundStyle<S>(_ style: S) -> Text where S : ShapeStyle {
         var text = self
         text.modifierChain.append {
             $0.foregroundStyle(style)
@@ -264,7 +264,7 @@ extension Text {
         return text
     }
 
-    /* nonisolated */ public func font(_ font: Font?) -> Text {
+    nonisolated public func font(_ font: Font?) -> Text {
         var text = self
         text.modifierChain.append {
             $0.font(font)
@@ -272,7 +272,7 @@ extension Text {
         return text
     }
 
-    /* nonisolated */ public func fontWeight(_ weight: Font.Weight?) -> Text {
+    nonisolated public func fontWeight(_ weight: Font.Weight?) -> Text {
         var text = self
         text.modifierChain.append {
             $0.fontWeight(weight)
@@ -281,15 +281,15 @@ extension Text {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func fontWidth(_ width: Font.Width?) -> Text {
+    nonisolated public func fontWidth(_ width: Font.Width?) -> Text {
         fatalError()
     }
 
-    /* nonisolated */ public func bold() -> Text {
+    nonisolated public func bold() -> Text {
         return bold(true)
     }
 
-    /* nonisolated */ public func bold(_ isActive: Bool) -> Text {
+    nonisolated public func bold(_ isActive: Bool) -> Text {
         var text = self
         text.modifierChain.append {
             $0.bold(isActive)
@@ -297,11 +297,11 @@ extension Text {
         return text
     }
 
-    /* nonisolated */ public func italic() -> Text {
+    nonisolated public func italic() -> Text {
         return italic(true)
     }
 
-    /* nonisolated */ public func italic(_ isActive: Bool) -> Text {
+    nonisolated public func italic(_ isActive: Bool) -> Text {
         var text = self
         text.modifierChain.append {
             $0.italic(isActive)
@@ -309,7 +309,7 @@ extension Text {
         return text
     }
 
-    /* nonisolated */ public func monospaced(_ isActive: Bool = true) -> Text {
+    nonisolated public func monospaced(_ isActive: Bool = true) -> Text {
         var text = self
         text.modifierChain.append {
             $0.monospaced(isActive)
@@ -317,7 +317,7 @@ extension Text {
         return text
     }
 
-    /* nonisolated */ public func fontDesign(_ design: Font.Design?) -> Text {
+    nonisolated public func fontDesign(_ design: Font.Design?) -> Text {
         var text = self
         text.modifierChain.append {
             $0.fontDesign(design)
@@ -326,11 +326,11 @@ extension Text {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func monospacedDigit() -> Text {
+    nonisolated public func monospacedDigit() -> Text {
         fatalError()
     }
 
-    /* nonisolated */ public func strikethrough(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> Text {
+    nonisolated public func strikethrough(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> Text {
         var text = self
         text.modifierChain.append {
             $0.strikethrough(isActive, pattern: pattern, color: color)
@@ -338,7 +338,7 @@ extension Text {
         return text
     }
 
-    /* nonisolated */ public func underline(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> Text {
+    nonisolated public func underline(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> Text {
         var text = self
         text.modifierChain.append {
             $0.underline(isActive, pattern: pattern, color: color)
@@ -347,17 +347,17 @@ extension Text {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func kerning(_ kerning: CGFloat) -> Text {
+    nonisolated public func kerning(_ kerning: CGFloat) -> Text {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func tracking(_ tracking: CGFloat) -> Text {
+    nonisolated public func tracking(_ tracking: CGFloat) -> Text {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func baselineOffset(_ baselineOffset: CGFloat) -> Text {
+    nonisolated public func baselineOffset(_ baselineOffset: CGFloat) -> Text {
         fatalError()
     }
 }
@@ -376,67 +376,67 @@ extension View {
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func fontWidth(_ width: Font.Width?) -> some View {
+    @_disfavoredOverload nonisolated public func fontWidth(_ width: Font.Width?) -> some View {
         stubView()
     }
 
-    @_disfavoredOverload /* nonisolated */ public func bold() -> some View {
+    @_disfavoredOverload nonisolated public func bold() -> some View {
         return bold(true)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func bold(_ isActive: Bool) -> some View {
+    @_disfavoredOverload nonisolated public func bold(_ isActive: Bool) -> some View {
         return fontWeight(isActive ? Font.Weight.bold : nil)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func italic() -> some View {
+    @_disfavoredOverload nonisolated public func italic() -> some View {
         return italic(true)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func italic(_ isActive: Bool) -> some View {
+    @_disfavoredOverload nonisolated public func italic(_ isActive: Bool) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.italic(isActive)
         }
     }
 
-    @_disfavoredOverload /* nonisolated */ public func monospaced(_ isActive: Bool = true) -> some View {
+    @_disfavoredOverload nonisolated public func monospaced(_ isActive: Bool = true) -> some View {
         return fontDesign(.monospaced)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func fontDesign(_ design: Font.Design?) -> some View {
+    @_disfavoredOverload nonisolated public func fontDesign(_ design: Font.Design?) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.fontDesign(bridgedDesign: design?.rawValue)
         }
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func monospacedDigit() -> some View {
+    @_disfavoredOverload nonisolated public func monospacedDigit() -> some View {
         stubView()
     }
 
-    @_disfavoredOverload /* nonisolated */ public func strikethrough(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
+    @_disfavoredOverload nonisolated public func strikethrough(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.bridgedStrikethrough(isActive)
         }
     }
 
-    @_disfavoredOverload /* nonisolated */ public func underline(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
+    @_disfavoredOverload nonisolated public func underline(_ isActive: Bool = true, pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.bridgedUnderline(isActive)
         }
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func kerning(_ kerning: CGFloat) -> some View {
+    @_disfavoredOverload nonisolated public func kerning(_ kerning: CGFloat) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func tracking(_ tracking: CGFloat) -> some View {
+    @_disfavoredOverload nonisolated public func tracking(_ tracking: CGFloat) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func baselineOffset(_ baselineOffset: CGFloat) -> some View {
+    @_disfavoredOverload nonisolated public func baselineOffset(_ baselineOffset: CGFloat) -> some View {
         stubView()
     }
 
@@ -552,11 +552,11 @@ extension View {
 
 extension Text {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityTextContentType(_ value: AccessibilityTextContentType) -> Text {
+    nonisolated public func accessibilityTextContentType(_ value: AccessibilityTextContentType) -> Text {
         fatalError()
     }
 
-    /* nonisolated */ public func accessibilityHeading(_ level: AccessibilityHeadingLevel) -> Text {
+    nonisolated public func accessibilityHeading(_ level: AccessibilityHeadingLevel) -> Text {
         var text = self
         text.modifierChain.append {
             $0.accessibilityHeading(level)
@@ -564,7 +564,7 @@ extension Text {
         return text
     }
 
-    /* nonisolated */ public func accessibilityLabel(_ label: Text) -> Text {
+    nonisolated public func accessibilityLabel(_ label: Text) -> Text {
         var text = self
         text.modifierChain.append {
             $0.accessibilityLabel(label)
@@ -572,22 +572,22 @@ extension Text {
         return text
     }
 
-    /* nonisolated */ public func accessibilityLabel(_ labelKey: LocalizedStringKey) -> Text {
+    nonisolated public func accessibilityLabel(_ labelKey: LocalizedStringKey) -> Text {
         return accessibilityLabel(Text(labelKey))
     }
 
-    @_disfavoredOverload /* nonisolated */ public func accessibilityLabel<S>(_ label: S) -> Text where S : StringProtocol {
+    @_disfavoredOverload nonisolated public func accessibilityLabel<S>(_ label: S) -> Text where S : StringProtocol {
         return accessibilityLabel(Text(label))
     }
 }
 
 extension View {
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func accessibilityTextContentType(_ value: AccessibilityTextContentType) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    @_disfavoredOverload nonisolated public func accessibilityTextContentType(_ value: AccessibilityTextContentType) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
-    @_disfavoredOverload /* nonisolated */ public func accessibilityHeading(_ level: AccessibilityHeadingLevel) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    @_disfavoredOverload nonisolated public func accessibilityHeading(_ level: AccessibilityHeadingLevel) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.accessibilityHeading(bridgedLevel: Int(level.rawValue))
         }
@@ -595,7 +595,7 @@ extension View {
 }
 
 extension Text {
-    public struct Scale : /* Sendable, */ Hashable {
+    public struct Scale : Sendable, Hashable {
         public static let `default` = Text.Scale()
         public static let secondary = Text.Scale()
     }
@@ -1442,7 +1442,7 @@ extension TextSelectability where Self == DisabledTextSelectability {
 public protocol TextVariantPreference {
 }
 
-public struct FixedTextVariant : TextVariantPreference /* , Sendable */ {
+public struct FixedTextVariant : TextVariantPreference, Sendable {
 }
 
 extension TextVariantPreference where Self == FixedTextVariant {
@@ -1451,7 +1451,7 @@ extension TextVariantPreference where Self == FixedTextVariant {
     }
 }
 
-public struct SizeDependentTextVariant : TextVariantPreference /*, Sendable */ {
+public struct SizeDependentTextVariant : TextVariantPreference, Sendable {
 }
 
 extension TextVariantPreference where Self == SizeDependentTextVariant {

@@ -5,14 +5,14 @@ import CoreGraphics
 #endif
 import SkipUI
 
-public protocol Shape : /* Sendable, */ Animatable, View, SkipUIBridging /*, _RemoveGlobalActorIsolation */ where Body == Never {
-    /* nonisolated */ func path(in rect: CGRect) -> Path
+public protocol Shape : Sendable, Animatable, View, SkipUIBridging /*, _RemoveGlobalActorIsolation */ where Body == Never {
+    nonisolated func path(in rect: CGRect) -> Path
 
-    /* nonisolated */ static var role: ShapeRole { get }
+    nonisolated static var role: ShapeRole { get }
 
-    /* nonisolated */ var layoutDirectionBehavior: LayoutDirectionBehavior { get }
+    nonisolated var layoutDirectionBehavior: LayoutDirectionBehavior { get }
 
-    /* nonisolated */ func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize
+    nonisolated func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize
 }
 
 extension Shape {
@@ -43,27 +43,27 @@ extension Shape {
         return .mirrors
     }
 
-    /* nonisolated */ public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
+    nonisolated public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
         return proposal.replacingUnspecifiedDimensions()
     }
 }
 
 extension Shape {
-    @inlinable /* nonisolated */ public func stroke(style: StrokeStyle) -> some Shape {
+    @inlinable nonisolated public func stroke(style: StrokeStyle) -> some Shape {
         return _StrokeShape(shape: self, style: style)
     }
 
-    @inlinable /* nonisolated */ public func stroke(lineWidth: CGFloat = 1) -> some Shape {
+    @inlinable nonisolated public func stroke(lineWidth: CGFloat = 1) -> some Shape {
         return stroke(style: .init(lineWidth: lineWidth))
     }
 }
 
 @frozen public struct Rectangle : Shape {
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+    nonisolated public func path(in rect: CGRect) -> Path {
         return Path(rect)
     }
 
-    @inlinable /* nonisolated */ public init() {
+    @inlinable nonisolated public init() {
     }
 
 //    public typealias AnimatableData = EmptyAnimatableData
@@ -76,7 +76,7 @@ extension Rectangle {
 }
 
 extension Rectangle : InsettableShape {
-    /* @inlinable nonisolated */ public func inset(by amount: CGFloat) -> some InsettableShape {
+    /* @inlinable */ nonisolated public func inset(by amount: CGFloat) -> some InsettableShape {
         return _InsetShape(shape: self, inset: amount)
     }
 }
@@ -91,17 +91,17 @@ extension Shape where Self == Rectangle {
     public var cornerSize: CGSize
     public var style: RoundedCornerStyle
 
-    @inlinable /* nonisolated */ public init(cornerSize: CGSize, style: RoundedCornerStyle = .continuous) {
+    @inlinable nonisolated public init(cornerSize: CGSize, style: RoundedCornerStyle = .continuous) {
         self.cornerSize = cornerSize
         self.style = style
     }
 
-    @inlinable /* nonisolated */ public init(cornerRadius: CGFloat, style: RoundedCornerStyle = .continuous) {
+    @inlinable nonisolated public init(cornerRadius: CGFloat, style: RoundedCornerStyle = .continuous) {
         self.cornerSize = CGSize(width: cornerRadius, height: cornerRadius)
         self.style = style
     }
 
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+    nonisolated public func path(in rect: CGRect) -> Path {
         return Path(roundedRect: rect, cornerSize: cornerSize, style: style)
     }
 
@@ -116,7 +116,7 @@ extension RoundedRectangle {
 }
 
 extension RoundedRectangle : InsettableShape {
-    /* @inlinable nonisolated */ public func inset(by amount: CGFloat) -> some InsettableShape {
+    /* @inlinable */ nonisolated public func inset(by amount: CGFloat) -> some InsettableShape {
         return _InsetShape(shape: self, inset: amount)
     }
 }
@@ -135,16 +135,16 @@ extension Shape where Self == RoundedRectangle {
     public var cornerRadii: RectangleCornerRadii
     public var style: RoundedCornerStyle
 
-    @inlinable /* nonisolated */ public init(cornerRadii: RectangleCornerRadii, style: RoundedCornerStyle = .continuous) {
+    @inlinable nonisolated public init(cornerRadii: RectangleCornerRadii, style: RoundedCornerStyle = .continuous) {
         self.cornerRadii = cornerRadii
         self.style = style
     }
 
-    /* nonisolated */ public init(topLeadingRadius: CGFloat = 0, bottomLeadingRadius: CGFloat = 0, bottomTrailingRadius: CGFloat = 0, topTrailingRadius: CGFloat = 0, style: RoundedCornerStyle = .continuous) {
+    nonisolated public init(topLeadingRadius: CGFloat = 0, bottomLeadingRadius: CGFloat = 0, bottomTrailingRadius: CGFloat = 0, topTrailingRadius: CGFloat = 0, style: RoundedCornerStyle = .continuous) {
         self.init(cornerRadii: RectangleCornerRadii(topLeading: topLeadingRadius, bottomLeading: bottomLeadingRadius, bottomTrailing: bottomTrailingRadius, topTrailing: topTrailingRadius), style: style)
     }
 
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+    nonisolated public func path(in rect: CGRect) -> Path {
         return Path(roundedRect: rect, cornerRadii: cornerRadii, style: style)
     }
 
@@ -159,7 +159,7 @@ extension UnevenRoundedRectangle {
 }
 
 extension UnevenRoundedRectangle : InsettableShape {
-    /* @inlinable nonisolated */ public func inset(by amount: CGFloat) -> some InsettableShape {
+    /* @inlinable */ nonisolated public func inset(by amount: CGFloat) -> some InsettableShape {
         return _InsetShape(shape: self, inset: amount)
     }
 }
@@ -177,11 +177,11 @@ extension Shape where Self == UnevenRoundedRectangle {
 @frozen public struct Capsule : Shape {
     public var style: RoundedCornerStyle
 
-    @inlinable /* nonisolated */ public init(style: RoundedCornerStyle = .continuous) {
+    @inlinable nonisolated public init(style: RoundedCornerStyle = .continuous) {
         self.style = style
     }
 
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+    nonisolated public func path(in rect: CGRect) -> Path {
         var path = Path()
         if rect.width >= rect.height {
             path.move(to: CGPoint(x: rect.minX + rect.height / 2.0, y: rect.minY))
@@ -208,7 +208,7 @@ extension Capsule {
 }
 
 extension Capsule : InsettableShape {
-    /* @inlinable nonisolated */ public func inset(by amount: CGFloat) -> some InsettableShape {
+    /* @inlinable */ nonisolated public func inset(by amount: CGFloat) -> some InsettableShape {
         return _InsetShape(shape: self, inset: amount)
     }
 }
@@ -223,12 +223,12 @@ extension Shape where Self == Capsule {
     }
 }
 
-@frozen public struct Ellipse : Shape /*, BitwiseCopyable */ {
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+@frozen public struct Ellipse : Shape, BitwiseCopyable {
+    nonisolated public func path(in rect: CGRect) -> Path {
         return Path(ellipseIn: rect)
     }
 
-    @inlinable /* nonisolated */ public init() {
+    @inlinable nonisolated public init() {
     }
 
 //    public typealias AnimatableData = EmptyAnimatableData
@@ -241,7 +241,7 @@ extension Ellipse {
 }
 
 extension Ellipse : InsettableShape {
-    /* @inlinable nonisolated */ public func inset(by amount: CGFloat) -> some InsettableShape {
+    /* @inlinable */ nonisolated public func inset(by amount: CGFloat) -> some InsettableShape {
         return _InsetShape(shape: self, inset: amount)
     }
 }
@@ -252,15 +252,15 @@ extension Shape where Self == Ellipse {
     }
 }
 
-@frozen public struct Circle : Shape /*, BitwiseCopyable */ {
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+@frozen public struct Circle : Shape, BitwiseCopyable {
+    nonisolated public func path(in rect: CGRect) -> Path {
         let dim = min(rect.width, rect.height)
         let x = rect.minX + (rect.width - dim) / 2.0
         let y = rect.minY + (rect.height - dim) / 2.0
         return Path(ellipseIn: CGRect(x: x, y: y, width: dim, height: dim))
     }
 
-    @inlinable /* nonisolated */ public init() {
+    @inlinable nonisolated public init() {
     }
 
 //    public typealias AnimatableData = EmptyAnimatableData
@@ -277,7 +277,7 @@ extension Circle {
 }
 
 extension Circle : InsettableShape {
-    /* @inlinable nonisolated */ public func inset(by amount: CGFloat) -> some InsettableShape {
+    /* @inlinable */ nonisolated public func inset(by amount: CGFloat) -> some InsettableShape {
         return _InsetShape(shape: self, inset: amount)
     }
 }
@@ -288,13 +288,13 @@ extension Shape where Self == Circle {
     }
 }
 
-@frozen public struct ContainerRelativeShape : Shape /*, BitwiseCopyable */ {
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+@frozen public struct ContainerRelativeShape : Shape, BitwiseCopyable {
+    nonisolated public func path(in rect: CGRect) -> Path {
         return Path(rect)
     }
 
     @available(*, unavailable)
-    @inlinable /* nonisolated */ public init() {
+    @inlinable nonisolated public init() {
         fatalError()
     }
 
@@ -308,7 +308,7 @@ extension ContainerRelativeShape {
 }
 
 extension ContainerRelativeShape : InsettableShape {
-    /* @inlinable nonisolated */ public func inset(by amount: CGFloat) -> some InsettableShape {
+    /* @inlinable */ nonisolated public func inset(by amount: CGFloat) -> some InsettableShape {
         _InsetShape(shape: self, inset: amount)
     }
 }
@@ -320,18 +320,18 @@ extension Shape where Self == ContainerRelativeShape {
     }
 }
 
-@frozen public struct AnyShape : Shape /*, @unchecked Sendable */ {
+@frozen public struct AnyShape : Shape, @unchecked Sendable {
     private let shape: any Shape
 
     nonisolated public init<S>(_ shape: S) where S : Shape {
         self.shape = shape
     }
 
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+    nonisolated public func path(in rect: CGRect) -> Path {
         return shape.path(in: rect)
     }
 
-    /* nonisolated */ public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
+    nonisolated public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
         return shape.sizeThatFits(proposal)
     }
 
@@ -347,51 +347,51 @@ extension AnyShape {
 
 extension Shape {
     @available(*, unavailable)
-    /* @inlinable nonisolated */ public func trim(from startFraction: CGFloat = 0, to endFraction: CGFloat = 1) -> some Shape {
+    /* @inlinable */ nonisolated public func trim(from startFraction: CGFloat = 0, to endFraction: CGFloat = 1) -> some Shape {
         stubShape()
     }
 }
 
 extension Shape {
     @available(*, unavailable)
-    /* nonisolated */ public func intersection<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
+    nonisolated public func intersection<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
         stubShape()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func union<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
+    nonisolated public func union<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
         stubShape()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func subtracting<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
+    nonisolated public func subtracting<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
         stubShape()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func symmetricDifference<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
+    nonisolated public func symmetricDifference<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
         stubShape()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func lineIntersection<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
+    nonisolated public func lineIntersection<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
         stubShape()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func lineSubtraction<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
+    nonisolated public func lineSubtraction<T>(_ other: T, eoFill: Bool = false) -> some Shape where T : Shape {
         stubShape()
     }
 }
 
 extension Shape {
     @available(*, unavailable)
-    /* @inlinable nonisolated */ public func size(_ size: CGSize) -> some Shape {
+    /* @inlinable */ nonisolated public func size(_ size: CGSize) -> some Shape {
         stubShape()
     }
 
 
-    /* @inlinable nonisolated */ public func size(width: CGFloat, height: CGFloat) -> some Shape {
+    /* @inlinable */ nonisolated public func size(width: CGFloat, height: CGFloat) -> some Shape {
         stubShape()
     }
 }
@@ -452,20 +452,20 @@ extension Shape {
 //}
 
 extension Shape {
-    /* nonisolated */ public func fill<S>(_ content: S = .foreground, style: FillStyle = FillStyle()) -> _ShapeView<Self, S> where S : ShapeStyle {
+    nonisolated public func fill<S>(_ content: S = .foreground, style: FillStyle = FillStyle()) -> _ShapeView<Self, S> where S : ShapeStyle {
         return _ShapeView(shape: self, style: content, fillStyle: style)
     }
 
-    /* nonisolated */ public func stroke<S>(_ content: S, style: StrokeStyle, antialiased: Bool = true) -> StrokeShapeView<Self, S, EmptyView> where S : ShapeStyle {
+    nonisolated public func stroke<S>(_ content: S, style: StrokeStyle, antialiased: Bool = true) -> StrokeShapeView<Self, S, EmptyView> where S : ShapeStyle {
         return StrokeShapeView(shape: self, style: content, strokeStyle: style, isAntialiased: antialiased, background: EmptyView())
     }
 
-    /* nonisolated */ public func stroke<S>(_ content: S, lineWidth: CGFloat = 1, antialiased: Bool = true) -> StrokeShapeView<Self, S, EmptyView> where S : ShapeStyle {
+    nonisolated public func stroke<S>(_ content: S, lineWidth: CGFloat = 1, antialiased: Bool = true) -> StrokeShapeView<Self, S, EmptyView> where S : ShapeStyle {
         return stroke(content, style: .init(lineWidth: lineWidth), antialiased: antialiased)
     }
 }
 
-public enum ShapeRole : Hashable /*, Sendable */ {
+public enum ShapeRole : Hashable, Sendable {
     case fill
     case stroke
     case separator
@@ -496,11 +496,11 @@ extension InsettableShape {
 }
 
 extension InsettableShape {
-    /* nonisolated */ public func strokeBorder<S>(_ content: S = .foreground, style: StrokeStyle, antialiased: Bool = true) -> StrokeBorderShapeView<Self, S, EmptyView> where S : ShapeStyle {
+    nonisolated public func strokeBorder<S>(_ content: S = .foreground, style: StrokeStyle, antialiased: Bool = true) -> StrokeBorderShapeView<Self, S, EmptyView> where S : ShapeStyle {
         return StrokeBorderShapeView(shape: self, style: content, strokeStyle: style, isAntialiased: antialiased, background: EmptyView())
     }
 
-    /* nonisolated */ public func strokeBorder<S>(_ content: S = .foreground, lineWidth: CGFloat = 1, antialiased: Bool = true) -> StrokeBorderShapeView<Self, S, EmptyView> where S : ShapeStyle {
+    nonisolated public func strokeBorder<S>(_ content: S = .foreground, lineWidth: CGFloat = 1, antialiased: Bool = true) -> StrokeBorderShapeView<Self, S, EmptyView> where S : ShapeStyle {
         return strokeBorder(content, style: .init(lineWidth: lineWidth), antialiased: antialiased)
     }
 }
@@ -509,20 +509,20 @@ extension InsettableShape {
     public var shape: Content
     public var offset: CGSize
 
-    @inlinable /* nonisolated public */ init(shape: Content, offset: CGSize) {
+    @inlinable nonisolated public init(shape: Content, offset: CGSize) {
         self.shape = shape
         self.offset = offset
     }
 
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+    nonisolated public func path(in rect: CGRect) -> Path {
         return shape.path(in: rect).offsetBy(dx: offset.width, dy: offset.height)
     }
 
-    /* nonisolated */ public static var role: ShapeRole {
+    nonisolated public static var role: ShapeRole {
         return Content.role
     }
 
-    /* nonisolated */ public var layoutDirectionBehavior: LayoutDirectionBehavior {
+    nonisolated public var layoutDirectionBehavior: LayoutDirectionBehavior {
         return shape.layoutDirectionBehavior
     }
 
@@ -531,7 +531,7 @@ extension InsettableShape {
 }
 
 extension OffsetShape : InsettableShape where Content : InsettableShape {
-    @inlinable /* nonisolated */ public func inset(by amount: CGFloat) -> OffsetShape<Content.InsetShape> {
+    @inlinable nonisolated public func inset(by amount: CGFloat) -> OffsetShape<Content.InsetShape> {
         return OffsetShape<Content.InsetShape>(shape: shape.inset(by: amount), offset: offset)
     }
 }
@@ -547,21 +547,21 @@ extension OffsetShape {
     public var scale: CGSize
     public var anchor: UnitPoint
 
-    @inlinable /* nonisolated */ public init(shape: Content, scale: CGSize, anchor: UnitPoint = .center) {
+    @inlinable nonisolated public init(shape: Content, scale: CGSize, anchor: UnitPoint = .center) {
         self.shape = shape
         self.scale = scale
         self.anchor = anchor
     }
 
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+    nonisolated public func path(in rect: CGRect) -> Path {
         return shape.path(in: rect).applying(.init(scaleX: scale.width, y: scale.height))
     }
 
-    /* nonisolated */ public static var role: ShapeRole {
+    nonisolated public static var role: ShapeRole {
         return Content.role
     }
 
-    /* nonisolated */ public var layoutDirectionBehavior: LayoutDirectionBehavior {
+    nonisolated public var layoutDirectionBehavior: LayoutDirectionBehavior {
         return shape.layoutDirectionBehavior
     }
 
@@ -580,21 +580,21 @@ extension ScaledShape {
     public var angle: Angle
     public var anchor: UnitPoint
 
-    @inlinable /* nonisolated */ public init(shape: Content, angle: Angle, anchor: UnitPoint = .center) {
+    @inlinable nonisolated public init(shape: Content, angle: Angle, anchor: UnitPoint = .center) {
         self.shape = shape
         self.angle = angle
         self.anchor = anchor
     }
 
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+    nonisolated public func path(in rect: CGRect) -> Path {
         return shape.path(in: rect).applying(.init(rotationAngle: CGFloat(angle.radians)))
     }
 
-    /* nonisolated */ public static var role: ShapeRole {
+    nonisolated public static var role: ShapeRole {
         return Content.role
     }
 
-    /* nonisolated */ public var layoutDirectionBehavior: LayoutDirectionBehavior {
+    nonisolated public var layoutDirectionBehavior: LayoutDirectionBehavior {
         return shape.layoutDirectionBehavior
     }
 
@@ -603,7 +603,7 @@ extension ScaledShape {
 }
 
 extension RotatedShape : InsettableShape where Content : InsettableShape {
-    @inlinable /* nonisolated */ public func inset(by amount: CGFloat) -> RotatedShape<Content.InsetShape> {
+    @inlinable nonisolated public func inset(by amount: CGFloat) -> RotatedShape<Content.InsetShape> {
         return RotatedShape<Content.InsetShape>(shape: shape.inset(by: amount), angle: angle, anchor: anchor)
     }
 }
@@ -619,20 +619,20 @@ extension RotatedShape {
     public var transform: CGAffineTransform
 
     @available(*, unavailable)
-    @inlinable /* nonisolated */ public init(shape: Content, transform: CGAffineTransform) {
+    @inlinable nonisolated public init(shape: Content, transform: CGAffineTransform) {
         self.shape = shape
         self.transform = transform
     }
 
-    /* nonisolated */ public func path(in rect: CGRect) -> Path {
+    nonisolated public func path(in rect: CGRect) -> Path {
         return shape.path(in: rect).applying(transform)
     }
 
-    /* nonisolated */ public static var role: ShapeRole {
+    nonisolated public static var role: ShapeRole {
         return Content.role
     }
 
-    /* nonisolated */ public var layoutDirectionBehavior: LayoutDirectionBehavior {
+    nonisolated public var layoutDirectionBehavior: LayoutDirectionBehavior {
         return shape.layoutDirectionBehavior
     }
 
@@ -659,11 +659,11 @@ public struct _InsetShape<Content> : InsettableShape where Content : InsettableS
         return shape.path(in: rect)
     }
 
-    /* nonisolated */ public static var role: ShapeRole {
+    nonisolated public static var role: ShapeRole {
         return Content.role
     }
 
-    /* nonisolated */ public var layoutDirectionBehavior: LayoutDirectionBehavior {
+    nonisolated public var layoutDirectionBehavior: LayoutDirectionBehavior {
         return shape.layoutDirectionBehavior
     }
 
@@ -672,7 +672,7 @@ public struct _InsetShape<Content> : InsettableShape where Content : InsettableS
 }
 
 extension _InsetShape {
-    @inlinable /* nonisolated */ public func inset(by amount: CGFloat) -> _InsetShape<Content> {
+    @inlinable nonisolated public func inset(by amount: CGFloat) -> _InsetShape<Content> {
         return _InsetShape<Content>(shape: shape, inset: inset + amount)
     }
 }
@@ -696,11 +696,11 @@ public struct _StrokeShape<Content> : Shape where Content : Shape {
         return shape.path(in: rect)
     }
 
-    /* nonisolated */ public static var role: ShapeRole {
+    nonisolated public static var role: ShapeRole {
         return Content.role
     }
 
-    /* nonisolated */ public var layoutDirectionBehavior: LayoutDirectionBehavior {
+    nonisolated public var layoutDirectionBehavior: LayoutDirectionBehavior {
         return shape.layoutDirectionBehavior
     }
 
@@ -709,7 +709,7 @@ public struct _StrokeShape<Content> : Shape where Content : Shape {
 }
 
 extension _StrokeShape : InsettableShape where Content : InsettableShape {
-    @inlinable /* nonisolated */ public func inset(by amount: CGFloat) -> _StrokeShape<Content.InsetShape> {
+    @inlinable nonisolated public func inset(by amount: CGFloat) -> _StrokeShape<Content.InsetShape> {
         return _StrokeShape<Content.InsetShape>(shape: shape.inset(by: amount), style: style)
     }
 }
@@ -727,15 +727,15 @@ public protocol ShapeView<Content> : View {
 }
 
 extension ShapeView {
-    /* nonisolated */ public func fill<S>(_ content: S = .foreground, style: FillStyle = FillStyle()) -> FillShapeView<Self.Content, S, Self> where S : ShapeStyle {
+    nonisolated public func fill<S>(_ content: S = .foreground, style: FillStyle = FillStyle()) -> FillShapeView<Self.Content, S, Self> where S : ShapeStyle {
         return FillShapeView(shape: shape, style: content, fillStyle: style, background: self)
     }
 
-    /* nonisolated */ public func stroke<S>(_ content: S, style: StrokeStyle, antialiased: Bool = true) -> StrokeShapeView<Self.Content, S, Self> where S : ShapeStyle {
+    nonisolated public func stroke<S>(_ content: S, style: StrokeStyle, antialiased: Bool = true) -> StrokeShapeView<Self.Content, S, Self> where S : ShapeStyle {
         return StrokeShapeView(shape: shape, style: content, strokeStyle: style, isAntialiased: antialiased, background: self)
     }
 
-    /* nonisolated */ public func stroke<S>(_ content: S, lineWidth: CGFloat = 1, antialiased: Bool = true) -> StrokeShapeView<Self.Content, S, Self> where S : ShapeStyle {
+    nonisolated public func stroke<S>(_ content: S, lineWidth: CGFloat = 1, antialiased: Bool = true) -> StrokeShapeView<Self.Content, S, Self> where S : ShapeStyle {
         return stroke(content, style: .init(lineWidth: lineWidth), antialiased: antialiased)
     }
 
@@ -745,11 +745,11 @@ extension ShapeView {
 }
 
 extension ShapeView where Self.Content : InsettableShape {
-    /* nonisolated */ public func strokeBorder<S>(_ content: S = .foreground, style: StrokeStyle, antialiased: Bool = true) -> StrokeBorderShapeView<Self.Content, S, Self> where S : ShapeStyle {
+    nonisolated public func strokeBorder<S>(_ content: S = .foreground, style: StrokeStyle, antialiased: Bool = true) -> StrokeBorderShapeView<Self.Content, S, Self> where S : ShapeStyle {
         return StrokeBorderShapeView(shape: shape, style: content, strokeStyle: style, isAntialiased: antialiased, background: self)
     }
 
-    /* nonisolated */ public func strokeBorder<S>(_ content: S = .foreground, lineWidth: CGFloat = 1, antialiased: Bool = true) -> StrokeBorderShapeView<Self.Content, S, Self> where S : ShapeStyle {
+    nonisolated public func strokeBorder<S>(_ content: S = .foreground, lineWidth: CGFloat = 1, antialiased: Bool = true) -> StrokeBorderShapeView<Self.Content, S, Self> where S : ShapeStyle {
         return strokeBorder(content, style: .init(lineWidth: lineWidth), antialiased: antialiased)
     }
 }
@@ -777,7 +777,7 @@ public struct _ShapeView<Content, Style> : ShapeView where Content : Shape, Styl
         return shape.layoutDirectionBehavior
     }
 
-    /* nonisolated */ public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
+    nonisolated public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
         return shape.sizeThatFits(proposal)
     }
 }
@@ -788,13 +788,13 @@ extension _ShapeView : SkipUIBridging {
     }
 }
 
-/* @MainActor */ @frozen /* @preconcurrency */ public struct FillShapeView<Content, Style, Background> : ShapeView where Content : Shape, Style : ShapeStyle, Background : View {
-    /* @MainActor @preconcurrency */ public var shape: Content
-    /* @MainActor @preconcurrency */ public var style: Style
-    /* @MainActor @preconcurrency */ public var fillStyle: FillStyle
-    /* @MainActor @preconcurrency */ public var background: Background
+/* @MainActor */ @frozen @preconcurrency public struct FillShapeView<Content, Style, Background> : ShapeView where Content : Shape, Style : ShapeStyle, Background : View {
+    /* @MainActor */ @preconcurrency public var shape: Content
+    /* @MainActor */ @preconcurrency public var style: Style
+    /* @MainActor */ @preconcurrency public var fillStyle: FillStyle
+    /* @MainActor */ @preconcurrency public var background: Background
 
-    /* nonisolated */ public init(shape: Content, style: Style, fillStyle: FillStyle, background: Background) {
+    nonisolated public init(shape: Content, style: Style, fillStyle: FillStyle, background: Background) {
         self.shape = shape
         self.style = style
         self.fillStyle = fillStyle
@@ -813,7 +813,7 @@ extension _ShapeView : SkipUIBridging {
         return shape.layoutDirectionBehavior
     }
 
-    /* nonisolated */ public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
+    nonisolated public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
         return shape.sizeThatFits(proposal)
     }
 }
@@ -827,14 +827,14 @@ extension FillShapeView : SkipUIBridging {
     }
 }
 
-/* @MainActor */ @frozen /* @preconcurrency */ public struct StrokeShapeView<Content, Style, Background> : ShapeView where Content : Shape, Style : ShapeStyle, Background : View {
-    /* @MainActor @preconcurrency */ public var shape: Content
-    /* @MainActor @preconcurrency */ public var style: Style
-    /* @MainActor @preconcurrency */ public var strokeStyle: StrokeStyle
-    /* @MainActor @preconcurrency */ public var isAntialiased: Bool
-    /* @MainActor @preconcurrency */ public var background: Background
+/* @MainActor */ @frozen @preconcurrency public struct StrokeShapeView<Content, Style, Background> : ShapeView where Content : Shape, Style : ShapeStyle, Background : View {
+    /* @MainActor */ @preconcurrency public var shape: Content
+    /* @MainActor */ @preconcurrency public var style: Style
+    /* @MainActor */ @preconcurrency public var strokeStyle: StrokeStyle
+    /* @MainActor */ @preconcurrency public var isAntialiased: Bool
+    /* @MainActor */ @preconcurrency public var background: Background
 
-    /* nonisolated */ public init(shape: Content, style: Style, strokeStyle: StrokeStyle, isAntialiased: Bool, background: Background) {
+    nonisolated public init(shape: Content, style: Style, strokeStyle: StrokeStyle, isAntialiased: Bool, background: Background) {
         self.shape = shape
         self.style = style
         self.strokeStyle = strokeStyle
@@ -854,7 +854,7 @@ extension FillShapeView : SkipUIBridging {
         return shape.layoutDirectionBehavior
     }
 
-    /* nonisolated */ public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
+    nonisolated public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
         return shape.sizeThatFits(proposal)
     }
 }
@@ -868,14 +868,14 @@ extension StrokeShapeView : SkipUIBridging {
     }
 }
 
-/* @MainActor */ @frozen /* @preconcurrency */ public struct StrokeBorderShapeView<Content, Style, Background> : ShapeView where Content : InsettableShape, Style : ShapeStyle, Background : View {
-    /* @MainActor @preconcurrency */ public var shape: Content
-    /* @MainActor @preconcurrency */ public var style: Style
-    /* @MainActor @preconcurrency */ public var strokeStyle: StrokeStyle
-    /* @MainActor @preconcurrency */ public var isAntialiased: Bool
-    /* @MainActor @preconcurrency */ public var background: Background
+/* @MainActor */ @frozen @preconcurrency public struct StrokeBorderShapeView<Content, Style, Background> : ShapeView where Content : InsettableShape, Style : ShapeStyle, Background : View {
+    /* @MainActor */ @preconcurrency public var shape: Content
+    /* @MainActor */ @preconcurrency public var style: Style
+    /* @MainActor */ @preconcurrency public var strokeStyle: StrokeStyle
+    /* @MainActor */ @preconcurrency public var isAntialiased: Bool
+    /* @MainActor */ @preconcurrency public var background: Background
 
-    /* nonisolated */ public init(shape: Content, style: Style, strokeStyle: StrokeStyle, isAntialiased: Bool, background: Background) {
+    nonisolated public init(shape: Content, style: Style, strokeStyle: StrokeStyle, isAntialiased: Bool, background: Background) {
         self.shape = shape
         self.style = style
         self.strokeStyle = strokeStyle

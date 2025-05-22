@@ -1,43 +1,43 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 
-/* @MainActor @preconcurrency */ public protocol Commands {
+/* @MainActor */ @preconcurrency public protocol Commands {
 //    associatedtype Body : Commands
 //
-//    @CommandsBuilder @MainActor /* @preconcurrency */ var body: Self.Body { get }
+//    @CommandsBuilder @MainActor @preconcurrency var body: Self.Body { get }
 }
 
 func stubCommands() -> EmptyCommands {
     return EmptyCommands()
 }
 
-/* @MainActor @preconcurrency */ public struct EmptyCommands : Commands {
-    /* nonisolated */ public init() {
+/* @MainActor */ @preconcurrency public struct EmptyCommands : Commands {
+    nonisolated public init() {
     }
 }
 
-/* @MainActor @preconcurrency */ public struct CommandGroup<Content> : Commands where Content : View {
+/* @MainActor */ @preconcurrency public struct CommandGroup<Content> : Commands where Content : View {
     @available(*, unavailable)
-    /* nonisolated */ public init(before group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
+    nonisolated public init(before group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(after group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
+    nonisolated public init(after group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(replacing group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
+    nonisolated public init(replacing group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
         fatalError()
     }
 
-    @MainActor /* @preconcurrency */ public var body: some Commands {
+    @MainActor @preconcurrency public var body: some Commands {
         stubCommands()
     }
 }
 
-public struct CommandGroupPlacement {
+public struct CommandGroupPlacement : Sendable {
     public static let appInfo = CommandGroupPlacement()
 
     public static let appSettings = CommandGroupPlacement()
@@ -75,23 +75,23 @@ public struct CommandGroupPlacement {
     public static let help = CommandGroupPlacement()
 }
 
-/* @MainActor @preconcurrency */ public struct CommandMenu<Content> : Commands where Content : View {
+/* @MainActor */ @preconcurrency public struct CommandMenu<Content> : Commands where Content : View {
     @available(*, unavailable)
-    /* nonisolated */ public init(_ nameKey: LocalizedStringKey, @ViewBuilder content: () -> Content) {
+    nonisolated public init(_ nameKey: LocalizedStringKey, @ViewBuilder content: () -> Content) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(_ name: Text, @ViewBuilder content: () -> Content) {
+    nonisolated public init(_ name: Text, @ViewBuilder content: () -> Content) {
         fatalError()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ name: S, @ViewBuilder content: () -> Content) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ name: S, @ViewBuilder content: () -> Content) where S : StringProtocol {
         fatalError()
     }
 
-    @MainActor /* @preconcurrency */ public var body: some Commands {
+    @MainActor @preconcurrency public var body: some Commands {
         stubCommands()
     }
 }

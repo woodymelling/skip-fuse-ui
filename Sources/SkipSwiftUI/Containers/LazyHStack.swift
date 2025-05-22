@@ -5,13 +5,13 @@ import CoreGraphics
 #endif
 import SkipUI
 
-/* @MainActor @preconcurrency */ public struct LazyHStack<Content> : View where Content : View {
+/* @MainActor */ @preconcurrency public struct LazyHStack<Content> : View where Content : View {
     private let alignment: VerticalAlignment
     private let spacing: CGFloat?
     private let pinnedViews: PinnedScrollableViews
     private let content: Content
 
-    /* nonisolated */ public init(alignment: VerticalAlignment = .center, spacing: CGFloat? = nil, pinnedViews: PinnedScrollableViews = .init(), @ViewBuilder content: () -> Content) {
+    nonisolated public init(alignment: VerticalAlignment = .center, spacing: CGFloat? = nil, pinnedViews: PinnedScrollableViews = .init(), @ViewBuilder content: () -> Content) {
         self.alignment = alignment
         self.spacing = spacing
         self.pinnedViews = pinnedViews

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-/* @MainActor @preconcurrency */ public struct Slider<Label, ValueLabel> : View where Label : View, ValueLabel : View {
+/* @MainActor */ @preconcurrency public struct Slider<Label, ValueLabel> : View where Label : View, ValueLabel : View {
     private let value: Binding<Double>
     private let min: Double
     private let max: Double
@@ -20,23 +20,23 @@ extension Slider : SkipUIBridging {
 
 extension Slider {
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, @ViewBuilder label: () -> Label, @ViewBuilder minimumValueLabel: () -> ValueLabel, @ViewBuilder maximumValueLabel: () -> ValueLabel, onEditingChanged: @escaping (Bool) -> Void = { _ in }) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, @ViewBuilder label: () -> Label, @ViewBuilder minimumValueLabel: () -> ValueLabel, @ViewBuilder maximumValueLabel: () -> ValueLabel, onEditingChanged: @escaping (Bool) -> Void = { _ in }) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, @ViewBuilder label: () -> Label, @ViewBuilder minimumValueLabel: () -> ValueLabel, @ViewBuilder maximumValueLabel: () -> ValueLabel, onEditingChanged: @escaping (Bool) -> Void = { _ in }) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, @ViewBuilder label: () -> Label, @ViewBuilder minimumValueLabel: () -> ValueLabel, @ViewBuilder maximumValueLabel: () -> ValueLabel, onEditingChanged: @escaping (Bool) -> Void = { _ in }) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         fatalError()
     }
 }
 
 extension Slider where ValueLabel == EmptyView {
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, @ViewBuilder label: () -> Label, onEditingChanged: @escaping (Bool) -> Void) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, @ViewBuilder label: () -> Label, onEditingChanged: @escaping (Bool) -> Void) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         fatalError()
     }
 
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, @ViewBuilder label: () -> Label) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, @ViewBuilder label: () -> Label) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         self.value = Binding(get: { Double(value.wrappedValue) }, set: { value.wrappedValue = V($0) })
         self.min = Double(bounds.lowerBound)
         self.max = Double(bounds.upperBound)
@@ -45,11 +45,11 @@ extension Slider where ValueLabel == EmptyView {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, @ViewBuilder label: () -> Label, onEditingChanged: @escaping (Bool) -> Void) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, @ViewBuilder label: () -> Label, onEditingChanged: @escaping (Bool) -> Void) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         fatalError()
     }
 
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, @ViewBuilder label: () -> Label) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, @ViewBuilder label: () -> Label) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         self.value = Binding(get: { Double(value.wrappedValue) }, set: { value.wrappedValue = V($0) })
         self.min = Double(bounds.lowerBound)
         self.max = Double(bounds.upperBound)
@@ -60,11 +60,11 @@ extension Slider where ValueLabel == EmptyView {
 
 extension Slider where Label == EmptyView, ValueLabel == EmptyView {
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, onEditingChanged: @escaping (Bool) -> Void) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, onEditingChanged: @escaping (Bool) -> Void) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         fatalError()
     }
 
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         self.value = Binding(get: { Double(value.wrappedValue) }, set: { value.wrappedValue = V($0) })
         self.min = Double(bounds.lowerBound)
         self.max = Double(bounds.upperBound)
@@ -73,11 +73,11 @@ extension Slider where Label == EmptyView, ValueLabel == EmptyView {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, onEditingChanged: @escaping (Bool) -> Void) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, onEditingChanged: @escaping (Bool) -> Void) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         fatalError()
     }
 
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         self.value = Binding(get: { Double(value.wrappedValue) }, set: { value.wrappedValue = V($0) })
         self.min = Double(bounds.lowerBound)
         self.max = Double(bounds.upperBound)
@@ -88,19 +88,19 @@ extension Slider where Label == EmptyView, ValueLabel == EmptyView {
 
 extension Slider {
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, onEditingChanged: @escaping (Bool) -> Void = { _ in }, minimumValueLabel: ValueLabel, maximumValueLabel: ValueLabel, @ViewBuilder label: () -> Label) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, onEditingChanged: @escaping (Bool) -> Void = { _ in }, minimumValueLabel: ValueLabel, maximumValueLabel: ValueLabel, @ViewBuilder label: () -> Label) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, onEditingChanged: @escaping (Bool) -> Void = { _ in }, minimumValueLabel: ValueLabel, maximumValueLabel: ValueLabel, @ViewBuilder label: () -> Label) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, onEditingChanged: @escaping (Bool) -> Void = { _ in }, minimumValueLabel: ValueLabel, maximumValueLabel: ValueLabel, @ViewBuilder label: () -> Label) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         fatalError()
     }
 }
 
 extension Slider where ValueLabel == EmptyView {
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, onEditingChanged: @escaping (Bool) -> Void = { _ in }, @ViewBuilder label: () -> Label) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
+    nonisolated public init<V>(value: Binding<V>, in bounds: ClosedRange<V> = 0...1, onEditingChanged: @escaping (Bool) -> Void = { _ in }, @ViewBuilder label: () -> Label) where V : BinaryFloatingPoint, V.Stride : BinaryFloatingPoint {
         fatalError()
     }
 

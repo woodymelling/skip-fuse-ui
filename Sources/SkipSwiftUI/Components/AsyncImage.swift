@@ -2,18 +2,18 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-/* @MainActor @preconcurrency */ public struct AsyncImage<Content> : View where Content : View {
+/* @MainActor */ @preconcurrency public struct AsyncImage<Content> : View where Content : View {
     private let url: URL?
     private let scale: CGFloat
     private let content: ((AsyncImagePhase) -> Content)?
 
-    /* nonisolated */ public init(url: URL?, scale: CGFloat = 1) where Content == Image {
+    nonisolated public init(url: URL?, scale: CGFloat = 1) where Content == Image {
         self.url = url
         self.scale = scale
         self.content = nil
     }
 
-    /* nonisolated */ public init<I, P>(url: URL?, scale: CGFloat = 1, @ViewBuilder content: @escaping (Image) -> I, @ViewBuilder placeholder: @escaping () -> P) where Content == TupleView /* _ConditionalContent<I, P> */, I : View, P : View {
+    nonisolated public init<I, P>(url: URL?, scale: CGFloat = 1, @ViewBuilder content: @escaping (Image) -> I, @ViewBuilder placeholder: @escaping () -> P) where Content == TupleView /* _ConditionalContent<I, P> */, I : View, P : View {
         self.init(url: url, scale: scale, transaction: Transaction()) { phase in
             switch phase {
             case .empty, .failure:
@@ -24,7 +24,7 @@ import SkipUI
         }
     }
 
-    /* nonisolated */ public init(url: URL?, scale: CGFloat = 1, transaction: Transaction = Transaction(), @ViewBuilder content: @escaping (AsyncImagePhase) -> Content) {
+    nonisolated public init(url: URL?, scale: CGFloat = 1, transaction: Transaction = Transaction(), @ViewBuilder content: @escaping (AsyncImagePhase) -> Content) {
         self.url = url
         self.scale = scale
         self.content = content
@@ -56,7 +56,7 @@ extension AsyncImage : SkipUIBridging {
     }
 }
 
-public enum AsyncImagePhase /* : Sendable */ {
+public enum AsyncImagePhase : Sendable {
     case empty
     case success(Image)
     case failure(any Error)

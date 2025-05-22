@@ -8,7 +8,7 @@ import SkipUI
     open class var shared: UIApplication {
         return _shared
     }
-    private static let _shared = UIApplication()
+    nonisolated(unsafe) private static let _shared = UIApplication()
 
     private let application: SkipUI.UIApplication
 
@@ -53,7 +53,7 @@ import SkipUI
     }
 
     @available(*, unavailable)
-    /* nonisolated */ open func canOpenURL(_ url: URL) -> Bool {
+    nonisolated open func canOpenURL(_ url: URL) -> Bool {
         fatalError()
     }
 
@@ -176,13 +176,13 @@ import SkipUI
 
 extension UIApplication {
     @available(*, unavailable)
-    /* @MainActor @preconcurrency */ public func activateSceneSession(for request: Any /* UISceneSessionActivationRequest */, errorHandler: ((any Error) -> Void)? = nil) {
+    /* @MainActor */ @preconcurrency public func activateSceneSession(for request: Any /* UISceneSessionActivationRequest */, errorHandler: ((any Error) -> Void)? = nil) {
         fatalError()
     }
 }
 
 extension UIApplication {
-    /* nonisolated */ public static let openNotificationSettingsURLString = "openNotificationSettingsURLString"
+    nonisolated public static let openNotificationSettingsURLString = "openNotificationSettingsURLString"
 }
 
 extension UIApplication {
@@ -296,67 +296,67 @@ extension UIApplication {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var didEnterBackgroundNotification: NSNotification.Name {
+    nonisolated public class var didEnterBackgroundNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var willEnterForegroundNotification: NSNotification.Name {
+    nonisolated public class var willEnterForegroundNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var didFinishLaunchingNotification: NSNotification.Name {
+    nonisolated public class var didFinishLaunchingNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var didBecomeActiveNotification: NSNotification.Name {
+    nonisolated public class var didBecomeActiveNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var willResignActiveNotification: NSNotification.Name {
+    nonisolated public class var willResignActiveNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var didReceiveMemoryWarningNotification: NSNotification.Name {
+    nonisolated public class var didReceiveMemoryWarningNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var willTerminateNotification: NSNotification.Name {
+    nonisolated public class var willTerminateNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var significantTimeChangeNotification: NSNotification.Name {
+    nonisolated public class var significantTimeChangeNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var backgroundRefreshStatusDidChangeNotification: NSNotification.Name {
+    nonisolated public class var backgroundRefreshStatusDidChangeNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var protectedDataWillBecomeUnavailableNotification: NSNotification.Name {
+    nonisolated public class var protectedDataWillBecomeUnavailableNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var protectedDataDidBecomeAvailableNotification: NSNotification.Name {
+    nonisolated public class var protectedDataDidBecomeAvailableNotification: NSNotification.Name {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var openSettingsURLString: String {
+    nonisolated public class var openSettingsURLString: String {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public class var userDidTakeScreenshotNotification: NSNotification.Name {
+    nonisolated public class var userDidTakeScreenshotNotification: NSNotification.Name {
         fatalError()
     }
 
@@ -365,7 +365,7 @@ extension UIApplication {
         fatalError()
     }
 
-    public enum State : Int /*, @unchecked Sendable */ {
+    public enum State : Int, Sendable {
         case active = 0
         case inactive = 1
         case background = 2
@@ -381,7 +381,7 @@ extension UIApplication {
         fatalError()
     }
 
-    public struct OpenExternalURLOptionsKey : Hashable, Equatable, RawRepresentable /*, @unchecked Sendable */ {
+    public struct OpenExternalURLOptionsKey : Hashable, Equatable, RawRepresentable, Sendable {
         public let rawValue: String
 
         public init(rawValue: String) {

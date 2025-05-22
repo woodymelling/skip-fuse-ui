@@ -5,12 +5,12 @@ import CoreGraphics
 #endif
 import SkipUI
 
-/* @MainActor */ @frozen /* @preconcurrency */ public struct HStack<Content> : View where Content : View {
+/* @MainActor */ @frozen @preconcurrency public struct HStack<Content> : View where Content : View {
     private let alignment: VerticalAlignment
     private let spacing: CGFloat?
     private let content: Content
 
-    /* @inlinable nonisolated */ public init(alignment: VerticalAlignment = .center, spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
+    /* @inlinable */ nonisolated public init(alignment: VerticalAlignment = .center, spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
         self.alignment = alignment
         self.spacing = spacing
         self.content = content()

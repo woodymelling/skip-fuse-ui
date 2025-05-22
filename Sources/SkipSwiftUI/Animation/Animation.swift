@@ -4,7 +4,7 @@ import Foundation
 import SkipBridge
 import SkipUI
 
-/* @frozen */ public struct Animation : Hashable /*, Sendable */ {
+/* @frozen */ public struct Animation : Hashable, Sendable {
     private let spec: AnimationSpec
 
     init(spec: AnimationSpec) {
@@ -17,7 +17,7 @@ import SkipUI
     }
 }
 
-struct AnimationSpec : Hashable {
+struct AnimationSpec : Hashable, Sendable {
     let type: AnimationType
     var speed: Double?
     var logicallyComplete: TimeInterval?
@@ -30,7 +30,7 @@ struct AnimationSpec : Hashable {
     }
 }
 
-enum AnimationType : Hashable {
+enum AnimationType : Hashable, Sendable {
     case `default`
     case spring
     case springBlend(Spring, TimeInterval)
@@ -383,7 +383,7 @@ public protocol Animatable {
 //    public var animatableData: EmptyAnimatableData
 //}
 
-@frozen public struct EmptyAnimatableData : VectorArithmetic /*, BitwiseCopyable, Sendable */ {
+@frozen public struct EmptyAnimatableData : VectorArithmetic, BitwiseCopyable, Sendable {
     @inlinable public init() {
     }
 
@@ -468,7 +468,7 @@ public protocol Animatable {
 public protocol AnimatableModifier : Animatable, ViewModifier {
 }
 
-public struct AnimationCompletionCriteria : Hashable /*, Sendable */ {
+public struct AnimationCompletionCriteria : Hashable, Sendable {
     public static let logicallyComplete = AnimationCompletionCriteria()
 
     public static let removed = AnimationCompletionCriteria()
@@ -490,7 +490,7 @@ public func withAnimation<Result>(_ animation: Animation? = .default, completion
 }
 
 extension View {
-    /* @inlinable nonisolated */ public func animation<V>(_ animation: Animation?, value: V) -> some View where V : Equatable {
+    /* @inlinable */ nonisolated public func animation<V>(_ animation: Animation?, value: V) -> some View where V : Equatable {
         let bridgedValue = Java_swiftEquatable(for: value)
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.animation(animation?.Java_animation, value: bridgedValue)
@@ -499,7 +499,7 @@ extension View {
 }
 
 extension View where Self : Equatable {
-    @inlinable /* nonisolated */ public func animation(_ animation: Animation?) -> some View {
+    @inlinable nonisolated public func animation(_ animation: Animation?) -> some View {
         return self.animation(animation, value: self)
     }
 }

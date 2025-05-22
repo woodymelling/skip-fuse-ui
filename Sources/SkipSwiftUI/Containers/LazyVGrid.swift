@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-/* @MainActor @preconcurrency */ public struct LazyVGrid<Content> : View where Content : View {
+/* @MainActor */ @preconcurrency public struct LazyVGrid<Content> : View where Content : View {
     private let columns: [GridItem]
     private let alignment: HorizontalAlignment
     private let spacing: CGFloat?
     private let pinnedViews: PinnedScrollableViews
     private let content: Content
 
-    /* nonisolated */ public init(columns: [GridItem], alignment: HorizontalAlignment = .center, spacing: CGFloat? = nil, pinnedViews: PinnedScrollableViews = .init(), @ViewBuilder content: () -> Content) {
+    nonisolated public init(columns: [GridItem], alignment: HorizontalAlignment = .center, spacing: CGFloat? = nil, pinnedViews: PinnedScrollableViews = .init(), @ViewBuilder content: () -> Content) {
         self.columns = columns
         self.alignment = alignment
         self.spacing = spacing

@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-/* @MainActor @preconcurrency */ public protocol ToolbarContent {
+/* @MainActor */ @preconcurrency public protocol ToolbarContent {
     associatedtype Body : ToolbarContent
 
-    @ToolbarContentBuilder @MainActor /* @preconcurrency */ var body: Self.Body { get }
+    @ToolbarContentBuilder @MainActor @preconcurrency var body: Self.Body { get }
 }
 
 public protocol CustomizableToolbarContent : ToolbarContent where Self.Body : CustomizableToolbarContent {
@@ -42,14 +42,14 @@ extension EmptyToolbarContent : SkipUIBridging {
     }
 }
 
-/* @MainActor */ @frozen /* @preconcurrency */ public struct AnyToolbarContent : ToolbarContent {
+/* @MainActor */ @frozen @preconcurrency public struct AnyToolbarContent : ToolbarContent {
     private let content: any ToolbarContent
 
-    /* nonisolated */ public init<C>(_ content: C) where C : ToolbarContent {
+    nonisolated public init<C>(_ content: C) where C : ToolbarContent {
         self.init(erasing: content)
     }
 
-    /* nonisolated */ public init<C>(erasing content: C) where C : ToolbarContent {
+    nonisolated public init<C>(erasing content: C) where C : ToolbarContent {
         self.content = content
     }
 
@@ -62,14 +62,14 @@ extension AnyToolbarContent : SkipUIBridging {
     }
 }
 
-/* @MainActor */ @frozen /* @preconcurrency */ public struct AnyCustomizableToolbarContent : CustomizableToolbarContent {
+/* @MainActor */ @frozen @preconcurrency public struct AnyCustomizableToolbarContent : CustomizableToolbarContent {
     private let content: any CustomizableToolbarContent
 
-    /* nonisolated */ public init<C>(_ content: C) where C : CustomizableToolbarContent {
+    nonisolated public init<C>(_ content: C) where C : CustomizableToolbarContent {
         self.init(erasing: content)
     }
 
-    /* nonisolated */ public init<C>(erasing content: C) where C : CustomizableToolbarContent {
+    nonisolated public init<C>(erasing content: C) where C : CustomizableToolbarContent {
         self.content = content
     }
 
@@ -83,7 +83,7 @@ extension AnyCustomizableToolbarContent : SkipUIBridging {
 }
 
 extension ToolbarContent {
-    /* nonisolated */ public func hidden(_ hidden: Bool = true) -> some ToolbarContent {
+    nonisolated public func hidden(_ hidden: Bool = true) -> some ToolbarContent {
         if hidden {
             return AnyToolbarContent(erasing: EmptyToolbarContent())
         } else {
@@ -93,7 +93,7 @@ extension ToolbarContent {
 }
 
 extension CustomizableToolbarContent {
-    /* nonisolated */ public func hidden(_ hidden: Bool = true) -> some CustomizableToolbarContent {
+    nonisolated public func hidden(_ hidden: Bool = true) -> some CustomizableToolbarContent {
         if hidden {
             return AnyCustomizableToolbarContent(erasing: EmptyToolbarContent())
         } else {
@@ -103,7 +103,7 @@ extension CustomizableToolbarContent {
 }
 
 extension CustomizableToolbarContent {
-    /* nonisolated */ public func customizationBehavior(_ behavior: ToolbarCustomizationBehavior) -> some CustomizableToolbarContent {
+    nonisolated public func customizationBehavior(_ behavior: ToolbarCustomizationBehavior) -> some CustomizableToolbarContent {
         // Only `default` is @available, so can return self
         return self
     }
@@ -116,12 +116,12 @@ extension CustomizableToolbarContent {
     }
 }
 
-/* @MainActor @preconcurrency */ public struct ToolbarCommands : Commands {
-    /* nonisolated */ public init() {
+/* @MainActor */ @preconcurrency public struct ToolbarCommands : Commands {
+    nonisolated public init() {
     }
 }
 
-public struct ToolbarCustomizationBehavior /* : Sendable */ {
+public struct ToolbarCustomizationBehavior : Sendable {
     public static var `default`: ToolbarCustomizationBehavior {
         return ToolbarCustomizationBehavior()
     }
@@ -137,7 +137,7 @@ public struct ToolbarCustomizationBehavior /* : Sendable */ {
     }
 }
 
-public struct ToolbarCustomizationOptions : OptionSet /*, Sendable */ {
+public struct ToolbarCustomizationOptions : OptionSet, Sendable {
     public static var alwaysAvailable: ToolbarCustomizationOptions {
         return ToolbarCustomizationOptions(rawValue: 1 << 0)
     }
@@ -149,13 +149,13 @@ public struct ToolbarCustomizationOptions : OptionSet /*, Sendable */ {
     }
 }
 
-public struct ToolbarDefaultItemKind {
+public struct ToolbarDefaultItemKind : Sendable {
     public static let sidebarToggle = ToolbarDefaultItemKind()
 
     public static let title = ToolbarDefaultItemKind()
 }
 
-/* @MainActor @preconcurrency */ public struct ToolbarItem<ID, Content> : ToolbarContent where Content : View {
+/* @MainActor */ @preconcurrency public struct ToolbarItem<ID, Content> : ToolbarContent where Content : View {
     private let _id: ID
     private let placement: ToolbarItemPlacement
     private let content: Content
@@ -164,7 +164,7 @@ public struct ToolbarDefaultItemKind {
 }
 
 extension ToolbarItem where ID == () {
-    /* nonisolated */ public init(placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
+    nonisolated public init(placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
         self._id = ()
         self.placement = placement
         self.content = content()
@@ -172,14 +172,14 @@ extension ToolbarItem where ID == () {
 }
 
 extension ToolbarItem : CustomizableToolbarContent where ID == String {
-    /* nonisolated */ public init(id: String, placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
+    nonisolated public init(id: String, placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
         self._id = id
         self.placement = placement
         self.content = content()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(id: String, placement: ToolbarItemPlacement = .automatic, showsByDefault: Bool, @ViewBuilder content: () -> Content) {
+    nonisolated public init(id: String, placement: ToolbarItemPlacement = .automatic, showsByDefault: Bool, @ViewBuilder content: () -> Content) {
         fatalError()
     }
 }
@@ -192,16 +192,16 @@ extension ToolbarItem : SkipUIBridging {
 }
 
 extension ToolbarItem : Identifiable where ID : Hashable {
-    /* @MainActor @preconcurrency */ public var id: ID {
+    /* @MainActor */ @preconcurrency public var id: ID {
         return _id
     }
 }
 
-/* @MainActor @preconcurrency */ public struct ToolbarItemGroup<Content> : ToolbarContent where Content : View {
+/* @MainActor */ @preconcurrency public struct ToolbarItemGroup<Content> : ToolbarContent where Content : View {
     private let placement: ToolbarItemPlacement
     private let content: Content
 
-    /* nonisolated */ public init(placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
+    nonisolated public init(placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
         self.placement = placement
         self.content = content()
     }
@@ -217,12 +217,12 @@ extension ToolbarItemGroup : SkipUIBridging {
 
 extension ToolbarItemGroup {
     @available(*, unavailable)
-    /* nonisolated */ public init<C, L>(placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> C, @ViewBuilder label: () -> L) where /* Content == LabeledToolbarItemGroupContent<C, L>, */ C : View, L : View {
+    nonisolated public init<C, L>(placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> C, @ViewBuilder label: () -> L) where /* Content == LabeledToolbarItemGroupContent<C, L>, */ C : View, L : View {
         fatalError()
     }
 }
 
-public struct ToolbarItemPlacement {
+public struct ToolbarItemPlacement : Sendable {
     public static let automatic = ToolbarItemPlacement(identifier: 0) // For bridging
 
     public static let principal = ToolbarItemPlacement(identifier: 1) // For bridging
@@ -260,7 +260,7 @@ public struct ToolbarItemPlacement {
     }
 }
 
-public struct ToolbarLabelStyle : /* Sendable, */ Equatable {
+public struct ToolbarLabelStyle : Sendable, Equatable {
     public static var automatic: ToolbarLabelStyle {
         return ToolbarLabelStyle()
     }
@@ -290,7 +290,7 @@ public struct ToolbarPlacement {
     }
 }
 
-public struct ToolbarRole /* : Sendable */ {
+public struct ToolbarRole : Sendable {
     public static var automatic: ToolbarRole {
         return ToolbarRole()
     }
@@ -325,14 +325,14 @@ public struct ToolbarTitleDisplayMode {
     }
 }
 
-/* @MainActor @preconcurrency */ public struct ToolbarTitleMenu<Content> : ToolbarContent, CustomizableToolbarContent where Content : View {
+/* @MainActor */ @preconcurrency public struct ToolbarTitleMenu<Content> : ToolbarContent, CustomizableToolbarContent where Content : View {
     private let content: Content
 
-    /* nonisolated */ public init() where Content == EmptyView {
+    nonisolated public init() where Content == EmptyView {
         self.content = EmptyView()
     }
 
-    /* nonisolated */ public init(@ViewBuilder content: () -> Content) {
+    nonisolated public init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
 
@@ -340,7 +340,7 @@ public struct ToolbarTitleDisplayMode {
 }
 
 extension Group : ToolbarContent where Content : ToolbarContent {
-    /* nonisolated */ public init(@ToolbarContentBuilder content: () -> Content) {
+    nonisolated public init(@ToolbarContentBuilder content: () -> Content) {
         self.content = content()
     }
 
@@ -437,38 +437,38 @@ extension TupleToolbarContent : SkipUIBridging {
 }
 
 extension View {
-    /* nonisolated */ public func toolbarBackground<S>(_ style: S, for bars: ToolbarPlacement...) -> some View where S : ShapeStyle {
+    nonisolated public func toolbarBackground<S>(_ style: S, for bars: ToolbarPlacement...) -> some View where S : ShapeStyle {
         return ModifierView(target: self) {
             let javaStyle = style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.Color._clear
             return $0.Java_viewOrEmpty.toolbarBackground(javaStyle, bridgedPlacements: bars.map(\.identifier))
         }
     }
 
-    /* nonisolated */ public func toolbarBackground(_ visibility: Visibility, for bars: ToolbarPlacement...) -> some View {
+    nonisolated public func toolbarBackground(_ visibility: Visibility, for bars: ToolbarPlacement...) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.toolbarBackgroundVisibility(bridgedVisibility: visibility.rawValue, bridgedPlacements: bars.map(\.identifier))
         }
     }
 
-    /* nonisolated */ public func toolbarBackgroundVisibility(_ visibility: Visibility, for bars: ToolbarPlacement...) -> some View {
+    nonisolated public func toolbarBackgroundVisibility(_ visibility: Visibility, for bars: ToolbarPlacement...) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.toolbarBackgroundVisibility(bridgedVisibility: visibility.rawValue, bridgedPlacements: bars.map(\.identifier))
         }
     }
 
-    /* nonisolated */ public func toolbarColorScheme(_ colorScheme: ColorScheme?, for bars: ToolbarPlacement...) -> some View {
+    nonisolated public func toolbarColorScheme(_ colorScheme: ColorScheme?, for bars: ToolbarPlacement...) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.toolbarColorScheme(bridgedColorScheme: colorScheme?.rawValue, bridgedPlacements: bars.map(\.identifier))
         }
     }
 
-    /* nonisolated */ public func toolbar(_ visibility: Visibility, for bars: ToolbarPlacement...) -> some View {
+    nonisolated public func toolbar(_ visibility: Visibility, for bars: ToolbarPlacement...) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.toolbarVisibility(bridgedVisibility: visibility.rawValue, bridgedPlacements: bars.map(\.identifier))
         }
     }
 
-    /* nonisolated */ public func toolbarVisibility(_ visibility: Visibility, for bars: ToolbarPlacement...) -> some View {
+    nonisolated public func toolbarVisibility(_ visibility: Visibility, for bars: ToolbarPlacement...) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.toolbarVisibility(bridgedVisibility: visibility.rawValue, bridgedPlacements: bars.map(\.identifier))
         }
@@ -479,14 +479,14 @@ extension View {
         stubView()
     }
 
-    /* nonisolated */ public func toolbar<Content>(@ViewBuilder content: () -> Content) -> some View where Content : View {
+    nonisolated public func toolbar<Content>(@ViewBuilder content: () -> Content) -> some View where Content : View {
         let content = content()
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.toolbar(id: "", bridgedContent: content.Java_viewOrEmpty)
         }
     }
 
-    /* nonisolated */ public func toolbar<Content>(@ToolbarContentBuilder content: () -> Content) -> some View where Content : ToolbarContent {
+    nonisolated public func toolbar<Content>(@ToolbarContentBuilder content: () -> Content) -> some View where Content : ToolbarContent {
         let content = content()
         return ModifierView(target: self) {
             let javaContent = (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
@@ -494,7 +494,7 @@ extension View {
         }
     }
 
-    /* nonisolated */ public func toolbar<Content>(id: String, @ToolbarContentBuilder content: () -> Content) -> some View where Content : CustomizableToolbarContent {
+    nonisolated public func toolbar<Content>(id: String, @ToolbarContentBuilder content: () -> Content) -> some View where Content : CustomizableToolbarContent {
         let content = content()
         return ModifierView(target: self) {
             let javaContent = (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
@@ -503,17 +503,17 @@ extension View {
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func toolbarTitleMenu<C>(@ViewBuilder content: () -> C) -> some View where C : View {
+    nonisolated public func toolbarTitleMenu<C>(@ViewBuilder content: () -> C) -> some View where C : View {
         stubView()
     }
 
-    /* nonisolated */ public func toolbarTitleDisplayMode(_ mode: ToolbarTitleDisplayMode) -> some View {
+    nonisolated public func toolbarTitleDisplayMode(_ mode: ToolbarTitleDisplayMode) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.toolbarTitleDisplayMode(bridgedMode: mode.identifier)
         }
     }
 
-    /* nonisolated */ public func toolbarRole(_ role: ToolbarRole) -> some View {
+    nonisolated public func toolbarRole(_ role: ToolbarRole) -> some View {
         // Only .automatic is @available, so we can return self
         return self
     }

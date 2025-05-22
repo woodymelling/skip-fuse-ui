@@ -98,7 +98,7 @@ extension AppStorage {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func defaultAppStorage(_ store: UserDefaults) -> some View {
+    nonisolated public func defaultAppStorage(_ store: UserDefaults) -> some View {
         stubView()
     }
 }

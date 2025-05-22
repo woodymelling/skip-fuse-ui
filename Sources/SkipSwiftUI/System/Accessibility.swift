@@ -3,150 +3,150 @@
 import SkipUI
 
 extension View {
-    /* nonisolated */ public func accessibilityValue(_ valueDescription: Text, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityValue(_ valueDescription: Text, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.accessibilityValue(valueDescription.Java_view as? SkipUI.Text ?? SkipUI.Text(verbatim: ""), isEnabled: isEnabled)
         }
     }
 
-    /* nonisolated */ public func accessibilityValue(_ valueKey: LocalizedStringKey, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityValue(_ valueKey: LocalizedStringKey, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return accessibilityValue(Text(valueKey), isEnabled: isEnabled)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func accessibilityValue<S>(_ value: S, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
+    @_disfavoredOverload nonisolated public func accessibilityValue<S>(_ value: S, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
         return accessibilityValue(Text(value), isEnabled: isEnabled)
     }
 
-    /* nonisolated */ public func accessibility(value: Text) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(value: Text) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return accessibilityValue(value)
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityShowsLargeContentViewer<V>(@ViewBuilder _ largeContentView: () -> V) -> some View where V : View {
+    nonisolated public func accessibilityShowsLargeContentViewer<V>(@ViewBuilder _ largeContentView: () -> V) -> some View where V : View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityShowsLargeContentViewer() -> some View {
+    nonisolated public func accessibilityShowsLargeContentViewer() -> some View {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityLinkedGroup<ID>(id: ID, in namespace: Namespace.ID) -> some View where ID : Hashable {
+    nonisolated public func accessibilityLinkedGroup<ID>(id: ID, in namespace: Namespace.ID) -> some View where ID : Hashable {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityLabeledPair<ID>(role: Any /* AccessibilityLabeledPairRole */, id: ID, in namespace: Namespace.ID) -> some View where ID : Hashable {
+    nonisolated public func accessibilityLabeledPair<ID>(role: Any /* AccessibilityLabeledPairRole */, id: ID, in namespace: Namespace.ID) -> some View where ID : Hashable {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityActions<Content>(category: AccessibilityActionCategory, @ViewBuilder _ content: () -> Content) -> some View where Content : View {
+    nonisolated public func accessibilityActions<Content>(category: AccessibilityActionCategory, @ViewBuilder _ content: () -> Content) -> some View where Content : View {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func accessibilityLabel(_ label: Text, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityLabel(_ label: Text, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.accessibilityLabel(label.Java_view as? SkipUI.Text ?? SkipUI.Text(verbatim: ""), isEnabled: isEnabled)
         }
     }
 
-    /* nonisolated */ public func accessibilityLabel(_ labelKey: LocalizedStringKey, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityLabel(_ labelKey: LocalizedStringKey, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return accessibilityLabel(Text(labelKey), isEnabled: isEnabled)
     }
 
-    @_disfavoredOverload /* nonisolated */ public func accessibilityLabel<S>(_ label: S, isEnabled: Bool) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
+    @_disfavoredOverload nonisolated public func accessibilityLabel<S>(_ label: S, isEnabled: Bool) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
         return accessibilityLabel(Text(label), isEnabled: isEnabled)
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityLabel<V>(@ViewBuilder content: (_ label: Any /* PlaceholderContentView<Self> */) -> V) -> some View where V : View {
+    nonisolated public func accessibilityLabel<V>(@ViewBuilder content: (_ label: Any /* PlaceholderContentView<Self> */) -> V) -> some View where V : View {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityAdjustableAction(_ handler: @escaping (Any /* AccessibilityAdjustmentDirection */) -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityAdjustableAction(_ handler: @escaping (Any /* AccessibilityAdjustmentDirection */) -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityHint(_ hint: Text, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityHint(_ hint: Text, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityHint(_ hintKey: LocalizedStringKey, isEnabled: Bool) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityHint(_ hintKey: LocalizedStringKey, isEnabled: Bool) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func accessibilityHint<S>(_ hint: S, isEnabled: Bool) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
+    @_disfavoredOverload nonisolated public func accessibilityHint<S>(_ hint: S, isEnabled: Bool) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibility(hidden: Bool) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(hidden: Bool) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
-    /* nonisolated */ public func accessibility(label: Text) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(label: Text) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return accessibilityLabel(label)
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibility(hint: Text) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(hint: Text) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibility(inputLabels: [Text]) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(inputLabels: [Text]) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
-    /* nonisolated */ public func accessibility(identifier: String) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(identifier: String) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return accessibilityIdentifier(identifier)
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibility(selectionIdentifier: AnyHashable) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(selectionIdentifier: AnyHashable) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibility(sortPriority: Double) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(sortPriority: Double) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibility(activationPoint: CGPoint) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(activationPoint: CGPoint) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibility(activationPoint: UnitPoint) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(activationPoint: UnitPoint) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func accessibilityHidden(_ hidden: Bool, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityHidden(_ hidden: Bool, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.accessibilityHidden(hidden, isEnabled: isEnabled)
         }
@@ -155,103 +155,103 @@ extension View {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityInputLabels(_ inputLabels: [Text], isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityInputLabels(_ inputLabels: [Text], isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityInputLabels(_ inputLabelKeys: [LocalizedStringKey], isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityInputLabels(_ inputLabelKeys: [LocalizedStringKey], isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func accessibilityInputLabels<S>(_ inputLabels: [S], isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
-        stubView()
-    }
-}
-
-extension View {
-    @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotorEntry<ID>(id: ID, in namespace: Namespace.ID) -> some View where ID : Hashable {
+    @_disfavoredOverload nonisolated public func accessibilityInputLabels<S>(_ inputLabels: [S], isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<Content>(_ label: Text, /* @AccessibilityRotorContentBuilder */ entries: @escaping () -> Content) -> some View where Content : AccessibilityRotorContent {
-        stubView()
-    }
-
-    @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<Content>(_ systemRotor: Any /* AccessibilitySystemRotor */, /* @AccessibilityRotorContentBuilder */ entries: @escaping () -> Content) -> some View where Content : AccessibilityRotorContent {
-        stubView()
-    }
-
-    @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<EntryModel>(_ rotorLabel: Text, entries: [EntryModel], entryLabel: KeyPath<EntryModel, String>) -> some View where EntryModel : Identifiable {
-        stubView()
-    }
-
-    @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<EntryModel, ID>(_ rotorLabel: Text, entries: [EntryModel], entryID: KeyPath<EntryModel, ID>, entryLabel: KeyPath<EntryModel, String>) -> some View where ID : Hashable {
-        stubView()
-    }
-
-    @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<EntryModel>(_ systemRotor: Any /* AccessibilitySystemRotor */, entries: [EntryModel], entryLabel: KeyPath<EntryModel, String>) -> some View where EntryModel : Identifiable {
-        stubView()
-    }
-
-    @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<EntryModel, ID>(_ systemRotor: Any /* AccessibilitySystemRotor */, entries: [EntryModel], entryID: KeyPath<EntryModel, ID>, entryLabel: KeyPath<EntryModel, String>) -> some View where ID : Hashable {
-        stubView()
-    }
-
-    @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor(_ label: Text, textRanges: [Range<String.Index>]) -> some View {
-        stubView()
-    }
-
-    @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor(_ systemRotor: Any /* AccessibilitySystemRotor */, textRanges: [Range<String.Index>]) -> some View {
+    nonisolated public func accessibilityRotorEntry<ID>(id: ID, in namespace: Namespace.ID) -> some View where ID : Hashable {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<Content>(_ labelKey: LocalizedStringKey, /* @AccessibilityRotorContentBuilder */ entries: @escaping () -> Content) -> some View where Content : AccessibilityRotorContent {
+    nonisolated public func accessibilityRotor<Content>(_ label: Text, /* @AccessibilityRotorContentBuilder */ entries: @escaping () -> Content) -> some View where Content : AccessibilityRotorContent {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<L, Content>(_ label: L, /* @AccessibilityRotorContentBuilder */ entries: @escaping () -> Content) -> some View where L : StringProtocol, Content : AccessibilityRotorContent {
+    nonisolated public func accessibilityRotor<Content>(_ systemRotor: Any /* AccessibilitySystemRotor */, /* @AccessibilityRotorContentBuilder */ entries: @escaping () -> Content) -> some View where Content : AccessibilityRotorContent {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<EntryModel>(_ rotorLabelKey: LocalizedStringKey, entries: [EntryModel], entryLabel: KeyPath<EntryModel, String>) -> some View where EntryModel : Identifiable {
+    nonisolated public func accessibilityRotor<EntryModel>(_ rotorLabel: Text, entries: [EntryModel], entryLabel: KeyPath<EntryModel, String>) -> some View where EntryModel : Identifiable {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<L, EntryModel>(_ rotorLabel: L, entries: [EntryModel], entryLabel: KeyPath<EntryModel, String>) -> some View where L : StringProtocol, EntryModel : Identifiable {
+    nonisolated public func accessibilityRotor<EntryModel, ID>(_ rotorLabel: Text, entries: [EntryModel], entryID: KeyPath<EntryModel, ID>, entryLabel: KeyPath<EntryModel, String>) -> some View where ID : Hashable {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<EntryModel, ID>(_ rotorLabelKey: LocalizedStringKey, entries: [EntryModel], entryID: KeyPath<EntryModel, ID>, entryLabel: KeyPath<EntryModel, String>) -> some View where ID : Hashable {
+    nonisolated public func accessibilityRotor<EntryModel>(_ systemRotor: Any /* AccessibilitySystemRotor */, entries: [EntryModel], entryLabel: KeyPath<EntryModel, String>) -> some View where EntryModel : Identifiable {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor<L, EntryModel, ID>(_ rotorLabel: L, entries: [EntryModel], entryID: KeyPath<EntryModel, ID>, entryLabel: KeyPath<EntryModel, String>) -> some View where L : StringProtocol, ID : Hashable {
+    nonisolated public func accessibilityRotor<EntryModel, ID>(_ systemRotor: Any /* AccessibilitySystemRotor */, entries: [EntryModel], entryID: KeyPath<EntryModel, ID>, entryLabel: KeyPath<EntryModel, String>) -> some View where ID : Hashable {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRotor(_ labelKey: LocalizedStringKey, textRanges: [Range<String.Index>]) -> some View {
+    nonisolated public func accessibilityRotor(_ label: Text, textRanges: [Range<String.Index>]) -> some View {
+        stubView()
+    }
+
+    @available(*, unavailable)
+    nonisolated public func accessibilityRotor(_ systemRotor: Any /* AccessibilitySystemRotor */, textRanges: [Range<String.Index>]) -> some View {
+        stubView()
+    }
+}
+
+extension View {
+    @available(*, unavailable)
+    nonisolated public func accessibilityRotor<Content>(_ labelKey: LocalizedStringKey, /* @AccessibilityRotorContentBuilder */ entries: @escaping () -> Content) -> some View where Content : AccessibilityRotorContent {
+        stubView()
+    }
+
+    @available(*, unavailable)
+    nonisolated public func accessibilityRotor<L, Content>(_ label: L, /* @AccessibilityRotorContentBuilder */ entries: @escaping () -> Content) -> some View where L : StringProtocol, Content : AccessibilityRotorContent {
+        stubView()
+    }
+
+    @available(*, unavailable)
+    nonisolated public func accessibilityRotor<EntryModel>(_ rotorLabelKey: LocalizedStringKey, entries: [EntryModel], entryLabel: KeyPath<EntryModel, String>) -> some View where EntryModel : Identifiable {
+        stubView()
+    }
+
+    @available(*, unavailable)
+    nonisolated public func accessibilityRotor<L, EntryModel>(_ rotorLabel: L, entries: [EntryModel], entryLabel: KeyPath<EntryModel, String>) -> some View where L : StringProtocol, EntryModel : Identifiable {
+        stubView()
+    }
+
+    @available(*, unavailable)
+    nonisolated public func accessibilityRotor<EntryModel, ID>(_ rotorLabelKey: LocalizedStringKey, entries: [EntryModel], entryID: KeyPath<EntryModel, ID>, entryLabel: KeyPath<EntryModel, String>) -> some View where ID : Hashable {
+        stubView()
+    }
+
+    @available(*, unavailable)
+    nonisolated public func accessibilityRotor<L, EntryModel, ID>(_ rotorLabel: L, entries: [EntryModel], entryID: KeyPath<EntryModel, ID>, entryLabel: KeyPath<EntryModel, String>) -> some View where L : StringProtocol, ID : Hashable {
+        stubView()
+    }
+
+    @available(*, unavailable)
+    nonisolated public func accessibilityRotor(_ labelKey: LocalizedStringKey, textRanges: [Range<String.Index>]) -> some View {
         stubView()
     }
 
@@ -263,13 +263,13 @@ extension View {
 
 extension View {
     @available(*, unavailable)
-    /* @inlinable nonisolated */ public func accessibilityIgnoresInvertColors(_ active: Bool = true) -> some View {
+    /* @inlinable */ nonisolated public func accessibilityIgnoresInvertColors(_ active: Bool = true) -> some View {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func accessibilityIdentifier(_ identifier: String, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityIdentifier(_ identifier: String, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.accessibilityIdentifier(identifier, isEnabled: isEnabled)
         }
@@ -278,207 +278,207 @@ extension View {
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRepresentation<V>(@ViewBuilder representation: () -> V) -> some View where V : View {
+    nonisolated public func accessibilityRepresentation<V>(@ViewBuilder representation: () -> V) -> some View where V : View {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityChildren<V>(@ViewBuilder children: () -> V) -> some View where V : View {
+    nonisolated public func accessibilityChildren<V>(@ViewBuilder children: () -> V) -> some View where V : View {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityChartDescriptor<R>(_ representable: R) -> some View /* where R : AXChartDescriptorRepresentable */ {
+    nonisolated public func accessibilityChartDescriptor<R>(_ representable: R) -> some View /* where R : AXChartDescriptorRepresentable */ {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityCustomContent(_ key: AccessibilityCustomContentKey, _ value: Text?, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityCustomContent(_ key: AccessibilityCustomContentKey, _ value: Text?, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityCustomContent(_ key: AccessibilityCustomContentKey, _ valueKey: LocalizedStringKey, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityCustomContent(_ key: AccessibilityCustomContentKey, _ valueKey: LocalizedStringKey, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func accessibilityCustomContent<V>(_ key: AccessibilityCustomContentKey, _ value: V, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where V : StringProtocol {
+    @_disfavoredOverload nonisolated public func accessibilityCustomContent<V>(_ key: AccessibilityCustomContentKey, _ value: V, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where V : StringProtocol {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityCustomContent(_ label: Text, _ value: Text, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityCustomContent(_ label: Text, _ value: Text, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityCustomContent(_ labelKey: LocalizedStringKey, _ value: Text, importance: Any? = nil /* AXCustomContent.Importance = .default */) ->  some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityCustomContent(_ labelKey: LocalizedStringKey, _ value: Text, importance: Any? = nil /* AXCustomContent.Importance = .default */) ->  some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityCustomContent(_ labelKey: LocalizedStringKey, _ valueKey: LocalizedStringKey, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityCustomContent(_ labelKey: LocalizedStringKey, _ valueKey: LocalizedStringKey, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func accessibilityCustomContent<V>(_ labelKey: LocalizedStringKey, _ value: V, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where V : StringProtocol {
+    @_disfavoredOverload nonisolated public func accessibilityCustomContent<V>(_ labelKey: LocalizedStringKey, _ value: V, importance: Any? = nil /* AXCustomContent.Importance = .default */) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where V : StringProtocol {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityFocused<Value>(_ binding: Any /* AccessibilityFocusState<Value>.Binding */, equals value: Value) -> some View where Value : Hashable {
+    nonisolated public func accessibilityFocused<Value>(_ binding: Any /* AccessibilityFocusState<Value>.Binding */, equals value: Value) -> some View where Value : Hashable {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityFocused(_ condition: Any /* AccessibilityFocusState<Bool>.Binding */) -> some View {
+    nonisolated public func accessibilityFocused(_ condition: Any /* AccessibilityFocusState<Bool>.Binding */) -> some View {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func accessibilityAddTraits(_ traits: AccessibilityTraits) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityAddTraits(_ traits: AccessibilityTraits) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.accessibilityAddTraits(bridgedTraits: traits.rawValue)
         }
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityRemoveTraits(_ traits: AccessibilityTraits) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityRemoveTraits(_ traits: AccessibilityTraits) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func accessibility(addTraits traits: AccessibilityTraits) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(addTraits traits: AccessibilityTraits) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         return accessibilityAddTraits(traits)
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibility(removeTraits traits: AccessibilityTraits) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibility(removeTraits traits: AccessibilityTraits) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityElement(children: AccessibilityChildBehavior = .ignore) -> some View {
+    nonisolated public func accessibilityElement(children: AccessibilityChildBehavior = .ignore) -> some View {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityZoomAction(_ handler: @escaping (Any /* AccessibilityZoomGestureAction */) -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityZoomAction(_ handler: @escaping (Any /* AccessibilityZoomGestureAction */) -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityActivationPoint(_ activationPoint: CGPoint, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityActivationPoint(_ activationPoint: CGPoint, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityActivationPoint(_ activationPoint: UnitPoint, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityActivationPoint(_ activationPoint: UnitPoint, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityDragPoint(_ point: UnitPoint, description: Text, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityDragPoint(_ point: UnitPoint, description: Text, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityDragPoint(_ point: UnitPoint, description: LocalizedStringKey, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityDragPoint(_ point: UnitPoint, description: LocalizedStringKey, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func accessibilityDragPoint<S>(_ point: UnitPoint, description: S, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
+    @_disfavoredOverload nonisolated public func accessibilityDragPoint<S>(_ point: UnitPoint, description: S, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityDropPoint(_ point: UnitPoint, description: Text, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityDropPoint(_ point: UnitPoint, description: Text, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityDropPoint(_ point: UnitPoint, description: LocalizedStringKey, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityDropPoint(_ point: UnitPoint, description: LocalizedStringKey, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public func accessibilityDropPoint<S>(_ point: UnitPoint, description: S, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
+    @_disfavoredOverload nonisolated public func accessibilityDropPoint<S>(_ point: UnitPoint, description: S, isEnabled: Bool = true) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityActivationPoint(_ activationPoint: CGPoint) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityActivationPoint(_ activationPoint: CGPoint) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityActivationPoint(_ activationPoint: UnitPoint) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityActivationPoint(_ activationPoint: UnitPoint) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityAction(_ actionKind: AccessibilityActionKind = .default, _ handler: @escaping () -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityAction(_ actionKind: AccessibilityActionKind = .default, _ handler: @escaping () -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityAction(named name: Text, _ handler: @escaping () -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityAction(named name: Text, _ handler: @escaping () -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityAction<Label>(action: @escaping () -> Void, @ViewBuilder label: () -> Label) -> some View where Label : View {
+    nonisolated public func accessibilityAction<Label>(action: @escaping () -> Void, @ViewBuilder label: () -> Label) -> some View where Label : View {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityActions<Content>(@ViewBuilder _ content: () -> Content) -> some View where Content : View {
+    nonisolated public func accessibilityActions<Content>(@ViewBuilder _ content: () -> Content) -> some View where Content : View {
         stubView()
     }
 }
 
 extension View {
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityAction(named nameKey: LocalizedStringKey, _ handler: @escaping () -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
+    nonisolated public func accessibilityAction(named nameKey: LocalizedStringKey, _ handler: @escaping () -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ {
         stubView()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func accessibilityAction<S>(named name: S, _ handler: @escaping () -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
+    nonisolated public func accessibilityAction<S>(named name: S, _ handler: @escaping () -> Void) -> some View /* ModifiedContent<Self, AccessibilityAttachmentModifier> */ where S : StringProtocol {
         stubView()
     }
 }
 
-public struct AccessibilityActionCategory : Equatable /*, Sendable */ {
+public struct AccessibilityActionCategory : Equatable, Sendable {
     public static let `default` = AccessibilityActionCategory("_default")
 
     public static let edit = AccessibilityActionCategory("_edit")
@@ -495,7 +495,7 @@ public struct AccessibilityActionCategory : Equatable /*, Sendable */ {
     }
 }
 
-public struct AccessibilityActionKind : Equatable /*, Sendable */ {
+public struct AccessibilityActionKind : Equatable, Sendable {
     public static let `default` = AccessibilityActionKind(named: Text("_default"))
 
     public static let escape = AccessibilityActionKind(named: Text("_escape"))
@@ -506,7 +506,7 @@ public struct AccessibilityActionKind : Equatable /*, Sendable */ {
     }
 }
 
-public enum AccessibilityAdjustmentDirection : Hashable /* , Sendable */ {
+public enum AccessibilityAdjustmentDirection : Hashable, Sendable {
     case increment
     case decrement
 }
@@ -518,7 +518,7 @@ public enum AccessibilityAdjustmentDirection : Hashable /* , Sendable */ {
 //    public typealias Body = Never
 //}
 
-public struct AccessibilityChildBehavior : Hashable {
+public struct AccessibilityChildBehavior : Hashable, Sendable {
     public static let ignore = AccessibilityChildBehavior()
 
     public static let contain = AccessibilityChildBehavior()
@@ -604,15 +604,15 @@ public struct AccessibilityDirectTouchOptions : OptionSet, Sendable {
 //extension AccessibilityFocusState : Sendable where Value : Sendable {
 //}
 
-@frozen public enum AccessibilityLabeledPairRole : Hashable /*, Sendable, BitwiseCopyable */ {
+@frozen public enum AccessibilityLabeledPairRole : Hashable, Sendable, BitwiseCopyable {
     case label
     case content
 }
 
-/* @MainActor @preconcurrency */ public protocol AccessibilityRotorContent {
+/* @MainActor */ @preconcurrency public protocol AccessibilityRotorContent {
     associatedtype Body : AccessibilityRotorContent
 
-    /* @AccessibilityRotorContentBuilder */ @MainActor /* @preconcurrency */ var body: Self.Body { get }
+    /* @AccessibilityRotorContentBuilder */ @MainActor @preconcurrency var body: Self.Body { get }
 }
 //
 ///// Result builder you use to generate rotor entry content.
@@ -733,7 +733,7 @@ public struct AccessibilityRotorEntry<ID> where ID : Hashable {
 //    public typealias Body = Never
 //}
 
-public struct AccessibilitySystemRotor /* : Sendable */ {
+public struct AccessibilitySystemRotor : Sendable {
     public static func links(visited: Bool) -> AccessibilitySystemRotor {
         return AccessibilitySystemRotor()
     }
@@ -787,7 +787,7 @@ public struct AccessibilitySystemRotor /* : Sendable */ {
     }
 }
 
-public struct AccessibilityTechnologies : SetAlgebra /*, Sendable */, OptionSet /* Added OptionSet conformance */ {
+public struct AccessibilityTechnologies : SetAlgebra, Sendable, OptionSet /* Added OptionSet conformance */ {
     public static let voiceOver = AccessibilityTechnologies(rawValue: 1 << 0)
     public static let switchControl = AccessibilityTechnologies(rawValue: 1 << 1)
 
@@ -802,7 +802,7 @@ public struct AccessibilityTechnologies : SetAlgebra /*, Sendable */, OptionSet 
     }
 }
 
-public struct AccessibilityTextContentType /* : Sendable */ {
+public struct AccessibilityTextContentType : Sendable {
     public static let plain = AccessibilityTextContentType()
     public static let console = AccessibilityTextContentType()
     public static let fileSystem = AccessibilityTextContentType()
@@ -813,7 +813,7 @@ public struct AccessibilityTextContentType /* : Sendable */ {
     public static let wordProcessing = AccessibilityTextContentType()
 }
 
-public struct AccessibilityTraits : SetAlgebra, OptionSet /* Added OptionSet conformance */ /*, Sendable */ {
+public struct AccessibilityTraits : SetAlgebra, OptionSet /* Added OptionSet conformance */, Sendable {
     public let rawValue: Int
 
     public init(rawValue: Int) {
@@ -844,7 +844,7 @@ public struct AccessibilityTraits : SetAlgebra, OptionSet /* Added OptionSet con
 }
 
 public struct AccessibilityZoomGestureAction {
-    @frozen public enum Direction : Hashable /*, Sendable, BitwiseCopyable */ {
+    @frozen public enum Direction : Hashable, Sendable, BitwiseCopyable {
         case zoomIn
         case zoomOut
     }

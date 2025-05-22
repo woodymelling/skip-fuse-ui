@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-/* @MainActor @preconcurrency */ public protocol ViewModifier {
+/* @MainActor */ @preconcurrency public protocol ViewModifier {
     associatedtype Body : View
 
-    @ViewBuilder @MainActor /* @preconcurrency */ func body(content: Self.Content) -> Self.Body
+    @ViewBuilder @MainActor @preconcurrency func body(content: Self.Content) -> Self.Body
 
     typealias Content = JavaBackedView
 
@@ -19,26 +19,26 @@ extension ViewModifier {
 }
 
 extension ViewModifier where Self.Body == Never {
-    @MainActor /* @preconcurrency */ public func body(content: Self.Content) -> Self.Body {
+    @MainActor @preconcurrency public func body(content: Self.Content) -> Self.Body {
         fatalError()
     }
 }
 
 extension ViewModifier {
     @available(*, unavailable)
-    @inlinable /* nonisolated */ public func concat<T>(_ modifier: T) -> Any /* ModifiedContent<Self, T> */ {
+    @inlinable nonisolated public func concat<T>(_ modifier: T) -> Any /* ModifiedContent<Self, T> */ {
         fatalError()
     }
 }
 
 extension ViewModifier {
     @available(*, unavailable)
-    /* @inlinable nonisolated */ public func transaction(_ transform: @escaping (inout Transaction) -> Void) -> some ViewModifier {
+    /* @inlinable */ nonisolated public func transaction(_ transform: @escaping (inout Transaction) -> Void) -> some ViewModifier {
         stubViewModifier()
     }
 
     @available(*, unavailable)
-    @MainActor /* @inlinable @preconcurrency */ public func animation(_ animation: Animation?) -> some ViewModifier {
+    @MainActor /* @inlinable */ @preconcurrency public func animation(_ animation: Animation?) -> some ViewModifier {
         stubViewModifier()
     }
 }
@@ -52,7 +52,7 @@ extension Never : ViewModifier {
 }
 
 extension View {
-    /* @inlinable nonisolated */ public func modifier<T>(_ modifier: T) -> some View /* ModifiedContent<Self, T> */ where T : ViewModifier {
+    /* @inlinable */ nonisolated public func modifier<T>(_ modifier: T) -> some View /* ModifiedContent<Self, T> */ where T : ViewModifier {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.modifier(modifier.Java_modifier)
         }

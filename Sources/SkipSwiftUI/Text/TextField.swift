@@ -3,7 +3,7 @@
 import Foundation
 import SkipUI
 
-/* @MainActor @preconcurrency */ public struct TextField<Label> : View where Label : View {
+/* @MainActor */ @preconcurrency public struct TextField<Label> : View where Label : View {
     private let text: Binding<String>
     private let prompt: Text?
     private let label: Label
@@ -56,25 +56,25 @@ extension TextField {
 }
 
 extension TextField where Label == Text {
-    /* nonisolated */ public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
+    nonisolated public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
         self.label = Text(titleKey)
         self.prompt = prompt
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S, F>(_ title: S, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String {
+    @_disfavoredOverload nonisolated public init<S, F>(_ title: S, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
         self.label = Text(title)
         self.prompt = prompt
     }
 
-    /* nonisolated */ public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
+    nonisolated public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
         self.label = Text(titleKey)
         self.prompt = prompt
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S, F>(_ title: S, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String {
+    @_disfavoredOverload nonisolated public init<S, F>(_ title: S, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
         self.label = Text(title)
         self.prompt = prompt
@@ -82,13 +82,13 @@ extension TextField where Label == Text {
 }
 
 extension TextField {
-    /* nonisolated */ public init<F>(value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
+    nonisolated public init<F>(value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
         self.label = label()
         self.prompt = prompt
     }
 
-    /* nonisolated */ public init<F>(value: Binding<F.FormatInput>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
+    nonisolated public init<F>(value: Binding<F.FormatInput>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
         self.label = label()
         self.prompt = prompt
@@ -97,7 +97,7 @@ extension TextField {
 
 extension TextField where Label == Text {
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, prompt: Text?) {
+    nonisolated public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, prompt: Text?) {
         fatalError()
 //        self.text = Self.text(from: value, formatter: formatter)
 //        self.label = Text(titleKey)
@@ -105,7 +105,7 @@ extension TextField where Label == Text {
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, prompt: Text?) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, prompt: Text?) where S : StringProtocol {
         fatalError()
 //        self.text = Self.text(from: value, formatter: formatter)
 //        self.label = Text(title)
@@ -115,7 +115,7 @@ extension TextField where Label == Text {
 
 extension TextField {
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(value: Binding<V>, formatter: Formatter, prompt: Text? = nil, @ViewBuilder label: () -> Label) {
+    nonisolated public init<V>(value: Binding<V>, formatter: Formatter, prompt: Text? = nil, @ViewBuilder label: () -> Label) {
         fatalError()
 //        self.text = Self.text(from: value, formatter: formatter)
 //        self.label = label()
@@ -125,7 +125,7 @@ extension TextField {
 
 extension TextField where Label == Text {
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter) {
+    nonisolated public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter) {
         fatalError()
 //        self.text = Self.text(from: value, formatter: formatter)
 //        self.label = Text(titleKey)
@@ -133,7 +133,7 @@ extension TextField where Label == Text {
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload /* nonisolated */ public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter) where S : StringProtocol {
         fatalError()
 //        self.text = Self.text(from: value, formatter: formatter)
 //        self.label = Text(title)
@@ -143,73 +143,73 @@ extension TextField where Label == Text {
 
 extension TextField where Label == Text {
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) {
+    nonisolated public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void) {
+    nonisolated public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onCommit: @escaping () -> Void) {
+    nonisolated public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onCommit: @escaping () -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) where S : StringProtocol {
+    nonisolated public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void) where S : StringProtocol {
+    nonisolated public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onCommit: @escaping () -> Void) where S : StringProtocol {
+    nonisolated public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onCommit: @escaping () -> Void) where S : StringProtocol {
         fatalError()
     }
 }
 
 extension TextField where Label == Text {
     @available(*, unavailable)
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>, axis: Axis) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, axis: Axis) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?, axis: Axis) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?, axis: Axis) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S>(_ title: S, text: Binding<String>, axis: Axis) where S : StringProtocol {
+    nonisolated public init<S>(_ title: S, text: Binding<String>, axis: Axis) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S>(_ title: S, text: Binding<String>, prompt: Text?, axis: Axis) where S : StringProtocol {
+    nonisolated public init<S>(_ title: S, text: Binding<String>, prompt: Text?, axis: Axis) where S : StringProtocol {
         fatalError()
     }
 }
 
 extension TextField {
     @available(*, unavailable)
-    /* nonisolated */ public init(text: Binding<String>, prompt: Text? = nil, axis: Axis, @ViewBuilder label: () -> Label) {
+    nonisolated public init(text: Binding<String>, prompt: Text? = nil, axis: Axis, @ViewBuilder label: () -> Label) {
         fatalError()
     }
 }
 
 extension TextField where Label == Text {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?) {
         self.text = text
         self.label = Text(titleKey)
         self.prompt = prompt
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, text: Binding<String>, prompt: Text?) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, text: Binding<String>, prompt: Text?) where S : StringProtocol {
         self.text = text
         self.label = Text(title)
         self.prompt = prompt
@@ -227,25 +227,25 @@ extension TextField {
 #if compiler(>=6.0)
 extension TextField where Label == Text {
     @available(*, unavailable)
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>, selection: Binding<TextSelection?>, prompt: Text? = nil, axis: Axis? = nil) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, selection: Binding<TextSelection?>, prompt: Text? = nil, axis: Axis? = nil) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S>(_ title: S, text: Binding<String>, selection: Binding<TextSelection?>, prompt: Text? = nil, axis: Axis? = nil) where S : StringProtocol {
+    nonisolated public init<S>(_ title: S, text: Binding<String>, selection: Binding<TextSelection?>, prompt: Text? = nil, axis: Axis? = nil) where S : StringProtocol {
         fatalError()
     }
 }
 #endif
 
 extension TextField where Label == Text {
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>) {
         self.text = text
         self.label = Text(titleKey)
         self.prompt = nil
     }
 
-    @_disfavoredOverload /* nonisolated */ public init<S>(_ title: S, text: Binding<String>) where S : StringProtocol {
+    @_disfavoredOverload nonisolated public init<S>(_ title: S, text: Binding<String>) where S : StringProtocol {
         self.text = text
         self.label = Text(title)
         self.prompt = nil
@@ -254,32 +254,32 @@ extension TextField where Label == Text {
 
 extension TextField where Label == Text {
     @available(*, unavailable)
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onCommit: @escaping () -> Void) {
+    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onCommit: @escaping () -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) where S : StringProtocol {
+    nonisolated public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void) where S : StringProtocol {
+    nonisolated public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public init<S>(_ title: S, text: Binding<String>, onCommit: @escaping () -> Void) where S : StringProtocol {
+    nonisolated public init<S>(_ title: S, text: Binding<String>, onCommit: @escaping () -> Void) where S : StringProtocol {
         fatalError()
     }
 }
@@ -334,7 +334,7 @@ extension TextFieldStyle where Self == PlainTextFieldStyle {
 }
 
 extension View {
-    /* nonisolated */ public func autocorrectionDisabled(_ disable: Bool = true) -> some View {
+    nonisolated public func autocorrectionDisabled(_ disable: Bool = true) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.autocorrectionDisabled(disable)
         }
@@ -342,7 +342,7 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func keyboardType(_ type: UIKeyboardType) -> some View {
+    nonisolated public func keyboardType(_ type: UIKeyboardType) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.keyboardType(bridgedType: type.rawValue)
         }
@@ -350,20 +350,20 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func onSubmit(of triggers: SubmitTriggers = .text, _ action: @escaping () -> Void) -> some View {
+    nonisolated public func onSubmit(of triggers: SubmitTriggers = .text, _ action: @escaping () -> Void) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.onSubmit(bridgedTriggers: triggers.rawValue, action: action)
         }
     }
 
     @available(*, unavailable)
-    /* nonisolated */ public func submitScope(_ isBlocking: Bool = true) -> some View {
+    nonisolated public func submitScope(_ isBlocking: Bool = true) -> some View {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func submitLabel(_ submitLabel: SubmitLabel) -> some View {
+    nonisolated public func submitLabel(_ submitLabel: SubmitLabel) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.submitLabel(bridgedLabel: submitLabel.identifier)
         }
@@ -372,13 +372,13 @@ extension View {
 
 extension View {
     @available(*, unavailable)
-    /* @inlinable nonisolated */ public func textContentType(_ textContentType: UITextContentType?) -> some View {
+    /* @inlinable */ nonisolated public func textContentType(_ textContentType: UITextContentType?) -> some View {
         stubView()
     }
 }
 
 extension View {
-    /* nonisolated */ public func textFieldStyle<S>(_ style: S) -> some View where S : TextFieldStyle {
+    nonisolated public func textFieldStyle<S>(_ style: S) -> some View where S : TextFieldStyle {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.textFieldStyle(bridgedStyle: style.identifier)
         }
@@ -386,7 +386,7 @@ extension View {
 }
 
 extension View {
-    /* nonisolated */ public func textInputAutocapitalization(_ autocapitalization: TextInputAutocapitalization?) -> some View {
+    nonisolated public func textInputAutocapitalization(_ autocapitalization: TextInputAutocapitalization?) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.textInputAutocapitalization(bridgedAutocapitalization: autocapitalization?.identifier)
         }
