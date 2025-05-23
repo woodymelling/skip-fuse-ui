@@ -20,3 +20,28 @@ extension ComposeView : SkipUIBridging {
         return SkipUI.ComposeView(bridgedContent: content)
     }
 }
+
+extension View {
+    /// Embed Compose modifier content.
+    public func composeModifier(content: () -> any JConvertible) -> some View {
+        return ComposeModifierView(target: self, content: content())
+    }
+}
+
+struct ComposeModifierView<V> : View where V : View {
+    private let target: V
+    private let content: any JConvertible
+
+    init(target: V, content: any JConvertible) {
+        self.target = target
+        self.content = content
+    }
+
+    public typealias Body = Never
+}
+
+extension ComposeModifierView : SkipUIBridging {
+    public var Java_view: any SkipUI.View {
+        return target.Java_viewOrEmpty.applyContentModifier(bridgedContent: content)
+    }
+}
