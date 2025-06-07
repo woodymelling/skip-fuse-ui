@@ -1,12 +1,13 @@
 // swift-tools-version: 6.0
 import PackageDescription
 
+let android = Context.environment["TARGET_OS_ANDROID"] ?? "0" != "0"
+
 let package = Package(
     name: "skip-fuse-ui",
     platforms: [.iOS(.v16), .macOS(.v13), .tvOS(.v16), .watchOS(.v9), .macCatalyst(.v16)],
     products: [
-        .library(name: "SkipFuseUI", type: .dynamic, targets: ["SkipFuseUI"]),
-        .library(name: "SwiftUI", type: .dynamic, targets: ["SwiftUI"]),
+        .library(name: "SkipFuseUI", type: .dynamic, targets: ["SkipFuseUI"] + (android ? ["SwiftUI"] : [])),
         .library(name: "SkipSwiftUI", type: .dynamic, targets: ["SkipSwiftUI"]),
     ],
     dependencies: [
@@ -17,7 +18,6 @@ let package = Package(
         .package(url: "https://source.skip.tools/skip-ui.git", from: "1.29.3")
     ],
     targets: [
-        .target(name: "SwiftUI", dependencies: ["SkipSwiftUI"]),
         .target(name: "SkipFuseUI", dependencies: ["SkipSwiftUI"]),
         .target(name: "SkipSwiftUI", dependencies: [
             .product(name: "SkipFuse", package: "skip-fuse"),
@@ -31,3 +31,7 @@ let package = Package(
         ], plugins: [.plugin(name: "skipstone", package: "skip")]),
     ]
 )
+
+if android {
+    package.targets += [.target(name: "SwiftUI", dependencies: ["SkipSwiftUI"])]
+}
