@@ -17,7 +17,7 @@ let package = Package(
         .package(url: "https://source.skip.tools/skip-ui.git", from: "1.29.3")
     ],
     targets: [
-        .target(name: "SwiftUI", dependencies: ["SkipFuseUI"]),
+        .target(name: "SwiftUI", dependencies: ["SkipSwiftUI"]),
         .target(name: "SkipFuseUI", dependencies: ["SkipSwiftUI"]),
         .target(name: "SkipSwiftUI", dependencies: [
             .product(name: "SkipFuse", package: "skip-fuse"),
