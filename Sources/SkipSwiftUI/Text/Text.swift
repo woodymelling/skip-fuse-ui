@@ -471,9 +471,10 @@ extension View {
         stubView()
     }
 
-    @available(*, unavailable)
     public func lineLimit(_ limit: Int, reservesSpace: Bool) -> some View {
-        stubView()
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.lineLimit(limit, reservesSpace: reservesSpace)
+        }
     }
 
     @available(*, unavailable)
