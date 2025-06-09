@@ -355,68 +355,208 @@ extension Group : CustomizableToolbarContent where Content : CustomizableToolbar
 }
 
 @resultBuilder public struct ToolbarContentBuilder {
-    public static func buildBlock() -> EmptyToolbarContent {
-        return EmptyToolbarContent()
-    }
-
     public static func buildExpression<Content>(_ content: Content) -> Content where Content : ToolbarContent {
         return content
-    }
-
-    public static func buildBlock<Content>(_ content: Content) -> Content where Content : ToolbarContent {
-        return content
-    }
-
-    public static func buildBlock(_ content: (any ToolbarContent)...) -> TupleToolbarContent {
-        return TupleToolbarContent(content)
     }
 
     public static func buildExpression<Content>(_ content: Content) -> Content where Content : CustomizableToolbarContent {
         return content
     }
 
-    public static func buildBlock<Content>(_ content: Content) -> Content where Content : CustomizableToolbarContent {
-        return content
-    }
-
-    public static func buildBlock(_ content: (any CustomizableToolbarContent)...) -> TupleToolbarContent {
-        return TupleToolbarContent(content)
-    }
-}
-
-extension ToolbarContentBuilder {
     public static func buildIf<Content>(_ content: Content?) -> Content? where Content : ToolbarContent {
         return content
-    }
-
-    public static func buildEither<TrueContent>(first: TrueContent) -> TrueContent where TrueContent : ToolbarContent {
-        return first
-    }
-
-    public static func buildEither<FalseContent>(second: FalseContent) -> FalseContent where FalseContent : ToolbarContent {
-        return second
     }
 
     public static func buildIf<Content>(_ content: Content?) -> Content? where Content : CustomizableToolbarContent {
         return content
     }
 
-    public static func buildEither<TrueContent>(first: TrueContent) -> TrueContent where TrueContent : CustomizableToolbarContent {
-        return first
+    public static func buildEither<TrueContent>(first: TrueContent) -> AnyToolbarContent where TrueContent : ToolbarContent {
+        return AnyToolbarContent(first)
     }
 
-    public static func buildEither<FalseContent>(second: FalseContent) -> FalseContent where FalseContent : CustomizableToolbarContent {
-        return second
+    public static func buildEither<FalseContent>(second: FalseContent) -> AnyToolbarContent where FalseContent : ToolbarContent {
+        return AnyToolbarContent(second)
     }
-}
 
-extension ToolbarContentBuilder {
+    public static func buildEither<TrueContent>(first: TrueContent) -> AnyCustomizableToolbarContent where TrueContent : CustomizableToolbarContent {
+        return AnyCustomizableToolbarContent(first)
+    }
+
+    public static func buildEither<FalseContent>(second: FalseContent) -> AnyCustomizableToolbarContent where FalseContent : CustomizableToolbarContent {
+        return AnyCustomizableToolbarContent(second)
+    }
+
     public static func buildLimitedAvailability<Content>(_ content: Content) -> Content where Content : ToolbarContent {
         return content
     }
 
     public static func buildLimitedAvailability<Content>(_ content: Content) -> Content where Content : CustomizableToolbarContent {
         return content
+    }
+
+    public static func buildBlock() -> EmptyToolbarContent {
+        return EmptyToolbarContent()
+    }
+
+    public static func buildBlock<Content>(_ content: Content) -> Content where Content : ToolbarContent {
+        return content
+    }
+
+    public static func buildBlock<C0, C1>(_ c0: C0, _ c1: C1) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent {
+        return TupleToolbarContent([c0, c1])
+    }
+
+    public static func buildBlock<C0, C1, C2>(_ c0: C0, _ c1: C1, _ c2: C2) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent, C10 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent, C10 : ToolbarContent, C11 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent, C10 : ToolbarContent, C11 : ToolbarContent, C12 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent, C10 : ToolbarContent, C11 : ToolbarContent, C12 : ToolbarContent, C13 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent, C10 : ToolbarContent, C11 : ToolbarContent, C12 : ToolbarContent, C13 : ToolbarContent, C14 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14, _ c15: C15) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent, C10 : ToolbarContent, C11 : ToolbarContent, C12 : ToolbarContent, C13 : ToolbarContent, C14 : ToolbarContent, C15 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14, _ c15: C15, _ c16: C16) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent, C10 : ToolbarContent, C11 : ToolbarContent, C12 : ToolbarContent, C13 : ToolbarContent, C14 : ToolbarContent, C15 : ToolbarContent, C16 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14, _ c15: C15, _ c16: C16, _ c17: C17) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent, C10 : ToolbarContent, C11 : ToolbarContent, C12 : ToolbarContent, C13 : ToolbarContent, C14 : ToolbarContent, C15 : ToolbarContent, C16 : ToolbarContent, C17 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14, _ c15: C15, _ c16: C16, _ c17: C17, _ c18: C18) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent, C10 : ToolbarContent, C11 : ToolbarContent, C12 : ToolbarContent, C13 : ToolbarContent, C14 : ToolbarContent, C15 : ToolbarContent, C16 : ToolbarContent, C17 : ToolbarContent, C18 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14, _ c15: C15, _ c16: C16, _ c17: C17, _ c18: C18, _ c19: C19) -> TupleToolbarContent where C0 : ToolbarContent, C1 : ToolbarContent, C2 : ToolbarContent, C3 : ToolbarContent, C4 : ToolbarContent, C5 : ToolbarContent, C6 : ToolbarContent, C7 : ToolbarContent, C8 : ToolbarContent, C9 : ToolbarContent, C10 : ToolbarContent, C11 : ToolbarContent, C12 : ToolbarContent, C13 : ToolbarContent, C14 : ToolbarContent, C15 : ToolbarContent, C16 : ToolbarContent, C17 : ToolbarContent, C18 : ToolbarContent, C19 : ToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19])
+    }
+
+    public static func buildBlock<Content>(_ content: Content) -> Content where Content : CustomizableToolbarContent {
+        return content
+    }
+
+    public static func buildBlock<C0, C1>(_ c0: C0, _ c1: C1) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1])
+    }
+
+    public static func buildBlock<C0, C1, C2>(_ c0: C0, _ c1: C1, _ c2: C2) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : ToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent, C10 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent, C10 : CustomizableToolbarContent, C11 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent, C10 : CustomizableToolbarContent, C11 : CustomizableToolbarContent, C12 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent, C10 : CustomizableToolbarContent, C11 : CustomizableToolbarContent, C12 : CustomizableToolbarContent, C13 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent, C10 : CustomizableToolbarContent, C11 : CustomizableToolbarContent, C12 : CustomizableToolbarContent, C13 : CustomizableToolbarContent, C14 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14, _ c15: C15) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent, C10 : CustomizableToolbarContent, C11 : CustomizableToolbarContent, C12 : CustomizableToolbarContent, C13 : CustomizableToolbarContent, C14 : CustomizableToolbarContent, C15 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14, _ c15: C15, _ c16: C16) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent, C10 : CustomizableToolbarContent, C11 : CustomizableToolbarContent, C12 : CustomizableToolbarContent, C13 : CustomizableToolbarContent, C14 : CustomizableToolbarContent, C15 : CustomizableToolbarContent, C16 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14, _ c15: C15, _ c16: C16, _ c17: C17) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent, C10 : CustomizableToolbarContent, C11 : CustomizableToolbarContent, C12 : CustomizableToolbarContent, C13 : CustomizableToolbarContent, C14 : CustomizableToolbarContent, C15 : CustomizableToolbarContent, C16 : CustomizableToolbarContent, C17 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14, _ c15: C15, _ c16: C16, _ c17: C17, _ c18: C18) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent, C10 : CustomizableToolbarContent, C11 : CustomizableToolbarContent, C12 : CustomizableToolbarContent, C13 : CustomizableToolbarContent, C14 : CustomizableToolbarContent, C15 : CustomizableToolbarContent, C16 : CustomizableToolbarContent, C17 : CustomizableToolbarContent, C18 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18])
+    }
+
+    public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14, _ c15: C15, _ c16: C16, _ c17: C17, _ c18: C18, _ c19: C19) -> TupleToolbarContent where C0 : CustomizableToolbarContent, C1 : CustomizableToolbarContent, C2 : CustomizableToolbarContent, C3 : CustomizableToolbarContent, C4 : CustomizableToolbarContent, C5 : CustomizableToolbarContent, C6 : CustomizableToolbarContent, C7 : CustomizableToolbarContent, C8 : CustomizableToolbarContent, C9 : CustomizableToolbarContent, C10 : CustomizableToolbarContent, C11 : CustomizableToolbarContent, C12 : CustomizableToolbarContent, C13 : CustomizableToolbarContent, C14 : CustomizableToolbarContent, C15 : CustomizableToolbarContent, C16 : CustomizableToolbarContent, C17 : CustomizableToolbarContent, C18 : CustomizableToolbarContent, C19 : CustomizableToolbarContent {
+        return TupleToolbarContent([c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19])
     }
 }
 
