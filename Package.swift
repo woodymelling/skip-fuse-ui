@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "SkipSwiftUI", type: .dynamic, targets: ["SkipSwiftUI"]),
     ],
     dependencies: [
-        .package(url: "https://source.skip.tools/skip.git", from: "1.5.20"),
+        .package(url: "https://source.skip.tools/skip.git", from: "1.5.24"),
         .package(url: "https://source.skip.tools/skip-fuse.git", from: "1.0.2"),
         .package(url: "https://source.skip.tools/skip-bridge.git", "0.14.1"..<"2.0.0"),
         .package(url: "https://source.skip.tools/swift-jni.git", "0.2.1"..<"2.0.0"),
