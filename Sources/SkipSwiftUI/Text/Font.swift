@@ -18,12 +18,16 @@ struct FontSpec: Hashable, Sendable {
     var isItalic: Bool
     var weight: Font.Weight?
     var design: Font.Design?
+    var size: CGFloat?
+    var scaledBy: CGFloat?
 
-    init(_ type: FontType, isItalic: Bool = false, weight: Font.Weight? = nil, design: Font.Design? = nil) {
+    init(_ type: FontType, isItalic: Bool = false, weight: Font.Weight? = nil, design: Font.Design? = nil, size: CGFloat? = nil, scaledBy: CGFloat? = nil) {
         self.type = type
         self.isItalic = isItalic
         self.weight = weight
         self.design = design
+        self.size = size
+        self.scaledBy = scaledBy
     }
 
     var Java_font: SkipUI.Font {
@@ -47,6 +51,12 @@ struct FontSpec: Hashable, Sendable {
         }
         if let design {
             font = font.design(bridgedValue: design.rawValue)
+        }
+        if let size {
+            font = font.pointSize(size)
+        }
+        if let scaledBy {
+            font = font.scaledBy(scaledBy)
         }
         return font
     }
@@ -81,7 +91,7 @@ extension Font {
         return system(style, design: design, weight: nil)
     }
 
-    public enum TextStyle : Int, CaseIterable, Hashable, Sendable {
+    public enum TextStyle : Int, CaseIterable, Codable, Hashable, Sendable {
         case largeTitle = 0 // For bridging
         case title = 1 // For bridging
         case title2 = 2 // For bridging
@@ -97,29 +107,29 @@ extension Font {
 }
 
 extension Font {
-    public func italic() -> Font {
+    public func italic(_ isActive: Bool = true) -> Font {
         var spec = self.spec
-        spec.isItalic = true
+        spec.isItalic = isActive
         return Font(spec: spec)
     }
 
     @available(*, unavailable)
-    public func smallCaps() -> Font {
+    public func smallCaps(_ isActive: Bool = true) -> Font {
         fatalError()
     }
 
     @available(*, unavailable)
-    public func lowercaseSmallCaps() -> Font {
+    public func lowercaseSmallCaps(_ isActive: Bool = true) -> Font {
         fatalError()
     }
 
     @available(*, unavailable)
-    public func uppercaseSmallCaps() -> Font {
+    public func uppercaseSmallCaps(_ isActive: Bool = true) -> Font {
         fatalError()
     }
 
     @available(*, unavailable)
-    public func monospacedDigit() -> Font {
+    public func monospacedDigit(_ isActive: Bool = true) -> Font {
         fatalError()
     }
 
@@ -134,19 +144,31 @@ extension Font {
         fatalError()
     }
 
-    public func bold() -> Font {
-        return weight(.bold)
+    public func bold(_ isActive: Bool = true) -> Font {
+        return weight(isActive ? .bold : .regular)
     }
 
-    public func monospaced() -> Font {
+    public func monospaced(_ isActive: Bool = true) -> Font {
         var spec = self.spec
-        spec.design = .monospaced
+        spec.design = isActive ? .monospaced : .default
         return Font(spec: spec)
     }
 
     @available(*, unavailable)
     public func leading(_ leading: Font.Leading) -> Font {
         fatalError()
+    }
+
+    public func pointSize(_ size: CGFloat) -> Font {
+        var spec = self.spec
+        spec.size = size
+        return Font(spec: spec)
+    }
+
+    public func scaled(by factor: CGFloat) -> Font {
+        var spec = self.spec
+        spec.scaledBy = factor
+        return Font(spec: spec)
     }
 
     @frozen public struct Weight : Hashable, BitwiseCopyable, Sendable {
@@ -211,5 +233,39 @@ extension Font {
         case serif = 1 // For bridging
         case rounded = 2 // For bridging
         case monospaced = 3 // For bridging
+    }
+}
+
+extension Font {
+    @available(*, unavailable)
+    public static var `default`: Font {
+        fatalError()
+    }
+}
+
+extension Font {
+    @available(*, unavailable)
+    public func resolve(in context: Font.Context) -> Font.Resolved {
+        fatalError()
+    }
+
+    public struct Context : Hashable, CustomDebugStringConvertible {
+        public var debugDescription: String {
+            return "Font.Context"
+        }
+    }
+
+    public struct Resolved : Hashable {
+        public let ctFont: Int /* CTFont */
+        public let isBold: Bool
+        public let isItalic: Bool
+        public let pointSize: CGFloat
+        public let weight: Font.Weight
+        public let width: Font.Width
+        public let leading: Font.Leading
+        public let isMonospaced: Bool
+        public let isLowercaseSmallCaps: Bool
+        public let isUppercaseSmallCaps: Bool
+        public let isSmallCaps: Bool
     }
 }

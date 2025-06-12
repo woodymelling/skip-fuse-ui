@@ -131,6 +131,20 @@ extension ForEach {
     }
 }
 
+extension ForEach {
+    @available(*, unavailable)
+    public init<V>(sections view: V, @ViewBuilder content: @escaping (Any /* SectionConfiguration */) -> Content) where /* Data == ForEachSectionCollection<Content>, ID == SectionConfiguration.ID, */ Content : View, V : View {
+        fatalError()
+    }
+}
+
+extension ForEach {
+    @available(*, unavailable)
+    public init<V>(subviews view: V, @ViewBuilder content: @escaping (Any /* Subview */) -> Content) where /* Data == ForEachSubviewCollection<Content>, ID == Subview.ID, */ Content : View, V : View {
+        fatalError()
+    }
+}
+
 extension DynamicViewContent {
     /* @inlinable */ nonisolated public func onMove(perform action: ((IndexSet, Int) -> Void)?) -> some DynamicViewContent {
         if var forEach = self as? any ForEachProtocol {

@@ -36,6 +36,10 @@ import Foundation
             values.append(string)
         }
 
+        public mutating func appendInterpolation(_ substring: Substring) {
+            appendInterpolation(String(substring))
+        }
+
         public mutating func appendInterpolation<Subject>(_ subject: Subject, formatter: Formatter? = nil) where Subject : AnyObject /* ReferenceConvertible // Causes compiler crash */ {
             if let formatter {
                 appendInterpolation(formatter.string(for: subject) ?? "nil")

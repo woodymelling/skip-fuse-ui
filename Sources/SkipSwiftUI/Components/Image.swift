@@ -119,13 +119,6 @@ extension Image {
 
 extension Image {
     @available(*, unavailable)
-    public func symbolRenderingMode(_ mode: SymbolRenderingMode?) -> Image {
-        fatalError()
-    }
-}
-
-extension Image {
-    @available(*, unavailable)
     public init(_ cgImage: Any /* CGImage */, scale: CGFloat, orientation: Image.Orientation = .up, label: Text) {
         fatalError()
     }

@@ -1,5 +1,6 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
+import Foundation
 import SkipUI
 
 extension View {
@@ -535,6 +536,12 @@ public struct AccessibilityCustomContentKey : Equatable {
 
     public init(_ labelKey: LocalizedStringKey) {
     }
+
+//    public init(_ label: LocalizedStringResource, id: String) {
+//    }
+//
+//    public init(_ label: LocalizedStringResource) {
+//    }
 }
 
 public struct AccessibilityDirectTouchOptions : OptionSet, Sendable {

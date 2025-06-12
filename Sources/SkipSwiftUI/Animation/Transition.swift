@@ -172,7 +172,7 @@ extension AnyTransition {
 }
 
 extension AnyTransition {
-    @MainActor public static let opacity = AnyTransition(OpacityTransition())
+    nonisolated(unsafe) public static let opacity = AnyTransition(OpacityTransition())
 }
 
 extension AnyTransition {
@@ -207,7 +207,9 @@ extension AnyTransition {
 }
 
 extension AnyTransition {
-    @MainActor public static let identity = AnyTransition(IdentityTransition())
+    public static var identity: AnyTransition {
+        return AnyTransition(IdentityTransition())
+    }
 }
 
 extension AnyTransition {

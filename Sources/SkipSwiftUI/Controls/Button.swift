@@ -110,6 +110,16 @@ public struct ButtonRole : Equatable, Sendable {
     let identifier: Int // For bridging
 }
 
+public struct ButtonSizing : Hashable, Sendable {
+    public static let automatic = ButtonSizing(identifier: 0) // For bridging
+    @available(*, unavailable)
+    public static let flexible = ButtonSizing(identifier: 1) // For bridging
+    @available(*, unavailable)
+    public static let fitted = ButtonSizing(identifier: 2) // For bridging
+
+    let identifier: Int // For bridging
+}
+
 @MainActor @preconcurrency public protocol ButtonStyle {
     associatedtype Body : View
 
@@ -252,6 +262,11 @@ extension View {
     @available(*, unavailable)
     nonisolated public func buttonRepeatBehavior(_ behavior: ButtonRepeatBehavior) -> some View {
         stubView()
+    }
+
+    nonisolated public func buttonSizing(_ sizing: ButtonSizing) -> some View {
+        // We only support .automatic
+        return self
     }
 
     nonisolated public func buttonStyle<S>(_ style: S) -> some View where S : PrimitiveButtonStyle {

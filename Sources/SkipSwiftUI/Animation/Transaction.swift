@@ -43,6 +43,30 @@ extension Transaction {
 
 extension Transaction {
     @available(*, unavailable)
+    public var scrollPositionUpdatePreservesVelocity: Bool {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+}
+
+extension Transaction {
+    @available(*, unavailable)
+    public var scrollContentOffsetAdjustmentBehavior: ScrollContentOffsetAdjustmentBehavior {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+}
+
+extension Transaction {
+    @available(*, unavailable)
     public var disablesAnimations: Bool {
         get {
             fatalError()
@@ -50,6 +74,13 @@ extension Transaction {
         set {
             fatalError()
         }
+    }
+}
+
+extension Transaction {
+    @available(*, unavailable)
+    public mutating func addAnimationCompletion(criteria: AnimationCompletionCriteria = .logicallyComplete, _ completion: @escaping () -> Void) {
+        fatalError()
     }
 }
 

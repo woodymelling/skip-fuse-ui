@@ -26,6 +26,10 @@ public struct OpenURLAction : Sendable {
             return OpenURLAction.Result(identifier: 2, url: url)
         }
 
+        public static func systemAction(_ url: URL, prefersInApp: Bool) -> OpenURLAction.Result {
+            return OpenURLAction.Result(identifier: 2, url: url)
+        }
+
         let identifier: Int // For bridging
         let url: URL?
 

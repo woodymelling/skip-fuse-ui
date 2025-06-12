@@ -28,4 +28,8 @@ extension View {
             })
         }
     }
+
+    @MainActor @preconcurrency  public func onOpenURL(prefersInApp: Bool) -> some View {
+        return self
+    }
 }

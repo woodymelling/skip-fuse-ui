@@ -441,113 +441,126 @@ extension View {
     }
 
     @available(*, unavailable)
-    public func allowsTightening(_ flag: Bool) -> some View {
+    nonisolated public func allowsTightening(_ flag: Bool) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    public func dynamicTypeSize(_ size: DynamicTypeSize) -> some View {
+    nonisolated public func dynamicTypeSize(_ size: DynamicTypeSize) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    public func dynamicTypeSize(_ range: Range<DynamicTypeSize>) -> some View {
+    nonisolated public func dynamicTypeSize(_ range: Range<DynamicTypeSize>) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    public func invalidatableContent(_ invalidatable: Bool = true) -> some View {
+    nonisolated public func invalidatableContent(_ invalidatable: Bool = true) -> some View {
         stubView()
     }
 
-    public func lineLimit(_ number: Int?) -> some View {
+    nonisolated public func lineLimit(_ number: Int?) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.lineLimit(number)
         }
     }
 
     @available(*, unavailable)
-    public func lineLimit(_ limit: Range<Int>) -> some View {
+    nonisolated public func lineLimit(_ limit: Range<Int>) -> some View {
         stubView()
     }
 
-    public func lineLimit(_ limit: Int, reservesSpace: Bool) -> some View {
+    nonisolated public func lineLimit(_ limit: Int, reservesSpace: Bool) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.lineLimit(limit, reservesSpace: reservesSpace)
         }
     }
 
     @available(*, unavailable)
-    public func lineSpacing(_ lineSpacing: CGFloat) -> some View {
+    nonisolated public func lineSpacing(_ lineSpacing: CGFloat) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    public func minimumScaleFactor(_ factor: CGFloat) -> some View {
+    nonisolated public func lineHeight(_ lineHeight: Any? /* AttributedString.LineHeight? */) -> some View {
         stubView()
     }
 
-    public func multilineTextAlignment(_ alignment: TextAlignment) -> some View {
+    @available(*, unavailable)
+    nonisolated public func minimumScaleFactor(_ factor: CGFloat) -> some View {
+        stubView()
+    }
+
+    nonisolated public func multilineTextAlignment(_ alignment: TextAlignment) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.multilineTextAlignment(bridgedAlignment: alignment.rawValue)
         }
     }
 
+    nonisolated public func multilineTextAlignment(strategy: Text.AlignmentStrategy) -> some View {
+        return self
+    }
+
     @available(*, unavailable)
-    public func privacySensitive(_ sensitive: Bool = true) -> some View {
+    nonisolated public func privacySensitive(_ sensitive: Bool = true) -> some View {
         stubView()
     }
 
-    public func redacted(reason: RedactionReasons) -> some View {
+    nonisolated public func redacted(reason: RedactionReasons) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.redacted(bridgedReason: reason.rawValue)
         }
     }
 
     @available(*, unavailable)
-    public func speechAlwaysIncludesPunctuation(_ value: Bool = true) -> some View {
+    nonisolated public func speechAlwaysIncludesPunctuation(_ value: Bool = true) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    public func speechSpellsOutCharacters(_ value: Bool = true) -> some View {
+    nonisolated public func speechSpellsOutCharacters(_ value: Bool = true) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    public func speechAdjustedPitch(_ value: Double) -> some View {
+    nonisolated public func speechAdjustedPitch(_ value: Double) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    public func speechAnnouncementsQueued(_ value: Bool = true) -> some View {
+    nonisolated public func speechAnnouncementsQueued(_ value: Bool = true) -> some View {
         stubView()
     }
 
-    public func textCase(_ textCase: Text.Case?) -> some View {
+    nonisolated public func textCase(_ textCase: Text.Case?) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.bridgedTextCase(textCase?.rawValue)
         }
     }
 
     @available(*, unavailable)
-    public func textScale(_ scale: Text.Scale, isEnabled: Bool = true) -> some View {
+    nonisolated public func textScale(_ scale: Text.Scale, isEnabled: Bool = true) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    public func textSelection(_ selectability: TextSelectability) -> some View {
+    nonisolated public func textSelection(_ selectability: TextSelectability) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    public func truncationMode(_ mode: Text.TruncationMode) -> some View {
+    nonisolated public func truncationMode(_ mode: Text.TruncationMode) -> some View {
         stubView()
     }
 
     @available(*, unavailable)
-    public func unredacted() -> some View {
+    nonisolated public func unredacted() -> some View {
         stubView()
+    }
+
+    nonisolated public func writingDirection(strategy: Text.WritingDirectionStrategy) -> some View {
+        return self
     }
 }
 
@@ -1359,6 +1372,25 @@ extension Text {
 //extension Text.Layout.DrawingOptions : BitwiseCopyable {
 //}
 //
+
+extension Text {
+    public struct WritingDirectionStrategy : Hashable, Sendable {
+        @available(*, unavailable)
+        public static let layoutBased = WritingDirectionStrategy()
+        public static let contentBased = WritingDirectionStrategy()
+        public static let `default` = WritingDirectionStrategy()
+    }
+}
+
+extension Text {
+    public struct AlignmentStrategy : Hashable, Sendable {
+        @available(*, unavailable)
+        public static let layoutBased = AlignmentStrategy()
+        @available(*, unavailable)
+        public static let writingDirectionBased = AlignmentStrategy()
+        public static let `default` = AlignmentStrategy()
+    }
+}
 
 public protocol TextAttribute : Hashable {
 }
