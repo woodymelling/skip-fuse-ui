@@ -236,6 +236,17 @@ extension Color {
     }
 }
 
+extension Color {
+    public func headroom(_ headroom: Double?) -> Color {
+        return self
+    }
+
+    @available(*, unavailable)
+    public func exposureAdjust(_ stops: Double) -> Color {
+        fatalError()
+    }
+}
+
 extension Color.Resolved : ShapeStyle {
     public func opacity(_ opacity: Double) -> Color.Resolved {
         var color = self

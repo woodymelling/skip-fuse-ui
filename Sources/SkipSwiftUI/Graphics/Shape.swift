@@ -83,7 +83,7 @@ extension Rectangle : InsettableShape {
 }
 
 extension Shape where Self == Rectangle {
-    public static var rect: Rectangle {
+    nonisolated public static var rect: Rectangle {
         return Rectangle()
     }
 }
@@ -123,11 +123,11 @@ extension RoundedRectangle : InsettableShape {
 }
 
 extension Shape where Self == RoundedRectangle {
-    public static func rect(cornerSize: CGSize, style: RoundedCornerStyle = .continuous) -> Self {
+    nonisolated public static func rect(cornerSize: CGSize, style: RoundedCornerStyle = .continuous) -> Self {
         return RoundedRectangle(cornerSize: cornerSize, style: style)
     }
 
-    public static func rect(cornerRadius: CGFloat, style: RoundedCornerStyle = .continuous) -> Self {
+    nonisolated public static func rect(cornerRadius: CGFloat, style: RoundedCornerStyle = .continuous) -> Self {
         return RoundedRectangle(cornerRadius: cornerRadius, style: style)
     }
 }
@@ -166,11 +166,11 @@ extension UnevenRoundedRectangle : InsettableShape {
 }
 
 extension Shape where Self == UnevenRoundedRectangle {
-    public static func rect(cornerRadii: RectangleCornerRadii, style: RoundedCornerStyle = .continuous) -> Self {
+    nonisolated public static func rect(cornerRadii: RectangleCornerRadii, style: RoundedCornerStyle = .continuous) -> Self {
         return UnevenRoundedRectangle(cornerRadii: cornerRadii, style: style)
     }
 
-    public static func rect(topLeadingRadius: CGFloat = 0, bottomLeadingRadius: CGFloat = 0, bottomTrailingRadius: CGFloat = 0, topTrailingRadius: CGFloat = 0, style: RoundedCornerStyle = .continuous) -> Self {
+    nonisolated public static func rect(topLeadingRadius: CGFloat = 0, bottomLeadingRadius: CGFloat = 0, bottomTrailingRadius: CGFloat = 0, topTrailingRadius: CGFloat = 0, style: RoundedCornerStyle = .continuous) -> Self {
         return UnevenRoundedRectangle(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius, style: style)
     }
 }
@@ -215,11 +215,11 @@ extension Capsule : InsettableShape {
 }
 
 extension Shape where Self == Capsule {
-    public static var capsule: Capsule {
+    nonisolated public static var capsule: Capsule {
         return Capsule()
     }
 
-    public static func capsule(style: RoundedCornerStyle) -> Self {
+    nonisolated public static func capsule(style: RoundedCornerStyle) -> Self {
         return Capsule(style: style)
     }
 }
@@ -248,7 +248,7 @@ extension Ellipse : InsettableShape {
 }
 
 extension Shape where Self == Ellipse {
-    public static var ellipse: Ellipse {
+    nonisolated public static var ellipse: Ellipse {
         return Ellipse()
     }
 }
@@ -284,7 +284,7 @@ extension Circle : InsettableShape {
 }
 
 extension Shape where Self == Circle {
-    public static var circle: Circle {
+    nonisolated public static var circle: Circle {
         return Circle()
     }
 }
@@ -316,7 +316,7 @@ extension ContainerRelativeShape : InsettableShape {
 
 extension Shape where Self == ContainerRelativeShape {
     @available(*, unavailable)
-    public static var containerRelative: ContainerRelativeShape {
+    nonisolated public static var containerRelative: ContainerRelativeShape {
         fatalError()
     }
 }

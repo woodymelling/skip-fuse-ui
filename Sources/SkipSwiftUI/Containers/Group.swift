@@ -14,6 +14,20 @@ extension Group : View where Content : View {
     }
 }
 
+extension Group {
+    @available(*, unavailable)
+    public init<Base, Result>(subviews view: Base, @ViewBuilder transform: @escaping (Any /* SubviewsCollection */) -> Result) where /* Content == GroupElementsOfContent<Base, Result>, */ Base : View, Result : View {
+        fatalError()
+    }
+}
+
+extension Group {
+    @available(*, unavailable)
+    public init<Base, Result>(sections view: Base, @ViewBuilder transform: @escaping (Any /* SectionCollection */) -> Result) where /* Content == GroupSectionsOfContent<Base, Result>, */ Base : View, Result : View {
+        fatalError()
+    }
+}
+
 extension Group : SkipUIBridging {
     public var Java_view: any SkipUI.View {
         return SkipUI.Group(bridgedContent: (content.wrappedValue as? any SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())

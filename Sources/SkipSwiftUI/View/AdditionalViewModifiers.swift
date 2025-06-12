@@ -132,6 +132,18 @@ extension View {
 }
 
 extension View {
+    @available(*, unavailable)
+    nonisolated public func controlSize(_ controlSize: ControlSize) -> some View {
+        stubView()
+    }
+
+    @available(*, unavailable)
+    nonisolated public func controlSize<T>(_ range: T) -> some View where T : RangeExpression, T.Bound == ControlSize {
+        stubView()
+    }
+}
+
+extension View {
     /* @inlinable */ nonisolated public func disabled(_ disabled: Bool) -> some View {
         return ModifierView(target: self) {
             $0.Java_viewOrEmpty.disabled(disabled)
