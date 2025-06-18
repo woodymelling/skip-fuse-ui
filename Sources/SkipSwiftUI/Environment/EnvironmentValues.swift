@@ -51,7 +51,7 @@ extension EnvironmentValues {
         switch key {
         case "colorScheme":
             let rawValue = bridgedValue as? Int
-            return bridgedValue == nil ? ColorScheme.light : ColorScheme(rawValue: rawValue!) ?? .light
+            return rawValue == nil ? ColorScheme.light : ColorScheme(rawValue: rawValue!) ?? .light
         case "dismiss":
             let action = (bridgedValue as? SkipUI.DismissAction)?.action ?? { }
             let actionBox = UncheckedSendableBox(action)
@@ -83,6 +83,9 @@ extension EnvironmentValues {
                     }
                 }
             }
+        case "scenePhase":
+            let rawValue = bridgedValue as? Int
+            return rawValue == nil ? ScenePhase.active : ScenePhase(rawValue: rawValue!) ?? .active
         default:
             return nil
         }
@@ -141,6 +144,8 @@ extension EnvironmentValues {
                 completionHandler.onCancel = { task.cancel() }
             }
             return SkipUI.RefreshAction(bridgedAction: bridgedAction)
+        case "scenePhase":
+            return (value as? ScenePhase ?? .active).rawValue
         default:
             return nil
         }
@@ -155,6 +160,7 @@ extension EnvironmentValues {
         keys[\EnvironmentValues.layoutDirection] = "layoutDirection"
         keys[\EnvironmentValues.openURL] = "openURL"
         keys[\EnvironmentValues.refresh] = "refresh"
+        keys[\EnvironmentValues.scenePhase] = "scenePhase"
         return keys
     }()
 
@@ -356,6 +362,12 @@ extension EnvironmentValues {
     public var dynamicTypeSize: Any /* DynamicTypeSize */ {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
+    }
+}
+
+extension EnvironmentValues {
+    public var scenePhase: ScenePhase {
+        get { fatalError("Read via @Environment property wrapper") }
     }
 }
 
