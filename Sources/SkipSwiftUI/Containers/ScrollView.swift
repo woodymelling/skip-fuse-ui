@@ -3,26 +3,27 @@
 #if !ROBOLECTRIC && canImport(CoreGraphics)
 import CoreGraphics
 #endif
-import SkipBridge
 import SkipUI
 
-@MainActor @preconcurrency public struct ScrollView<Content> : View where Content : View {
-    @MainActor @preconcurrency public var content: UncheckedSendableBox<Content>
-    @MainActor @preconcurrency public var axes: Axis.Set
-    @MainActor @preconcurrency public var showsIndicators = true
+public struct ScrollView<Content> where Content : View {
+    public var content: Content
+    public var axes: Axis.Set
+    public var showsIndicators = true
 
-    nonisolated public init(_ axes: Axis.Set = .vertical, showsIndicators: Bool = true, @ViewBuilder content: () -> Content) {
+    public init(_ axes: Axis.Set = .vertical, showsIndicators: Bool = true, @ViewBuilder content: () -> Content) {
         self.axes = axes
         self.showsIndicators = showsIndicators
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
     }
+}
 
+extension ScrollView : View {
     public typealias Body = Never
 }
 
 extension ScrollView : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.ScrollView(bridgedAxes: Int(axes.rawValue), showsIndicators: showsIndicators, bridgedContent: content.wrappedValue.Java_viewOrEmpty)
+        return SkipUI.ScrollView(bridgedAxes: Int(axes.rawValue), showsIndicators: showsIndicators, bridgedContent: content.Java_viewOrEmpty)
     }
 }
 
@@ -509,21 +510,15 @@ public struct ScrollViewProxy {
     }
 }
 
-@MainActor @frozen @preconcurrency public struct ScrollViewReader<Content> : View where Content : View {
-    @MainActor @preconcurrency public var content: (ScrollViewProxy) -> Content {
-        get {
-            return _content.wrappedValue
-        }
-        set {
-            _content = UncheckedSendableBox(newValue)
-        }
-    }
-    private var _content: UncheckedSendableBox<(ScrollViewProxy) -> Content>
+@frozen public struct ScrollViewReader<Content> where Content : View {
+    public var content: (ScrollViewProxy) -> Content
 
-    /* @inlinable */nonisolated public init(@ViewBuilder content: @escaping (ScrollViewProxy) -> Content) {
-        _content = UncheckedSendableBox(content)
+    /* @inlinable */public init(@ViewBuilder content: @escaping (ScrollViewProxy) -> Content) {
+        self.content = content
     }
+}
 
+extension ScrollViewReader : View {
     public typealias Body = Never
 }
 
@@ -531,7 +526,7 @@ extension ScrollViewReader : SkipUIBridging {
     public var Java_view: any SkipUI.View {
         return SkipUI.ScrollViewReader { skipUIProxy in
             let proxy = ScrollViewProxy(proxy: skipUIProxy)
-            let view = _content.wrappedValue(proxy)
+            let view = content(proxy)
             return view.Java_viewOrEmpty
         }
     }

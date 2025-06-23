@@ -3,22 +3,24 @@
 import Foundation
 import SkipUI
 
-@MainActor @preconcurrency public struct TextField<Label> : View where Label : View {
+public struct TextField<Label> where Label : View {
     private let text: Binding<String>
     private let prompt: Text?
-    private let label: UncheckedSendableBox<Label>
+    private let label: Label
+}
 
+extension TextField : View {
     public typealias Body = Never
 }
 
 extension TextField : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.TextField(getText: { text.wrappedValue }, setText: { text.wrappedValue = $0 }, prompt: prompt?.Java_view as? SkipUI.Text, isSecure: false, bridgedLabel: label.wrappedValue.Java_viewOrEmpty)
+        return SkipUI.TextField(getText: { text.wrappedValue }, setText: { text.wrappedValue = $0 }, prompt: prompt?.Java_view as? SkipUI.Text, isSecure: false, bridgedLabel: label.Java_viewOrEmpty)
     }
 }
 
 extension TextField {
-    nonisolated private static func text<F>(from value: Binding<F.FormatInput?>, format: F) -> Binding<String> where F : ParseableFormatStyle, F.FormatOutput == String {
+    private static func text<F>(from value: Binding<F.FormatInput?>, format: F) -> Binding<String> where F : ParseableFormatStyle, F.FormatOutput == String {
         let getText: (F.FormatInput?) -> String = {
             guard let input = $0 else {
                 return ""
@@ -34,7 +36,7 @@ extension TextField {
         return Binding<String>(get: { getText(value.wrappedValue) }, set: { value.wrappedValue = setText($0) })
     }
 
-    nonisolated private static func text<F>(from value: Binding<F.FormatInput>, format: F) -> Binding<String> where F : ParseableFormatStyle, F.FormatOutput == String {
+    private static func text<F>(from value: Binding<F.FormatInput>, format: F) -> Binding<String> where F : ParseableFormatStyle, F.FormatOutput == String {
         let getText: (F.FormatInput) -> String = { format.format($0) }
         let setText: (String) -> F.FormatInput = { try! format.parseStrategy.parse($0) }
         return Binding<String>(get: { getText(value.wrappedValue) }, set: { value.wrappedValue = setText($0) })
@@ -56,48 +58,48 @@ extension TextField {
 }
 
 extension TextField where Label == Text {
-    nonisolated public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
+    public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
-        self.label = UncheckedSendableBox(Text(titleKey))
+        self.label = Text(titleKey)
         self.prompt = prompt
     }
 
-    @_disfavoredOverload nonisolated public init<S, F>(_ title: S, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String {
+    @_disfavoredOverload public init<S, F>(_ title: S, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
-        self.label = UncheckedSendableBox(Text(title))
+        self.label = Text(title)
         self.prompt = prompt
     }
 
-    nonisolated public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
+    public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
-        self.label = UncheckedSendableBox(Text(titleKey))
+        self.label = Text(titleKey)
         self.prompt = prompt
     }
 
-    @_disfavoredOverload nonisolated public init<S, F>(_ title: S, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String {
+    @_disfavoredOverload public init<S, F>(_ title: S, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
-        self.label = UncheckedSendableBox(Text(title))
+        self.label = Text(title)
         self.prompt = prompt
     }
 }
 
 extension TextField {
-    nonisolated public init<F>(value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
+    public init<F>(value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
-        self.label = UncheckedSendableBox(label())
+        self.label = label()
         self.prompt = prompt
     }
 
-    nonisolated public init<F>(value: Binding<F.FormatInput>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
+    public init<F>(value: Binding<F.FormatInput>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String {
         self.text = Self.text(from: value, format: format)
-        self.label = UncheckedSendableBox(label())
+        self.label = label()
         self.prompt = prompt
     }
 }
 
 extension TextField where Label == Text {
     @available(*, unavailable)
-    nonisolated public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, prompt: Text?) {
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, prompt: Text?) {
         fatalError()
 //        self.text = Self.text(from: value, formatter: formatter)
 //        self.label = Text(titleKey)
@@ -105,7 +107,7 @@ extension TextField where Label == Text {
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, prompt: Text?) where S : StringProtocol {
+    @_disfavoredOverload public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, prompt: Text?) where S : StringProtocol {
         fatalError()
 //        self.text = Self.text(from: value, formatter: formatter)
 //        self.label = Text(title)
@@ -115,7 +117,7 @@ extension TextField where Label == Text {
 
 extension TextField {
     @available(*, unavailable)
-    nonisolated public init<V>(value: Binding<V>, formatter: Formatter, prompt: Text? = nil, @ViewBuilder label: () -> Label) {
+    public init<V>(value: Binding<V>, formatter: Formatter, prompt: Text? = nil, @ViewBuilder label: () -> Label) {
         fatalError()
 //        self.text = Self.text(from: value, formatter: formatter)
 //        self.label = label()
@@ -125,7 +127,7 @@ extension TextField {
 
 extension TextField where Label == Text {
     @available(*, unavailable)
-    nonisolated public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter) {
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter) {
         fatalError()
 //        self.text = Self.text(from: value, formatter: formatter)
 //        self.label = Text(titleKey)
@@ -133,7 +135,7 @@ extension TextField where Label == Text {
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter) where S : StringProtocol {
+    @_disfavoredOverload public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter) where S : StringProtocol {
         fatalError()
 //        self.text = Self.text(from: value, formatter: formatter)
 //        self.label = Text(title)
@@ -143,83 +145,83 @@ extension TextField where Label == Text {
 
 extension TextField where Label == Text {
     @available(*, unavailable)
-    nonisolated public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) {
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void) {
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onCommit: @escaping () -> Void) {
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onCommit: @escaping () -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) where S : StringProtocol {
+    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void) where S : StringProtocol {
+    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onCommit: @escaping () -> Void) where S : StringProtocol {
+    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onCommit: @escaping () -> Void) where S : StringProtocol {
         fatalError()
     }
 }
 
 extension TextField where Label == Text {
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, axis: Axis) {
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, axis: Axis) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?, axis: Axis) {
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?, axis: Axis) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<S>(_ title: S, text: Binding<String>, axis: Axis) where S : StringProtocol {
+    public init<S>(_ title: S, text: Binding<String>, axis: Axis) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<S>(_ title: S, text: Binding<String>, prompt: Text?, axis: Axis) where S : StringProtocol {
+    public init<S>(_ title: S, text: Binding<String>, prompt: Text?, axis: Axis) where S : StringProtocol {
         fatalError()
     }
 }
 
 extension TextField {
     @available(*, unavailable)
-    nonisolated public init(text: Binding<String>, prompt: Text? = nil, axis: Axis, @ViewBuilder label: () -> Label) {
+    public init(text: Binding<String>, prompt: Text? = nil, axis: Axis, @ViewBuilder label: () -> Label) {
         fatalError()
     }
 }
 
 extension TextField where Label == Text {
-    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?) {
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?) {
         self.text = text
-        self.label = UncheckedSendableBox(Text(titleKey))
+        self.label = Text(titleKey)
         self.prompt = prompt
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, text: Binding<String>, prompt: Text?) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, text: Binding<String>, prompt: Text?) where S : StringProtocol {
         self.text = text
-        self.label = UncheckedSendableBox(Text(title))
+        self.label = Text(title)
         self.prompt = prompt
     }
 }
 
 extension TextField {
-    nonisolated public init(text: Binding<String>, prompt: Text? = nil, @ViewBuilder label: () -> Label) {
+    public init(text: Binding<String>, prompt: Text? = nil, @ViewBuilder label: () -> Label) {
         self.text = text
-        self.label = UncheckedSendableBox(label())
+        self.label = label()
         self.prompt = prompt
     }
 }
@@ -227,59 +229,59 @@ extension TextField {
 #if compiler(>=6.0)
 extension TextField where Label == Text {
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, selection: Binding<TextSelection?>, prompt: Text? = nil, axis: Axis? = nil) {
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, selection: Binding<TextSelection?>, prompt: Text? = nil, axis: Axis? = nil) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<S>(_ title: S, text: Binding<String>, selection: Binding<TextSelection?>, prompt: Text? = nil, axis: Axis? = nil) where S : StringProtocol {
+    public init<S>(_ title: S, text: Binding<String>, selection: Binding<TextSelection?>, prompt: Text? = nil, axis: Axis? = nil) where S : StringProtocol {
         fatalError()
     }
 }
 #endif
 
 extension TextField where Label == Text {
-    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>) {
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>) {
         self.text = text
-        self.label = UncheckedSendableBox(Text(titleKey))
+        self.label = Text(titleKey)
         self.prompt = nil
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, text: Binding<String>) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, text: Binding<String>) where S : StringProtocol {
         self.text = text
-        self.label = UncheckedSendableBox(Text(title))
+        self.label = Text(title)
         self.prompt = nil
     }
 }
 
 extension TextField where Label == Text {
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) {
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void) {
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onCommit: @escaping () -> Void) {
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onCommit: @escaping () -> Void) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) where S : StringProtocol {
+    public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void) where S : StringProtocol {
+    public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<S>(_ title: S, text: Binding<String>, onCommit: @escaping () -> Void) where S : StringProtocol {
+    public init<S>(_ title: S, text: Binding<String>, onCommit: @escaping () -> Void) where S : StringProtocol {
         fatalError()
     }
 }

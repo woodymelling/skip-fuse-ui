@@ -1,22 +1,23 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
-import SkipBridge
 import SkipUI
 
-@MainActor @preconcurrency public struct TabView<SelectionValue, Content> : View where SelectionValue : Hashable /*, Content : View */ {
-    private let selection: UncheckedSendableBox<Binding<SelectionValue>>?
-    private let content: UncheckedSendableBox<Content>
+public struct TabView<SelectionValue, Content> where SelectionValue : Hashable /*, Content : View */ {
+    private let selection: Binding<SelectionValue>?
+    private let content: Content
 
     nonisolated public init(selection: Binding<SelectionValue>?, @ViewBuilder content: () -> Content) where Content : View {
-        self.selection = selection == nil ? nil : UncheckedSendableBox(selection!)
-        self.content = UncheckedSendableBox(content())
+        self.selection = selection
+        self.content = content()
     }
 
     nonisolated public init(selection: Binding<SelectionValue>?, @TabContentBuilder<SelectionValue> content: () -> Content /* C */) where /* Content == TabContentBuilder<SelectionValue>.Content<C>, C */ Content : TabContent {
-        self.selection = selection == nil ? nil : UncheckedSendableBox(selection!)
-        self.content = UncheckedSendableBox(content())
+        self.selection = selection
+        self.content = content()
     }
+}
 
+extension TabView : View {
     public typealias Body = Never
 }
 
@@ -25,13 +26,13 @@ extension TabView : SkipUIBridging {
         let selectionGet: (() -> Any)?
         let selectionSet: ((Any) -> Void)?
         if let selection {
-            selectionGet = { Java_swiftHashable(for: selection.wrappedValue.get()) }
-            selectionSet = { selection.wrappedValue.set(($0 as! SwiftHashable).base as! SelectionValue) }
+            selectionGet = { Java_swiftHashable(for: selection.get()) }
+            selectionSet = { selection.set(($0 as! SwiftHashable).base as! SelectionValue) }
         } else {
             selectionGet = nil
             selectionSet = nil
         }
-        return SkipUI.TabView(selectionGet: selectionGet, selectionSet: selectionSet, bridgedContent: (content.wrappedValue as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())
+        return SkipUI.TabView(selectionGet: selectionGet, selectionSet: selectionSet, bridgedContent: (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView())
     }
 }
 
@@ -180,9 +181,9 @@ extension TabViewStyle where Self == PageTabViewStyle {
 public typealias DefaultTabLabel = Label<Text, Image>
 
 public struct Tab<Value, Content, Label> {
-    private let label: UncheckedSendableBox<Label>?
-    private let content: UncheckedSendableBox<Content>
-    private let value: UncheckedSendableBox<Value>?
+    private let label: Label?
+    private let content: Content
+    private let value: Value?
     private let role: TabRole?
 
     public var modifiers: [(any SkipUI.View) -> any SkipUI.View] = []
@@ -196,9 +197,9 @@ extension Tab : TabContent where Value : Hashable, Content : View, Label : View 
     }
 
     nonisolated public init<S>(_ title: S, image: String, value: Value, role: TabRole?, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel, S : StringProtocol {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(title, image: image))
-        self.value = UncheckedSendableBox(value)
+        self.content = content()
+        self.label = DefaultTabLabel(title, image: image)
+        self.value = value
         self.role = role
     }
 
@@ -207,9 +208,9 @@ extension Tab : TabContent where Value : Hashable, Content : View, Label : View 
     }
 
     nonisolated public init<S, T>(_ title: S, image: String, value: T, role: TabRole?, @ViewBuilder content: () -> Content) where Value == T?, Label == DefaultTabLabel, S : StringProtocol, T : Hashable {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(title, image: image))
-        self.value = UncheckedSendableBox(value)
+        self.content = content()
+        self.label = DefaultTabLabel(title, image: image)
+        self.value = value
         self.role = role
     }
 
@@ -220,9 +221,9 @@ extension Tab : TabContent where Value : Hashable, Content : View, Label : View 
 //    nonisolated public init(_ titleResource: LocalizedStringResource, image: String, value: Value, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel
 
     nonisolated public init(_ titleKey: LocalizedStringKey, image: String, value: Value, role: TabRole?, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(titleKey, image: image))
-        self.value = UncheckedSendableBox(value)
+        self.content = content()
+        self.label = DefaultTabLabel(titleKey, image: image)
+        self.value = value
         self.role = role
     }
 
@@ -235,9 +236,9 @@ extension Tab : TabContent where Value : Hashable, Content : View, Label : View 
 //    nonisolated public init<T>(_ titleResource: LocalizedStringResource, image: String, value: T, @ViewBuilder content: () -> Content) where Value == T?, Label == DefaultTabLabel, T : Hashable
 
     nonisolated public init<T>(_ titleKey: LocalizedStringKey, image: String, value: T, role: TabRole?, @ViewBuilder content: () -> Content) where Value == T?, Label == DefaultTabLabel, T : Hashable {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(titleKey, image: image))
-        self.value = UncheckedSendableBox(value)
+        self.content = content()
+        self.label = DefaultTabLabel(titleKey, image: image)
+        self.value = value
         self.role = role
     }
 
@@ -248,9 +249,9 @@ extension Tab : TabContent where Value : Hashable, Content : View, Label : View 
     }
 
     nonisolated public init<S>(_ title: S, systemImage: String, value: Value, role: TabRole?, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel, S : StringProtocol {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(title, systemImage: systemImage))
-        self.value = UncheckedSendableBox(value)
+        self.content = content()
+        self.label = DefaultTabLabel(title, systemImage: systemImage)
+        self.value = value
         self.role = role
     }
 
@@ -259,9 +260,9 @@ extension Tab : TabContent where Value : Hashable, Content : View, Label : View 
     }
 
     nonisolated public init<S, T>(_ title: S, systemImage: String, value: T, role: TabRole?, @ViewBuilder content: () -> Content) where Value == T?, Label == DefaultTabLabel, S : StringProtocol, T : Hashable {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(title, systemImage: systemImage))
-        self.value = UncheckedSendableBox(value)
+        self.content = content()
+        self.label = DefaultTabLabel(title, systemImage: systemImage)
+        self.value = value
         self.role = role
     }
 
@@ -272,9 +273,9 @@ extension Tab : TabContent where Value : Hashable, Content : View, Label : View 
 //    nonisolated public init(_ titleResource: LocalizedStringResource, systemImage: String, value: Value, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel
 
     nonisolated public init(_ titleKey: LocalizedStringKey, systemImage: String, value: Value, role: TabRole?, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(titleKey, systemImage: systemImage))
-        self.value = UncheckedSendableBox(value)
+        self.content = content()
+        self.label = DefaultTabLabel(titleKey, systemImage: systemImage)
+        self.value = value
         self.role = role
     }
 
@@ -287,47 +288,47 @@ extension Tab : TabContent where Value : Hashable, Content : View, Label : View 
 //    nonisolated public init<T>(_ titleResource: LocalizedStringResource, systemImage: String, value: T, @ViewBuilder content: () -> Content) where Value == T?, Label == DefaultTabLabel, T : Hashable
 
     nonisolated public init<T>(_ titleKey: LocalizedStringKey, systemImage: String, value: T, role: TabRole?, @ViewBuilder content: () -> Content) where Value == T?, Label == DefaultTabLabel, T : Hashable {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(titleKey, systemImage: systemImage))
-        self.value = UncheckedSendableBox(value)
+        self.content = content()
+        self.label = DefaultTabLabel(titleKey, systemImage: systemImage)
+        self.value = value
         self.role = role
     }
 
 //    nonisolated public init<T>(_ titleResource: LocalizedStringResource, systemImage: String, value: T, role: TabRole?, @ViewBuilder content: () -> Content) where Value == T?, Label == DefaultTabLabel, T : Hashable
 
     nonisolated public init(value: Value, @ViewBuilder content: () -> Content) where Label == EmptyView {
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
         self.label = nil
-        self.value = UncheckedSendableBox(value)
+        self.value = value
         self.role = nil
     }
 
     nonisolated public init<V>(value: V, @ViewBuilder content: () -> Content) where Value == V?, Label == EmptyView, V : Hashable {
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
         self.label = nil
-        self.value = UncheckedSendableBox(value)
+        self.value = value
         self.role = nil
     }
 
     nonisolated public init(value: Value, role: TabRole?, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel {
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
         if role == .search {
-            self.label = UncheckedSendableBox(DefaultTabLabel("Search", systemImage: "magnifyingglass"))
+            self.label = DefaultTabLabel("Search", systemImage: "magnifyingglass")
         } else {
             self.label = nil
         }
-        self.value = UncheckedSendableBox(value)
+        self.value = value
         self.role = role
     }
 
     nonisolated public init<V>(value: V, role: TabRole?, @ViewBuilder content: () -> Content) where Value == V?, Label == DefaultTabLabel, V : Hashable {
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
         if role == .search {
-            self.label = UncheckedSendableBox(DefaultTabLabel("Search", systemImage: "magnifyingglass"))
+            self.label = DefaultTabLabel("Search", systemImage: "magnifyingglass")
         } else {
             self.label = nil
         }
-        self.value = UncheckedSendableBox(value)
+        self.value = value
         self.role = role
     }
 
@@ -336,9 +337,9 @@ extension Tab : TabContent where Value : Hashable, Content : View, Label : View 
     }
 
     nonisolated public init(value: Value, role: TabRole?, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(label())
-        self.value = UncheckedSendableBox(value)
+        self.content = content()
+        self.label = label()
+        self.value = value
         self.role = role
     }
 
@@ -347,9 +348,9 @@ extension Tab : TabContent where Value : Hashable, Content : View, Label : View 
     }
 
     nonisolated public init<V>(value: V, role: TabRole?, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) where Value == V?, V : Hashable {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(label())
-        self.value = UncheckedSendableBox(value)
+        self.content = content()
+        self.label = label()
+        self.value = value
         self.role = role
     }
 }
@@ -360,8 +361,8 @@ extension Tab where Value == Never, Content : View, Label : View {
     }
 
     public init<S>(_ title: S, image: String, role: TabRole?, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel, S : StringProtocol {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(title, image: image))
+        self.content = content()
+        self.label = DefaultTabLabel(title, image: image)
         self.value = nil
         self.role = role
     }
@@ -373,8 +374,8 @@ extension Tab where Value == Never, Content : View, Label : View {
 //    public init(_ titleResource: LocalizedStringResource, image: String, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel
 
     public init(_ titleKey: LocalizedStringKey, image: String, role: TabRole?, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(titleKey, image: image))
+        self.content = content()
+        self.label = DefaultTabLabel(titleKey, image: image)
         self.value = nil
         self.role = role
     }
@@ -386,8 +387,8 @@ extension Tab where Value == Never, Content : View, Label : View {
     }
 
     public init<S>(_ title: S, systemImage: String, role: TabRole?, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel, S : StringProtocol {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(title, systemImage: systemImage))
+        self.content = content()
+        self.label = DefaultTabLabel(title, systemImage: systemImage)
         self.value = nil
         self.role = role
     }
@@ -399,8 +400,8 @@ extension Tab where Value == Never, Content : View, Label : View {
 //    public init(_ titleResource: LocalizedStringResource, systemImage: String, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel
 
     public init(_ titleKey: LocalizedStringKey, systemImage: String, role: TabRole?, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(DefaultTabLabel(titleKey, systemImage: systemImage))
+        self.content = content()
+        self.label = DefaultTabLabel(titleKey, systemImage: systemImage)
         self.value = nil
         self.role = role
     }
@@ -410,16 +411,16 @@ extension Tab where Value == Never, Content : View, Label : View {
 
 extension Tab where Value == Never, Content : View, Label : View {
     public init(@ViewBuilder content: () -> Content) where Label == EmptyView {
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
         self.label = nil
         self.value = nil
         self.role = nil
     }
 
     public init(role: TabRole?, @ViewBuilder content: () -> Content) where Label == DefaultTabLabel {
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
         if role == .search {
-            self.label = UncheckedSendableBox(DefaultTabLabel("Search", systemImage: "magnifyingglass"))
+            self.label = DefaultTabLabel("Search", systemImage: "magnifyingglass")
         } else {
             self.label = nil
         }
@@ -432,8 +433,8 @@ extension Tab where Value == Never, Content : View, Label : View {
     }
 
     public init(role: TabRole?, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(label())
+        self.content = content()
+        self.label = label()
         self.value = nil
         self.role = role
     }
@@ -441,16 +442,15 @@ extension Tab where Value == Never, Content : View, Label : View {
 
 extension Tab : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        guard let contentView = content.wrappedValue as? any View else {
-            return SkipUI.EmptyView()
-        }
+        let javaContent = (content as? any View)?.Java_viewOrEmpty ?? SkipUI.EmptyView()
+        let javaLabel = (label as? any View)?.Java_viewOrEmpty
         let javaValue: SwiftHashable?
-        if let hashable = value?.wrappedValue as? AnyHashable {
+        if let hashable = value as? AnyHashable {
             javaValue = Java_swiftHashable(for: hashable)
         } else {
             javaValue = nil
         }
-        var javaView: any SkipUI.View = SkipUI.Tab(value: javaValue, bridgedRole: role?.identifier, bridgedContent: contentView.Java_viewOrEmpty, bridgedLabel: (label?.wrappedValue as? any View)?.Java_viewOrEmpty)
+        var javaView: any SkipUI.View = SkipUI.Tab(value: javaValue, bridgedRole: role?.identifier, bridgedContent: javaContent, bridgedLabel: javaLabel)
         for modifier in modifiers {
             javaView = modifier(javaView)
         }

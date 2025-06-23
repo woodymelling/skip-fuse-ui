@@ -1,22 +1,23 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
-import SkipBridge
 import SkipUI
 
-@MainActor @frozen @preconcurrency public struct ZStack<Content> : View where Content : View {
+@frozen public struct ZStack<Content> where Content : View {
     private let alignment: Alignment
-    private let content: UncheckedSendableBox<Content>
+    private let content: Content
 
-    /* @inlinable */ nonisolated public init(alignment: Alignment = .center, @ViewBuilder content: () -> Content) {
+    /* @inlinable */public init(alignment: Alignment = .center, @ViewBuilder content: () -> Content) {
         self.alignment = alignment
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
     }
+}
 
+extension ZStack : View {
     public typealias Body = Never
 }
 
 extension ZStack : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.ZStack(horizontalAlignmentKey: alignment.horizontal.key, verticalAlignmentKey: alignment.vertical.key, bridgedContent: content.wrappedValue.Java_viewOrEmpty)
+        return SkipUI.ZStack(horizontalAlignmentKey: alignment.horizontal.key, verticalAlignmentKey: alignment.vertical.key, bridgedContent: content.Java_viewOrEmpty)
     }
 }

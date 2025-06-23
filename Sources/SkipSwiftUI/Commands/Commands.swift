@@ -11,20 +11,23 @@ func stubCommands() -> EmptyCommands {
     return EmptyCommands()
 }
 
-@MainActor @preconcurrency public struct EmptyCommands : Commands {
+@frozen public struct EmptyCommands : Commands {
     nonisolated public init() {
     }
 }
 
-@MainActor @frozen @preconcurrency public struct AnyCommands : Commands {
-    private let commands: UncheckedSendableBox<any Commands>
+@frozen public struct AnyCommands {
+    private let commands: any Commands
 
-    nonisolated public init<C>(_ commands: C) where C : Commands {
-        self.commands = UncheckedSendableBox(commands)
+    public init<C>(_ commands: C) where C : Commands {
+        self.commands = commands
     }
 }
 
-@MainActor @preconcurrency public struct CommandGroup<Content> : Commands where Content : View {
+extension AnyCommands : Commands {
+}
+
+public struct CommandGroup<Content> : Commands where Content : View {
     @available(*, unavailable)
     nonisolated public init(before group: CommandGroupPlacement, @ViewBuilder addition: () -> Content) {
         fatalError()
@@ -83,7 +86,7 @@ public struct CommandGroupPlacement : Sendable {
     public static let help = CommandGroupPlacement()
 }
 
-@MainActor @preconcurrency public struct CommandMenu<Content> : Commands where Content : View {
+public struct CommandMenu<Content> : Commands where Content : View {
     @available(*, unavailable)
     nonisolated public init(_ nameKey: LocalizedStringKey, @ViewBuilder content: () -> Content) {
         fatalError()
@@ -214,10 +217,13 @@ public struct CommandGroupPlacement : Sendable {
     }
 }
 
-public struct TupleCommands : Commands {
-    private let commands: UncheckedSendableBox<[any Commands]>
+public struct TupleCommands {
+    private let commands: [any Commands]
 
     nonisolated public init(_ commands: [any Commands]) {
-        self.commands = UncheckedSendableBox(commands)
+        self.commands = commands
     }
+}
+
+extension TupleCommands : Commands {
 }

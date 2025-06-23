@@ -3,7 +3,6 @@
 #if !ROBOLECTRIC && canImport(CoreGraphics)
 import CoreGraphics
 #endif
-import SkipBridge
 import SkipUI
 
 @MainActor @preconcurrency public protocol Transition {
@@ -222,41 +221,26 @@ extension AnyTransition {
     }
 }
 
-@MainActor @preconcurrency public struct AsymmetricTransition /* <Insertion, Removal> */ : Transition /* where Insertion : Transition, Removal : Transition */ {
-    @MainActor @preconcurrency public var insertion: any Transition /* Insertion */ {
-        get {
-            return _insertion.wrappedValue
-        }
-        set {
-            _insertion = UncheckedSendableBox(newValue)
-        }
-    }
-    private var _insertion: UncheckedSendableBox<any Transition>
+public struct AsymmetricTransition /* <Insertion, Removal> where Insertion : Transition, Removal : Transition */ {
+    /* @MainActor @preconcurrency */public var insertion: any Transition /* Insertion */
+    /* @MainActor @preconcurrency */public var removal: any Transition /* Removal */
 
-    @MainActor @preconcurrency public var removal: any Transition /* Removal */ {
-        get {
-            return _removal.wrappedValue
-        }
-        set {
-            _removal = UncheckedSendableBox(newValue)
-        }
-    }
-    private var _removal: UncheckedSendableBox<any Transition>
-
-    /* @MainActor @preconcurrency */nonisolated public init(insertion: any Transition /* Insertion */, removal: any Transition /* Removal */) {
-        _insertion = UncheckedSendableBox(insertion)
-        _removal = UncheckedSendableBox(removal)
+    /* @MainActor @preconcurrency */public init(insertion: any Transition /* Insertion */, removal: any Transition /* Removal */) {
+        self.insertion = insertion
+        self.removal = removal
     }
 
+    public var Java_transition: any SkipUI.Transition {
+        return SkipUI.AsymmetricTransition(insertion: insertion.Java_transition, removal: removal.Java_transition)
+    }
+}
+
+extension AsymmetricTransition : Transition {
     @MainActor @preconcurrency public func body(content: Any /* AsymmetricTransition<Insertion, Removal>.Content */, phase: TransitionPhase) -> some View {
         stubView()
     }
 
-//    @MainActor @preconcurrency public static var properties: TransitionProperties
-
-    public var Java_transition: any SkipUI.Transition {
-        return SkipUI.AsymmetricTransition(insertion: _insertion.wrappedValue.Java_transition, removal: _removal.wrappedValue.Java_transition)
-    }
+    //    @MainActor @preconcurrency public static var properties: TransitionProperties
 }
 
 @MainActor @preconcurrency public struct BlurReplaceTransition : Transition {
@@ -281,21 +265,23 @@ extension AnyTransition {
     }
 }
 
-struct CombinedTransition : Transition {
-    private let first: UncheckedSendableBox<any Transition>
-    private let second: UncheckedSendableBox<any Transition>
+struct CombinedTransition {
+    private let first: any Transition
+    private let second: any Transition
 
     nonisolated init(_ first: any Transition, _ second: any Transition) {
-        self.first = UncheckedSendableBox(first)
-        self.second = UncheckedSendableBox(second)
+        self.first = first
+        self.second = second
     }
+}
 
+extension CombinedTransition : Transition {
     @MainActor @preconcurrency public func body(content: Any /* CombinedTransition.Content */, phase: TransitionPhase) -> some View {
         stubView()
     }
 
     public var Java_transition: any SkipUI.Transition {
-        return SkipUI.CombinedTransition(first.wrappedValue.Java_transition, second.wrappedValue.Java_transition)
+        return SkipUI.CombinedTransition(first.Java_transition, second.Java_transition)
     }
 }
 
@@ -315,7 +301,7 @@ public struct ContentTransition : Equatable, Sendable {
     }
 }
 
-@MainActor @preconcurrency public struct IdentityTransition : Transition {
+public struct IdentityTransition : Transition {
     /* @MainActor @preconcurrency */nonisolated public init() {
     }
 
@@ -330,8 +316,8 @@ public struct ContentTransition : Equatable, Sendable {
     }
 }
 
-@MainActor @preconcurrency public struct MoveTransition : Transition {
-    @MainActor @preconcurrency public var edge: Edge
+public struct MoveTransition : Transition {
+    public var edge: Edge
 
     /* @MainActor @preconcurrency */nonisolated public init(edge: Edge) {
         self.edge = edge
@@ -346,8 +332,8 @@ public struct ContentTransition : Equatable, Sendable {
     }
 }
 
-@MainActor @preconcurrency public struct OffsetTransition : Transition {
-    @MainActor @preconcurrency public var offset: CGSize
+public struct OffsetTransition : Transition {
+    public var offset: CGSize
 
     /* @MainActor @preconcurrency */nonisolated public init(_ offset: CGSize) {
         self.offset = offset
@@ -362,7 +348,7 @@ public struct ContentTransition : Equatable, Sendable {
     }
 }
 
-@MainActor @preconcurrency public struct OpacityTransition : Transition {
+public struct OpacityTransition : Transition {
     /* @MainActor @preconcurrency */nonisolated public init() {
     }
 
@@ -377,8 +363,8 @@ public struct ContentTransition : Equatable, Sendable {
     }
 }
 
-@MainActor @preconcurrency public struct PushTransition : Transition {
-    @MainActor @preconcurrency public var edge: Edge
+public struct PushTransition : Transition {
+    public var edge: Edge
 
     /* @MainActor @preconcurrency */nonisolated public init(edge: Edge) {
         self.edge = edge
@@ -393,9 +379,9 @@ public struct ContentTransition : Equatable, Sendable {
     }
 }
 
-@MainActor @preconcurrency public struct ScaleTransition : Transition {
-    @MainActor @preconcurrency public var scale: Double
-    @MainActor @preconcurrency public var anchor: UnitPoint
+public struct ScaleTransition : Transition {
+    public var scale: Double
+    public var anchor: UnitPoint
 
     /* @MainActor @preconcurrency */nonisolated public init(_ scale: Double, anchor: UnitPoint = .center) {
         self.scale = scale
@@ -411,7 +397,7 @@ public struct ContentTransition : Equatable, Sendable {
     }
 }
 
-@MainActor @preconcurrency public struct SlideTransition : Transition {
+public struct SlideTransition : Transition {
     /* @MainActor @preconcurrency */nonisolated public init() {
     }
 

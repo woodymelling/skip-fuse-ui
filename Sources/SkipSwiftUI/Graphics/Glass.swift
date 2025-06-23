@@ -20,7 +20,7 @@ public struct Glass : Equatable, Sendable {
 
 @MainActor @preconcurrency public struct GlassEffectContainer<Content> : View, Sendable where Content : View {
     @available(*, unavailable)
-    @MainActor @preconcurrency public init(spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
+    public init(spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
     }
 
     public var body: some View {

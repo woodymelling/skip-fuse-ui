@@ -3,30 +3,32 @@
 import Foundation
 import SkipUI
 
-@MainActor @preconcurrency public struct Link<Label> : View where Label : View {
+public struct Link<Label> where Label : View {
     private let destination: URL
-    private let label: UncheckedSendableBox<Label>
+    private let label: Label
 
     nonisolated public init(destination: URL, @ViewBuilder label: () -> Label) {
         self.destination = destination
-        self.label = UncheckedSendableBox(label())
+        self.label = label()
     }
+}
 
+extension Link : View {
     public typealias Body = Never
 }
 
 extension Link : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.Link(destination: destination, bridgedLabel: label.wrappedValue.Java_viewOrEmpty)
+        return SkipUI.Link(destination: destination, bridgedLabel: label.Java_viewOrEmpty)
     }
 }
 
 extension Link where Label == Text {
-    nonisolated public init(_ titleKey: LocalizedStringKey, destination: URL) {
+    public init(_ titleKey: LocalizedStringKey, destination: URL) {
         self.init(destination: destination, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, destination: URL) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, destination: URL) where S : StringProtocol {
         self.init(destination: destination, label: { Text(title) })
     }
 }
