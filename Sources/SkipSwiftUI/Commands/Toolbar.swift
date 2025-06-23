@@ -1,6 +1,5 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
-import SkipBridge
 import SkipUI
 
 @MainActor @preconcurrency public protocol ToolbarContent {
@@ -43,43 +42,47 @@ extension EmptyToolbarContent : SkipUIBridging {
     }
 }
 
-@MainActor @frozen @preconcurrency public struct AnyToolbarContent : ToolbarContent {
-    private let content: UncheckedSendableBox<any ToolbarContent>
+@frozen public struct AnyToolbarContent {
+    private let content: any ToolbarContent
 
-    nonisolated public init<C>(_ content: C) where C : ToolbarContent {
+    public init<C>(_ content: C) where C : ToolbarContent {
         self.init(erasing: content)
     }
 
-    nonisolated public init<C>(erasing content: C) where C : ToolbarContent {
-        self.content = UncheckedSendableBox(content)
+    public init<C>(erasing content: C) where C : ToolbarContent {
+        self.content = content
     }
+}
 
+extension AnyToolbarContent : ToolbarContent {
     public var body : Never { fatalError("Never") }
 }
 
 extension AnyToolbarContent : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return (content.wrappedValue as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+        return (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
     }
 }
 
-@MainActor @frozen @preconcurrency public struct AnyCustomizableToolbarContent : CustomizableToolbarContent {
-    private let content: UncheckedSendableBox<any CustomizableToolbarContent>
+@frozen public struct AnyCustomizableToolbarContent {
+    private let content: any CustomizableToolbarContent
 
-    nonisolated public init<C>(_ content: C) where C : CustomizableToolbarContent {
+    public init<C>(_ content: C) where C : CustomizableToolbarContent {
         self.init(erasing: content)
     }
 
-    nonisolated public init<C>(erasing content: C) where C : CustomizableToolbarContent {
-        self.content = UncheckedSendableBox(content)
+    public init<C>(erasing content: C) where C : CustomizableToolbarContent {
+        self.content = content
     }
+}
 
+extension AnyCustomizableToolbarContent : CustomizableToolbarContent {
     public var body : Never { fatalError("Never") }
 }
 
 extension AnyCustomizableToolbarContent : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return (content.wrappedValue as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+        return (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
     }
 }
 
@@ -131,7 +134,7 @@ extension CustomizableToolbarContent {
     }
 }
 
-@MainActor @preconcurrency public struct ToolbarCommands : Commands {
+public struct ToolbarCommands : Commands {
     nonisolated public init() {
     }
 }
@@ -172,27 +175,29 @@ public struct ToolbarDefaultItemKind : Sendable {
     let identifier: Int // For bridging
 }
 
-@MainActor @preconcurrency public struct ToolbarItem<ID, Content> : ToolbarContent where Content : View {
-    private let _id: UncheckedSendableBox<ID>
+public struct ToolbarItem<ID, Content> where Content : View {
+    private let _id: ID
     private let placement: ToolbarItemPlacement
-    private let content: UncheckedSendableBox<Content>
+    private let content: Content
+}
 
+extension ToolbarItem: ToolbarContent {
     public var body : Never { fatalError("Never") }
 }
 
 extension ToolbarItem where ID == () {
-    nonisolated public init(placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
-        self._id = UncheckedSendableBox(())
+    public init(placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
+        self._id = ()
         self.placement = placement
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
     }
 }
 
 extension ToolbarItem : CustomizableToolbarContent where ID == String {
     nonisolated public init(id: String, placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
-        self._id = UncheckedSendableBox(id)
+        self._id = id
         self.placement = placement
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
     }
 
     @available(*, unavailable)
@@ -203,18 +208,18 @@ extension ToolbarItem : CustomizableToolbarContent where ID == String {
 
 extension ToolbarItem : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        let idString = _id.wrappedValue as? String ?? ""
-        return SkipUI.ToolbarItem(id: idString, bridgedPlacement: placement.identifier, bridgedContent: content.wrappedValue.Java_viewOrEmpty)
+        let idString = _id as? String ?? ""
+        return SkipUI.ToolbarItem(id: idString, bridgedPlacement: placement.identifier, bridgedContent: content.Java_viewOrEmpty)
     }
 }
 
 extension ToolbarItem : Identifiable where ID : Hashable {
     /* @MainActor @preconcurrency */nonisolated public var id: ID {
-        return _id.wrappedValue
+        return _id
     }
 }
 
-@MainActor @preconcurrency public struct DefaultToolbarItem : ToolbarContent {
+public struct DefaultToolbarItem : ToolbarContent {
     @available(*, unavailable)
     nonisolated public init(kind: ToolbarDefaultItemKind, placement: ToolbarItemPlacement = .automatic) {
     }
@@ -222,21 +227,23 @@ extension ToolbarItem : Identifiable where ID : Hashable {
     public var body : Never { fatalError("Never") }
 }
 
-@MainActor @preconcurrency public struct ToolbarItemGroup<Content> : ToolbarContent where Content : View {
+public struct ToolbarItemGroup<Content> where Content : View {
     private let placement: ToolbarItemPlacement
-    private let content: UncheckedSendableBox<Content>
+    private let content: Content
 
     nonisolated public init(placement: ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
         self.placement = placement
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
     }
+}
 
+extension ToolbarItemGroup : ToolbarContent {
     public var body : Never { fatalError("Never") }
 }
 
 extension ToolbarItemGroup : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.ToolbarItemGroup(bridgedPlacement: placement.identifier, bridgedContent: content.wrappedValue.Java_viewOrEmpty)
+        return SkipUI.ToolbarItemGroup(bridgedPlacement: placement.identifier, bridgedContent: content.Java_viewOrEmpty)
     }
 }
 
@@ -247,15 +254,17 @@ extension ToolbarItemGroup {
     }
 }
 
-@MainActor @preconcurrency public struct ToolbarSpacer : ToolbarContent, CustomizableToolbarContent {
+public struct ToolbarSpacer {
     private let sizing: SpacerSizing
     private let placement: ToolbarItemPlacement
 
-    nonisolated public init(_ sizing: SpacerSizing = .flexible, placement: ToolbarItemPlacement = .automatic) {
+    public init(_ sizing: SpacerSizing = .flexible, placement: ToolbarItemPlacement = .automatic) {
         self.sizing = sizing
         self.placement = placement
     }
+}
 
+extension ToolbarSpacer : ToolbarContent, CustomizableToolbarContent {
     public var body : Never { fatalError("Never") }
 }
 
@@ -362,31 +371,33 @@ public struct ToolbarTitleDisplayMode {
     }
 }
 
-@MainActor @preconcurrency public struct ToolbarTitleMenu<Content> : ToolbarContent, CustomizableToolbarContent where Content : View {
-    private let content: UncheckedSendableBox<Content>
+public struct ToolbarTitleMenu<Content> where Content : View {
+    private let content: Content
 
-    nonisolated public init() where Content == EmptyView {
-        self.content = UncheckedSendableBox(EmptyView())
+    public init() where Content == EmptyView {
+        self.content = EmptyView()
     }
 
-    nonisolated public init(@ViewBuilder content: () -> Content) {
-        self.content = UncheckedSendableBox(content())
+    public init(@ViewBuilder content: () -> Content) {
+        self.content = content()
     }
+}
 
+extension ToolbarTitleMenu : ToolbarContent, CustomizableToolbarContent {
     public var body : Never { fatalError("Never") }
 }
 
 extension Group : ToolbarContent where Content : ToolbarContent {
     nonisolated public init(@ToolbarContentBuilder content: () -> Content) {
-        self.content = UncheckedSendableBox(content())
+        self.content = content()
     }
 
     public var body : Never { fatalError("Never") }
 }
 
 extension Group : CustomizableToolbarContent where Content : CustomizableToolbarContent {
-    public init(@ToolbarContentBuilder content: () -> Content) {
-        self.content = UncheckedSendableBox(content())
+    nonisolated public init(@ToolbarContentBuilder content: () -> Content) {
+        self.content = content()
     }
 }
 
@@ -596,19 +607,21 @@ extension Group : CustomizableToolbarContent where Content : CustomizableToolbar
     }
 }
 
-public struct TupleToolbarContent : ToolbarContent, CustomizableToolbarContent {
-    private let content: UncheckedSendableBox<[any ToolbarContent]>
+public struct TupleToolbarContent {
+    private let content: [any ToolbarContent]
 
     nonisolated public init(_ content: [any ToolbarContent]) {
-        self.content = UncheckedSendableBox(content)
+        self.content = content
     }
+}
 
+extension TupleToolbarContent : ToolbarContent, CustomizableToolbarContent {
     public var body : Never { fatalError("Never") }
 }
 
 extension TupleToolbarContent : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        let javaViews = content.wrappedValue.compactMap { ($0 as? SkipUIBridging)?.Java_view }
+        let javaViews = content.compactMap { ($0 as? SkipUIBridging)?.Java_view }
         return SkipUI.ComposeBuilder(bridgedViews: javaViews)
     }
 }

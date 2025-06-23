@@ -1,88 +1,89 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import Foundation
-import SkipBridge
 import SkipUI
 
-@MainActor @preconcurrency public struct DatePicker<Label> : View where Label : View {
+public struct DatePicker<Label> where Label : View {
     private let selection: Binding<Date>
     private let displayedComponents: DatePicker<Label>.Components
-    private let label: UncheckedSendableBox<Label>
+    private let label: Label
 
     public typealias Components = DatePickerComponents
+}
 
+extension DatePicker : View {
     public typealias Body = Never
 }
 
 extension DatePicker : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.DatePicker(getSelection: { selection.wrappedValue }, setSelection: { selection.wrappedValue = $0 }, bridgedDisplayedComponents: Int(displayedComponents.rawValue), bridgedLabel: label.wrappedValue.Java_viewOrEmpty)
+        return SkipUI.DatePicker(getSelection: { selection.wrappedValue }, setSelection: { selection.wrappedValue = $0 }, bridgedDisplayedComponents: Int(displayedComponents.rawValue), bridgedLabel: label.Java_viewOrEmpty)
     }
 }
 
 extension DatePicker {
-    nonisolated public init(selection: Binding<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
+    public init(selection: Binding<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
         self.selection = selection
         self.displayedComponents = displayedComponents
-        self.label = UncheckedSendableBox(label())
+        self.label = label()
     }
 
     @available(*, unavailable)
-    nonisolated public init(selection: Binding<Date>, in range: ClosedRange<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
+    public init(selection: Binding<Date>, in range: ClosedRange<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(selection: Binding<Date>, in range: PartialRangeFrom<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
+    public init(selection: Binding<Date>, in range: PartialRangeFrom<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(selection: Binding<Date>, in range: PartialRangeThrough<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
+    public init(selection: Binding<Date>, in range: PartialRangeThrough<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date], @ViewBuilder label: () -> Label) {
         fatalError()
     }
 }
 
 extension DatePicker where Label == Text {
-    nonisolated public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
+    public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
         self.selection = selection
         self.displayedComponents = displayedComponents
-        self.label = UncheckedSendableBox(Text(titleKey))
+        self.label = Text(titleKey)
     }
 
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, in range: ClosedRange<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
+    public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, in range: ClosedRange<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, in range: PartialRangeFrom<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
+    public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, in range: PartialRangeFrom<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, in range: PartialRangeThrough<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
+    public init(_ titleKey: LocalizedStringKey, selection: Binding<Date>, in range: PartialRangeThrough<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) {
         fatalError()
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, selection: Binding<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, selection: Binding<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) where S : StringProtocol {
         self.selection = selection
         self.displayedComponents = displayedComponents
-        self.label = UncheckedSendableBox(Text(title))
+        self.label = Text(title)
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, selection: Binding<Date>, in range: ClosedRange<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, selection: Binding<Date>, in range: ClosedRange<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, selection: Binding<Date>, in range: PartialRangeFrom<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, selection: Binding<Date>, in range: PartialRangeFrom<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, selection: Binding<Date>, in range: PartialRangeThrough<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, selection: Binding<Date>, in range: PartialRangeThrough<Date>, displayedComponents: DatePicker<Label>.Components = [.hourAndMinute, .date]) where S : StringProtocol {
         fatalError()
     }
 }
@@ -114,9 +115,9 @@ extension DatePickerStyle {
     }
 }
 
-@MainActor @preconcurrency public struct WheelDatePickerStyle : DatePickerStyle {
+public struct WheelDatePickerStyle : DatePickerStyle {
     @available(*, unavailable)
-    @MainActor @preconcurrency public init() {
+    public init() {
         fatalError()
     }
 
@@ -134,8 +135,8 @@ extension DatePickerStyle where Self == WheelDatePickerStyle {
     }
 }
 
-@MainActor @preconcurrency public struct DefaultDatePickerStyle : DatePickerStyle {
-    @MainActor @preconcurrency public init() {
+public struct DefaultDatePickerStyle : DatePickerStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: WheelDatePickerStyle.Configuration) -> some View {
@@ -151,9 +152,9 @@ extension DatePickerStyle where Self == DefaultDatePickerStyle {
     }
 }
 
-@MainActor @preconcurrency public struct GraphicalDatePickerStyle : DatePickerStyle {
+public struct GraphicalDatePickerStyle : DatePickerStyle {
     @available(*, unavailable)
-    @MainActor @preconcurrency public init() {
+    public init() {
         fatalError()
     }
 
@@ -171,8 +172,8 @@ extension DatePickerStyle where Self == GraphicalDatePickerStyle {
     }
 }
 
-@MainActor @preconcurrency public struct CompactDatePickerStyle : DatePickerStyle {
-    @MainActor @preconcurrency public init() {
+public struct CompactDatePickerStyle : DatePickerStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: WheelDatePickerStyle.Configuration) -> some View {
@@ -189,7 +190,7 @@ extension DatePickerStyle where Self == CompactDatePickerStyle {
 }
 
 public struct DatePickerStyleConfiguration {
-    @MainActor @preconcurrency public struct Label : View {
+    public struct Label : View {
         public typealias Body = Never
     }
 

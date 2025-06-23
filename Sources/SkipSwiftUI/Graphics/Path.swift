@@ -5,7 +5,7 @@ import CoreGraphics
 #endif
 import SkipUI
 
-/* @frozen */ public struct Path : Equatable /*, LosslessStringConvertible, @unchecked Sendable */ {
+/* @frozen */ public struct Path : Equatable /*, LosslessStringConvertible @unchecked Sendable */ {
     private var steps: [PathStep] = []
 
     public init() {

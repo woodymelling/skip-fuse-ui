@@ -3,15 +3,17 @@
 import SkipBridge
 import SkipUI
 
-@MainActor @preconcurrency public struct Button<Label> : View where Label : View {
-    private let label: UncheckedSendableBox<Label>?
+public struct Button<Label> where Label : View {
+    private let label: Label?
     private let action: @MainActor () -> Void
     private let role: ButtonRole?
 
-    @preconcurrency nonisolated public init(action: @escaping @MainActor () -> Void, @ViewBuilder label: () -> Label) {
+    @preconcurrency public init(action: @escaping @MainActor () -> Void, @ViewBuilder label: () -> Label) {
         self.init(role: nil, action: action, label: label)
     }
+}
 
+extension Button : View {
     public typealias Body = Never
 }
 
@@ -23,16 +25,16 @@ extension Button : SkipUIBridging {
         #else
         let isolatedAction = action
         #endif
-        return SkipUI.Button(bridgedRole: role?.identifier, action: isolatedAction, bridgedLabel: label?.wrappedValue.Java_viewOrEmpty)
+        return SkipUI.Button(bridgedRole: role?.identifier, action: isolatedAction, bridgedLabel: label?.Java_viewOrEmpty)
     }
 }
 
 extension Button where Label == Text {
-    @preconcurrency nonisolated public init(_ titleKey: LocalizedStringKey, action: @escaping @MainActor () -> Void) {
+    @preconcurrency public init(_ titleKey: LocalizedStringKey, action: @escaping @MainActor () -> Void) {
         self.init(action: action, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload @preconcurrency nonisolated public init<S>(_ title: S, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload @preconcurrency public init<S>(_ title: S, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(action: action, label: { Text(title) })
     }
 
@@ -44,60 +46,60 @@ extension Button where Label == Text {
 }
 
 extension Button where Label == SkipSwiftUI.Label<Text, Image> {
-    nonisolated public init(_ titleKey: LocalizedStringKey, systemImage: String, action: @escaping @MainActor () -> Void) {
+    @preconcurrency public init(_ titleKey: LocalizedStringKey, systemImage: String, action: @escaping @MainActor () -> Void) {
         self.init(action: action, label: { SkipSwiftUI.Label(titleKey, systemImage: systemImage) })
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, systemImage: String, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload @preconcurrency public init<S>(_ title: S, systemImage: String, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(action: action, label: { SkipSwiftUI.Label(title, systemImage: systemImage) })
     }
 }
 
 //extension Button where Label == Label<Text, Image> {
-//    @preconcurrency nonisolated public init(_ titleKey: LocalizedStringKey, image: ImageResource, action: @escaping @MainActor () -> Void)
+//    public init(_ titleKey: LocalizedStringKey, image: ImageResource, action: @escaping @MainActor () -> Void)
 //
-//    @preconcurrency nonisolated public init<S>(_ title: S, image: ImageResource, action: @escaping @MainActor () -> Void) where S : StringProtocol
+//    public init<S>(_ title: S, image: ImageResource, action: @escaping @MainActor () -> Void) where S : StringProtocol
 //}
 
 extension Button where Label == PrimitiveButtonStyleConfiguration.Label {
     @available(*, unavailable)
-    nonisolated public init(_ configuration: PrimitiveButtonStyleConfiguration) {
+    public init(_ configuration: PrimitiveButtonStyleConfiguration) {
         fatalError()
     }
 }
 
 extension Button {
-    @preconcurrency nonisolated public init(role: ButtonRole?, action: @escaping @MainActor () -> Void, @ViewBuilder label: () -> Label) {
+    @preconcurrency public init(role: ButtonRole?, action: @escaping @MainActor () -> Void, @ViewBuilder label: () -> Label) {
         self.role = role
         self.action = action
-        self.label = UncheckedSendableBox(label())
+        self.label = label()
     }
 }
 
 extension Button where Label == Text {
-    @preconcurrency nonisolated public init(_ titleKey: LocalizedStringKey, role: ButtonRole?, action: @escaping @MainActor () -> Void) {
+    @preconcurrency public init(_ titleKey: LocalizedStringKey, role: ButtonRole?, action: @escaping @MainActor () -> Void) {
         self.init(role: role, action: action, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload @preconcurrency nonisolated public init<S>(_ title: S, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload @preconcurrency public init<S>(_ title: S, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(role: role, action: action, label: { Text(title) })
     }
 }
 
 extension Button where Label == SkipSwiftUI.Label<Text, Image> {
-    nonisolated public init(_ titleKey: LocalizedStringKey, systemImage: String, role: ButtonRole?, action: @escaping @MainActor () -> Void) {
+    @preconcurrency public init(_ titleKey: LocalizedStringKey, systemImage: String, role: ButtonRole?, action: @escaping @MainActor () -> Void) {
         self.init(role: role, action: action, label: { SkipSwiftUI.Label(titleKey, systemImage: systemImage) })
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, systemImage: String, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol {
+    @_disfavoredOverload @preconcurrency public init<S>(_ title: S, systemImage: String, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol {
         self.init(role: role, action: action, label: { SkipSwiftUI.Label(title, systemImage: systemImage) })
     }
 }
 
 //extension Button where Label == Label<Text, Image> {
-//    @preconcurrency nonisolated public init(_ titleKey: LocalizedStringKey, image: ImageResource, role: ButtonRole?, action: @escaping @MainActor () -> Void)
+//    public init(_ titleKey: LocalizedStringKey, image: ImageResource, role: ButtonRole?, action: @escaping @MainActor () -> Void)
 //
-//    @preconcurrency nonisolated public init<S>(_ title: S, image: ImageResource, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol
+//    public init<S>(_ title: S, image: ImageResource, role: ButtonRole?, action: @escaping @MainActor () -> Void) where S : StringProtocol
 //}
 
 public struct ButtonRepeatBehavior : Hashable, Sendable {
@@ -136,7 +138,7 @@ public struct ButtonSizing : Hashable, Sendable {
 }
 
 public struct ButtonStyleConfiguration {
-    @MainActor @preconcurrency public struct Label : View {
+    public struct Label : View {
         public typealias Body = Never
     }
 
@@ -145,8 +147,8 @@ public struct ButtonStyleConfiguration {
     public let isPressed: Bool
 }
 
-@MainActor @preconcurrency public struct BorderedButtonStyle : PrimitiveButtonStyle {
-    @MainActor @preconcurrency public init() {
+public struct BorderedButtonStyle : PrimitiveButtonStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: BorderedButtonStyle.Configuration) -> some View {
@@ -156,8 +158,8 @@ public struct ButtonStyleConfiguration {
     public let identifier = 3 // For bridging
 }
 
-@MainActor @preconcurrency public struct BorderedProminentButtonStyle : PrimitiveButtonStyle {
-    @MainActor @preconcurrency public init() {
+public struct BorderedProminentButtonStyle : PrimitiveButtonStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: BorderedProminentButtonStyle.Configuration) -> some View {
@@ -167,8 +169,8 @@ public struct ButtonStyleConfiguration {
     public let identifier = 4 // For bridging
 }
 
-@MainActor @preconcurrency public struct BorderlessButtonStyle : PrimitiveButtonStyle {
-    @MainActor @preconcurrency public init() {
+public struct BorderlessButtonStyle : PrimitiveButtonStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: BorderlessButtonStyle.Configuration) -> some View {
@@ -178,8 +180,8 @@ public struct ButtonStyleConfiguration {
     public let identifier = 2 // For bridging
 }
 
-@MainActor @preconcurrency public struct DefaultButtonStyle : PrimitiveButtonStyle {
-    @MainActor @preconcurrency public init() {
+public struct DefaultButtonStyle : PrimitiveButtonStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: DefaultButtonStyle.Configuration) -> some View {
@@ -189,8 +191,8 @@ public struct ButtonStyleConfiguration {
     public let identifier = 0 // For bridging
 }
 
-@MainActor @preconcurrency public struct PlainButtonStyle : PrimitiveButtonStyle {
-    @MainActor @preconcurrency public init() {
+public struct PlainButtonStyle : PrimitiveButtonStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: PlainButtonStyle.Configuration) -> some View {
@@ -200,9 +202,9 @@ public struct ButtonStyleConfiguration {
     public let identifier = 1 // For bridging
 }
 
-@MainActor @preconcurrency public struct GlassButtonStyle : PrimitiveButtonStyle {
+public struct GlassButtonStyle : PrimitiveButtonStyle {
     @available(*, unavailable)
-    @MainActor @preconcurrency public init() {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: GlassButtonStyle.Configuration) -> some View {
@@ -266,7 +268,7 @@ extension PrimitiveButtonStyle where Self == GlassButtonStyle {
 }
 
 public struct PrimitiveButtonStyleConfiguration {
-    @MainActor @preconcurrency public struct Label : View {
+    public struct Label : View {
         public typealias Body = Never
     }
 

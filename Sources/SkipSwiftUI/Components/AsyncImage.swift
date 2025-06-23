@@ -2,18 +2,18 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-@MainActor @preconcurrency public struct AsyncImage<Content> : View where Content : View {
+public struct AsyncImage<Content> where Content : View {
     private let url: URL?
     private let scale: CGFloat
-    private let content: UncheckedSendableBox<(AsyncImagePhase) -> Content>?
+    private let content: ((AsyncImagePhase) -> Content)?
 
-    nonisolated public init(url: URL?, scale: CGFloat = 1) where Content == Image {
+    public init(url: URL?, scale: CGFloat = 1) where Content == Image {
         self.url = url
         self.scale = scale
         self.content = nil
     }
 
-    nonisolated public init<I, P>(url: URL?, scale: CGFloat = 1, @ViewBuilder content: @escaping (Image) -> I, @ViewBuilder placeholder: @escaping () -> P) where Content == AnyView /* _ConditionalContent<I, P> */, I : View, P : View {
+    public init<I, P>(url: URL?, scale: CGFloat = 1, @ViewBuilder content: @escaping (Image) -> I, @ViewBuilder placeholder: @escaping () -> P) where Content == AnyView /* _ConditionalContent<I, P> */, I : View, P : View {
         self.init(url: url, scale: scale, transaction: Transaction()) { phase in
             switch phase {
             case .empty, .failure:
@@ -24,12 +24,14 @@ import SkipUI
         }
     }
 
-    nonisolated public init(url: URL?, scale: CGFloat = 1, transaction: Transaction = Transaction(), @ViewBuilder content: @escaping (AsyncImagePhase) -> Content) {
+    public init(url: URL?, scale: CGFloat = 1, transaction: Transaction = Transaction(), @ViewBuilder content: @escaping (AsyncImagePhase) -> Content) {
         self.url = url
         self.scale = scale
-        self.content = UncheckedSendableBox(content)
+        self.content = content
     }
+}
 
+extension AsyncImage : View {
     public typealias Body = Never
 }
 
@@ -46,7 +48,7 @@ extension AsyncImage : SkipUIBridging {
                 } else {
                     phase = .success(Image(spec: .init(.java(image!))))
                 }
-                let result = content.wrappedValue(phase)
+                let result = content(phase)
                 return result.Java_viewOrEmpty
             }
         } else {

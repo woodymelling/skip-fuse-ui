@@ -63,8 +63,8 @@ extension LabeledContent where Label == LabeledContentStyleConfiguration.Label, 
     typealias Configuration = LabeledContentStyleConfiguration
 }
 
-@MainActor @preconcurrency public struct AutomaticLabeledContentStyle : LabeledContentStyle {
-    @MainActor @preconcurrency public init() {
+public struct AutomaticLabeledContentStyle : LabeledContentStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: AutomaticLabeledContentStyle.Configuration) -> some View {
@@ -79,11 +79,11 @@ extension LabeledContentStyle where Self == AutomaticLabeledContentStyle {
 }
 
 public struct LabeledContentStyleConfiguration {
-    @MainActor @preconcurrency public struct Label : View {
+    public struct Label : View {
         public typealias Body = Never
     }
 
-    @MainActor @preconcurrency public struct Content : View {
+    public struct Content : View {
         public typealias Body = Never
     }
 

@@ -4,47 +4,48 @@
 import CoreGraphics
 #endif
 import Foundation
-import SkipBridge
 import SkipUI
 
-@MainActor @preconcurrency public struct NavigationStack<Data, Root> : View where Root : View {
-    private let root: UncheckedSendableBox<Root>
-    private let getData: UncheckedSendableBox<() -> [Any /* SwiftHashable */]>?
-    private let setData: UncheckedSendableBox<([Any /* SwiftHashable */]) -> Void>?
+public struct NavigationStack<Data, Root> where Root : View {
+    private let root: Root
+    private let getData: (() -> [Any /* SwiftHashable */])?
+    private let setData: (([Any /* SwiftHashable */]) -> Void)?
 
-    nonisolated public init(@ViewBuilder root: () -> Root) where Data == NavigationPath {
-        self.root = UncheckedSendableBox(root())
+    public init(@ViewBuilder root: () -> Root) where Data == NavigationPath {
+        self.root = root()
         getData = nil
         setData = nil
     }
 
-    nonisolated public init(path: Binding<NavigationPath>, @ViewBuilder root: () -> Root) where Data == NavigationPath {
-        self.root = UncheckedSendableBox(root())
-        self.getData = UncheckedSendableBox({
+    public init(path: Binding<NavigationPath>, @ViewBuilder root: () -> Root) where Data == NavigationPath {
+        self.root = root()
+        self.getData = {
             let boundPath = path.wrappedValue
             return (0..<boundPath.count).map {
                 Java_swiftHashable(for: boundPath[$0])
             }
-        })
-        self.setData = UncheckedSendableBox({ array in
+        }
+        self.setData = { array in
             var boundPath = NavigationPath()
             array.forEach { boundPath.append(($0 as! SwiftHashable).base as! AnyHashable) }
             path.wrappedValue = boundPath
-        })
+        }
     }
 
-    nonisolated public init(path: Binding<Data>, @ViewBuilder root: () -> Root) where Data : MutableCollection, Data : RandomAccessCollection, Data : RangeReplaceableCollection, Data.Element : Hashable {
-        self.root = UncheckedSendableBox(root())
-        self.getData = UncheckedSendableBox({
+    public init(path: Binding<Data>, @ViewBuilder root: () -> Root) where Data : MutableCollection, Data : RandomAccessCollection, Data : RangeReplaceableCollection, Data.Element : Hashable {
+        self.root = root()
+        self.getData = {
             return path.wrappedValue.map { Java_swiftHashable(for: $0) }
-        })
-        self.setData = UncheckedSendableBox({ array in
+        }
+        self.setData = { array in
             var boundPath = path.wrappedValue
             boundPath.replaceSubrange(boundPath.startIndex..<boundPath.endIndex, with: array.map { ($0 as! SwiftHashable).base as! Data.Element })
             path.wrappedValue = boundPath
-        })
+        }
     }
+}
 
+extension NavigationStack : View {
     public typealias Body = Never
 }
 
@@ -55,71 +56,73 @@ extension NavigationStack : SkipUIBridging {
             let value = ($0 as! SwiftHashable).base
             return String(describing: type(of: value))
         }
-        return SkipUI.NavigationStack(getData: getData?.wrappedValue, setData: setData?.wrappedValue, bridgedRoot: root.wrappedValue.Java_viewOrEmpty, destinationKeyTransformer: destinationKeyTransformer)
+        return SkipUI.NavigationStack(getData: getData, setData: setData, bridgedRoot: root.Java_viewOrEmpty, destinationKeyTransformer: destinationKeyTransformer)
     }
 }
 
-@MainActor @preconcurrency public struct NavigationLink<Label, Destination> : View where Label : View, Destination : View {
-    private let destination: UncheckedSendableBox<Destination>?
-    private let value: UncheckedSendableBox<AnyHashable>?
-    private let label: UncheckedSendableBox<Label>
+public struct NavigationLink<Label, Destination> where Label : View, Destination : View {
+    private let destination: Destination?
+    private let value: AnyHashable?
+    private let label: Label
 
-    nonisolated public init(@ViewBuilder destination: () -> Destination, @ViewBuilder label: () -> Label) {
-        self.destination = UncheckedSendableBox(destination())
+    public init(@ViewBuilder destination: () -> Destination, @ViewBuilder label: () -> Label) {
+        self.destination = destination()
         self.value = nil
-        self.label = UncheckedSendableBox(label())
+        self.label = label()
     }
 
-    nonisolated public init(destination: Destination, @ViewBuilder label: () -> Label) {
+    public init(destination: Destination, @ViewBuilder label: () -> Label) {
         self.init(destination: { destination }, label: label)
     }
+}
 
+extension NavigationLink : View {
     public typealias Body = Never
 }
 
 extension NavigationLink : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        let bridgedValue = value == nil ? nil : Java_swiftHashable(for: value!.wrappedValue)
-        return SkipUI.NavigationLink(bridgedDestination: destination?.wrappedValue.Java_viewOrEmpty, value: bridgedValue, bridgedLabel: label.wrappedValue.Java_viewOrEmpty)
+        let bridgedValue = value == nil ? nil : Java_swiftHashable(for: value!)
+        return SkipUI.NavigationLink(bridgedDestination: destination?.Java_viewOrEmpty, value: bridgedValue, bridgedLabel: label.Java_viewOrEmpty)
     }
 }
 
 extension NavigationLink where Destination == Never {
-    nonisolated public init<P>(value: P?, @ViewBuilder label: () -> Label) where P : Hashable {
-        self.value = value == nil ? nil : UncheckedSendableBox(value!)
-        self.label = UncheckedSendableBox(label())
+    public init<P>(value: P?, @ViewBuilder label: () -> Label) where P : Hashable {
+        self.value = value
+        self.label = label()
         self.destination = nil
     }
 
-    nonisolated public init<P>(_ titleKey: LocalizedStringKey, value: P?) where Label == Text, P : Hashable {
+    public init<P>(_ titleKey: LocalizedStringKey, value: P?) where Label == Text, P : Hashable {
         self.init(value: value, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload nonisolated public init<S, P>(_ title: S, value: P?) where Label == Text, S : StringProtocol, P : Hashable {
+    @_disfavoredOverload public init<S, P>(_ title: S, value: P?) where Label == Text, S : StringProtocol, P : Hashable {
         self.init(value: value, label: { Text(title) })
     }
 
-//    nonisolated public init<P>(value: P?, @ViewBuilder label: () -> Label) where P : Decodable, P : Encodable, P : Hashable
+//    public init<P>(value: P?, @ViewBuilder label: () -> Label) where P : Decodable, P : Encodable, P : Hashable
 //
-//    nonisolated public init<P>(_ titleKey: LocalizedStringKey, value: P?) where Label == Text, P : Decodable, P : Encodable, P : Hashable
+//    public init<P>(_ titleKey: LocalizedStringKey, value: P?) where Label == Text, P : Decodable, P : Encodable, P : Hashable
 //
-//    nonisolated public init<S, P>(_ title: S, value: P?) where Label == Text, S : StringProtocol, P : Decodable, P : Encodable, P : Hashable
+//    public init<S, P>(_ title: S, value: P?) where Label == Text, S : StringProtocol, P : Decodable, P : Encodable, P : Hashable
 }
 
 extension NavigationLink where Label == Text {
-    nonisolated public init(_ titleKey: LocalizedStringKey, @ViewBuilder destination: () -> Destination) {
+    public init(_ titleKey: LocalizedStringKey, @ViewBuilder destination: () -> Destination) {
         self.init(destination: destination, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, @ViewBuilder destination: () -> Destination) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, @ViewBuilder destination: () -> Destination) where S : StringProtocol {
         self.init(destination: destination, label: { Text(title) })
     }
 
-    nonisolated public init(_ titleKey: LocalizedStringKey, destination: Destination) {
+    public init(_ titleKey: LocalizedStringKey, destination: Destination) {
         self.init(destination: { destination }, label: { Text(titleKey) })
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, destination: Destination) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, destination: Destination) where S : StringProtocol {
         self.init(title, destination: { destination })
     }
 }
@@ -268,48 +271,50 @@ extension View {
     }
 }
 
-@MainActor @preconcurrency public struct NavigationSplitView<Sidebar, Content, Detail> : View where Sidebar : View, Content : View, Detail : View {
+public struct NavigationSplitView<Sidebar, Content, Detail> where Sidebar : View, Content : View, Detail : View {
     @available(*, unavailable)
-    nonisolated public init(@ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
+    public init(@ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(columnVisibility: Binding<NavigationSplitViewVisibility>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
+    public init(columnVisibility: Binding<NavigationSplitViewVisibility>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(@ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
+    public init(@ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(columnVisibility: Binding<NavigationSplitViewVisibility>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
+    public init(columnVisibility: Binding<NavigationSplitViewVisibility>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
         fatalError()
     }
+}
 
+extension NavigationSplitView : View {
     public typealias Body = Never
 }
 
 extension NavigationSplitView {
     @available(*, unavailable)
-    nonisolated public init(preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
+    public init(preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
+    public init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
+    public init(preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
+    public init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) where Content == EmptyView {
         fatalError()
     }
 }
@@ -358,8 +363,8 @@ extension View {
     }
 }
 
-@MainActor @preconcurrency public struct AutomaticNavigationSplitViewStyle : NavigationSplitViewStyle {
-    @MainActor @preconcurrency public init() {
+public struct AutomaticNavigationSplitViewStyle : NavigationSplitViewStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: AutomaticNavigationSplitViewStyle.Configuration) -> some View {
@@ -374,8 +379,8 @@ extension NavigationSplitViewStyle where Self == AutomaticNavigationSplitViewSty
     }
 }
 
-@MainActor @preconcurrency public struct BalancedNavigationSplitViewStyle : NavigationSplitViewStyle {
-    @MainActor @preconcurrency public init() {
+public struct BalancedNavigationSplitViewStyle : NavigationSplitViewStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: AutomaticNavigationSplitViewStyle.Configuration) -> some View {
@@ -390,8 +395,8 @@ extension NavigationSplitViewStyle where Self == BalancedNavigationSplitViewStyl
     }
 }
 
-@MainActor @preconcurrency public struct ProminentDetailNavigationSplitViewStyle : NavigationSplitViewStyle {
-    @MainActor @preconcurrency public init() {
+public struct ProminentDetailNavigationSplitViewStyle : NavigationSplitViewStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: AutomaticNavigationSplitViewStyle.Configuration) -> some View {

@@ -2,47 +2,49 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-@MainActor @preconcurrency public struct DisclosureGroup<Label, Content> : View where Label : View, Content : View {
+public struct DisclosureGroup<Label, Content> where Label : View, Content : View {
     private let isExpanded: Binding<Bool>
-    private let label: UncheckedSendableBox<Label>
-    private let content: UncheckedSendableBox<Content>
+    private let label: Label
+    private let content: Content
 
     @available(*, unavailable)
-    nonisolated public init(@ViewBuilder content: @escaping () -> Content, @ViewBuilder label: () -> Label) {
+    public init(@ViewBuilder content: @escaping () -> Content, @ViewBuilder label: () -> Label) {
         fatalError()
     }
 
-    nonisolated public init(isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content, @ViewBuilder label: () -> Label) {
+    public init(isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content, @ViewBuilder label: () -> Label) {
         self.isExpanded = isExpanded
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(label())
+        self.content = content()
+        self.label = label()
     }
+}
 
+extension DisclosureGroup : View {
     public typealias Body = Never
 }
 
 extension DisclosureGroup : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.DisclosureGroup(getExpanded: { isExpanded.wrappedValue }, setExpanded: { isExpanded.wrappedValue = $0 }, bridgedContent: content.wrappedValue.Java_viewOrEmpty, bridgedLabel: label.wrappedValue.Java_viewOrEmpty)
+        return SkipUI.DisclosureGroup(getExpanded: { isExpanded.wrappedValue }, setExpanded: { isExpanded.wrappedValue = $0 }, bridgedContent: content.Java_viewOrEmpty, bridgedLabel: label.Java_viewOrEmpty)
     }
 }
 
 extension DisclosureGroup where Label == Text {
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, @ViewBuilder content: @escaping () -> Content) {
+    public init(_ titleKey: LocalizedStringKey, @ViewBuilder content: @escaping () -> Content) {
         fatalError()
     }
 
-    nonisolated public init(_ titleKey: LocalizedStringKey, isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
+    public init(_ titleKey: LocalizedStringKey, isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
         self.init(isExpanded: isExpanded, content: content, label: { Text(titleKey) })
     }
 
     @available(*, unavailable)
-    nonisolated public init<S>(_ label: S, @ViewBuilder content: @escaping () -> Content) where S : StringProtocol {
+    public init<S>(_ label: S, @ViewBuilder content: @escaping () -> Content) where S : StringProtocol {
         fatalError()
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ label: S, isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ label: S, isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) where S : StringProtocol {
         self.init(isExpanded: isExpanded, content: content, label: { Text(label) })
     }
 }
@@ -55,8 +57,8 @@ extension DisclosureGroup where Label == Text {
     typealias Configuration = DisclosureGroupStyleConfiguration
 }
 
-@MainActor @preconcurrency public struct AutomaticDisclosureGroupStyle : DisclosureGroupStyle {
-    @MainActor @preconcurrency public init() {
+public struct AutomaticDisclosureGroupStyle : DisclosureGroupStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: AutomaticDisclosureGroupStyle.Configuration) -> some View {
@@ -71,13 +73,13 @@ extension DisclosureGroupStyle where Self == AutomaticDisclosureGroupStyle {
 }
 
 public struct DisclosureGroupStyleConfiguration {
-    @MainActor @preconcurrency public struct Label : View {
+    public struct Label : View {
         public typealias Body = Never
     }
 
     public let label: DisclosureGroupStyleConfiguration.Label
 
-    @MainActor @preconcurrency public struct Content : View {
+    public struct Content : View {
         public typealias Body = Never
     }
 

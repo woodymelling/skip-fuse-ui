@@ -24,16 +24,14 @@ extension View {
 }
 
 /// Provides a native wrapper around `SkipUI.Views` that are represented in Compose.
-public struct JavaBackedView : View, SkipUI.View, JObjectConvertible, SkipUIBridging, @unchecked Sendable {
-    public typealias Body = Never
+public struct JavaBackedView : SkipUI.View, JObjectConvertible, SkipUIBridging, @unchecked Sendable {
+    private let ptr: JavaObjectPointer
 
-    private let ptr: UncheckedSendableBox<JavaObjectPointer>
-
-    nonisolated public init?(_ ptr: JavaObjectPointer?) {
+    public init?(_ ptr: JavaObjectPointer?) {
         guard let ptr else {
             return nil
         }
-        self.ptr = UncheckedSendableBox(ptr)
+        self.ptr = ptr
     }
 
     nonisolated public static func fromJavaObject(_ obj: JavaObjectPointer?, options: JConvertibleOptions) -> Self {
@@ -41,12 +39,16 @@ public struct JavaBackedView : View, SkipUI.View, JObjectConvertible, SkipUIBrid
     }
 
     nonisolated public func toJavaObject(options: JConvertibleOptions) -> JavaObjectPointer? {
-        return ptr.wrappedValue
+        return ptr
     }
 
     public var Java_view: any SkipUI.View {
         return self
     }
+}
+
+extension JavaBackedView : View {
+    public typealias Body = Never
 }
 
 /// Create a `SwiftHashable` that uses `Java_composeBundleString` for its string representation so that we can

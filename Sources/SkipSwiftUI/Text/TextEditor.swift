@@ -2,29 +2,31 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-@MainActor @preconcurrency public struct TextEditor : View {
+public struct TextEditor {
     private let text: Binding<String>
 
-    nonisolated public init(text: Binding<String>) {
+    public init(text: Binding<String>) {
         self.text = text
     }
 
-//    nonisolated public init(_ titleResource: LocalizedStringResource, text: Binding<String>) {
-//        self.text = text
-//    }
+    //    nonisolated public init(_ titleResource: LocalizedStringResource, text: Binding<String>) {
+    //        self.text = text
+    //    }
 
     #if compiler(>=6.0)
     @available(*, unavailable)
-    nonisolated public init(text: Binding<String>, selection: Binding<TextSelection?>) {
+    public init(text: Binding<String>, selection: Binding<TextSelection?>) {
         fatalError()
     }
     #endif
 
     @available(*, unavailable)
-    nonisolated public init(text: Binding<AttributedString>, selection: Any? /* Binding<AttributedTextSelection>? */ = nil) {
+    public init(text: Binding<AttributedString>, selection: Any? /* Binding<AttributedTextSelection>? */ = nil) {
         fatalError()
     }
+}
 
+extension TextEditor : View {
     public typealias Body = Never
 }
 
@@ -50,15 +52,15 @@ extension TextEditorStyle {
     }
 }
 
-@MainActor @preconcurrency public struct AutomaticTextEditorStyle : TextEditorStyle {
+public struct AutomaticTextEditorStyle : TextEditorStyle {
     @MainActor @preconcurrency public func makeBody(configuration: AutomaticTextEditorStyle.Configuration) ->     AutomaticTextEditorStyle.Body {
         Body()
     }
 
-    @MainActor @preconcurrency public init() {
+    public init() {
     }
 
-    @MainActor @preconcurrency public struct Body : View {
+    public struct Body : View {
         public typealias Body = Never
     }
 
@@ -71,12 +73,12 @@ extension TextEditorStyle where Self == AutomaticTextEditorStyle {
     }
 }
 
-@MainActor @preconcurrency public struct PlainTextEditorStyle : TextEditorStyle {
+public struct PlainTextEditorStyle : TextEditorStyle {
     @MainActor @preconcurrency public func makeBody(configuration: PlainTextEditorStyle.Configuration) -> some View {
         stubView()
     }
 
-    @MainActor @preconcurrency public init() {
+    public init() {
     }
 
     public let identifier = 1 // For bridging

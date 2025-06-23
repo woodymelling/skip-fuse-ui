@@ -3,7 +3,6 @@
 #if !ROBOLECTRIC && canImport(CoreGraphics)
 import CoreGraphics
 #endif
-import SkipBridge
 import SkipUI
 
 public protocol Shape : Sendable, Animatable, View, SkipUIBridging /*, _RemoveGlobalActorIsolation */ where Body == Never {
@@ -789,25 +788,17 @@ extension _ShapeView : SkipUIBridging {
     }
 }
 
-@MainActor @frozen @preconcurrency public struct FillShapeView<Content, Style, Background> : ShapeView where Content : Shape, Style : ShapeStyle, Background : View {
-    /* @MainActor @preconcurrency */ public var shape: Content
-    @MainActor @preconcurrency public var style: Style
-    @MainActor @preconcurrency public var fillStyle: FillStyle
-    @MainActor @preconcurrency public var background: Background {
-        get {
-            return _background.wrappedValue
-        }
-        set {
-            _background = UncheckedSendableBox(newValue)
-        }
-    }
-    private var _background: UncheckedSendableBox<Background>
+@frozen public struct FillShapeView<Content, Style, Background> where Content : Shape, Style : ShapeStyle, Background : View {
+    public var shape: Content
+    public var style: Style
+    public var fillStyle: FillStyle
+    public var background: Background
 
-    nonisolated public init(shape: Content, style: Style, fillStyle: FillStyle, background: Background) {
+    public init(shape: Content, style: Style, fillStyle: FillStyle, background: Background) {
         self.shape = shape
         self.style = style
         self.fillStyle = fillStyle
-        _background = UncheckedSendableBox(background)
+        self.background = background
     }
 
     public func path(in rect: CGRect) -> Path {
@@ -822,9 +813,12 @@ extension _ShapeView : SkipUIBridging {
         return shape.layoutDirectionBehavior
     }
 
-    nonisolated public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
+    public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
         return shape.sizeThatFits(proposal)
     }
+}
+
+extension FillShapeView : ShapeView {
 }
 
 extension FillShapeView : SkipUIBridging {
@@ -832,31 +826,23 @@ extension FillShapeView : SkipUIBridging {
         // If this view is produced by another shape view, it will be captured in `background`. Maybe the official SwiftUI
         // implementation applies it as a background, but we instead need to build on its shape in order to support e.g.
         // fill + stroke or multiple strokes
-        return ((_background.wrappedValue as? any ShapeView)?.Java_shape ?? shape.Java_shape).fill(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.ForegroundStyle(), eoFill: fillStyle.isEOFilled, antialiased: fillStyle.isAntialiased)
+        return ((background as? any ShapeView)?.Java_shape ?? shape.Java_shape).fill(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.ForegroundStyle(), eoFill: fillStyle.isEOFilled, antialiased: fillStyle.isAntialiased)
     }
 }
 
-@MainActor @frozen @preconcurrency public struct StrokeShapeView<Content, Style, Background> : ShapeView where Content : Shape, Style : ShapeStyle, Background : View {
-    /* @MainActor @preconcurrency */ public var shape: Content
-    @MainActor @preconcurrency public var style: Style
-    @MainActor @preconcurrency public var strokeStyle: StrokeStyle
-    @MainActor @preconcurrency public var isAntialiased: Bool
-    @MainActor @preconcurrency public var background: Background {
-        get {
-            return _background.wrappedValue
-        }
-        set {
-            _background = UncheckedSendableBox(newValue)
-        }
-    }
-    private var _background: UncheckedSendableBox<Background>
+@frozen public struct StrokeShapeView<Content, Style, Background> where Content : Shape, Style : ShapeStyle, Background : View {
+    public var shape: Content
+    public var style: Style
+    public var strokeStyle: StrokeStyle
+    public var isAntialiased: Bool
+    public var background: Background
 
-    nonisolated public init(shape: Content, style: Style, strokeStyle: StrokeStyle, isAntialiased: Bool, background: Background) {
+    public init(shape: Content, style: Style, strokeStyle: StrokeStyle, isAntialiased: Bool, background: Background) {
         self.shape = shape
         self.style = style
         self.strokeStyle = strokeStyle
         self.isAntialiased = isAntialiased
-        _background = UncheckedSendableBox(background)
+        self.background = background
     }
 
     public func path(in rect: CGRect) -> Path {
@@ -871,9 +857,12 @@ extension FillShapeView : SkipUIBridging {
         return shape.layoutDirectionBehavior
     }
 
-    nonisolated public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
+    public func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize {
         return shape.sizeThatFits(proposal)
     }
+}
+
+extension StrokeShapeView : ShapeView {
 }
 
 extension StrokeShapeView : SkipUIBridging {
@@ -881,32 +870,27 @@ extension StrokeShapeView : SkipUIBridging {
         // If this view is produced by another shape view, it will be captured in `background`. Maybe the official SwiftUI
         // implementation applies it as a background, but we instead need to build on its shape in order to support e.g.
         // fill + stroke or multiple strokes
-        return ((_background.wrappedValue as? any ShapeView)?.Java_shape ?? shape.Java_shape).stroke(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.ForegroundStyle(), lineWidth: strokeStyle.lineWidth, bridgedLineCap: Int(strokeStyle.lineCap.rawValue), bridgedLineJoin: Int(strokeStyle.lineJoin.rawValue), miterLmit: strokeStyle.miterLimit, dash: strokeStyle.dash, dashPhase: strokeStyle.dashPhase, antialiased: isAntialiased)
+        return ((background as? any ShapeView)?.Java_shape ?? shape.Java_shape).stroke(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.ForegroundStyle(), lineWidth: strokeStyle.lineWidth, bridgedLineCap: Int(strokeStyle.lineCap.rawValue), bridgedLineJoin: Int(strokeStyle.lineJoin.rawValue), miterLmit: strokeStyle.miterLimit, dash: strokeStyle.dash, dashPhase: strokeStyle.dashPhase, antialiased: isAntialiased)
     }
 }
 
-@MainActor @frozen @preconcurrency public struct StrokeBorderShapeView<Content, Style, Background> : ShapeView where Content : InsettableShape, Style : ShapeStyle, Background : View {
-    /* @MainActor @preconcurrency */ public var shape: Content
-    @MainActor @preconcurrency public var style: Style
-    @MainActor @preconcurrency public var strokeStyle: StrokeStyle
-    @MainActor @preconcurrency public var isAntialiased: Bool
-    @MainActor @preconcurrency public var background: Background {
-        get {
-            return _background.wrappedValue
-        }
-        set {
-            _background = UncheckedSendableBox(newValue)
-        }
-    }
-    private var _background: UncheckedSendableBox<Background>
+@frozen public struct StrokeBorderShapeView<Content, Style, Background> where Content : InsettableShape, Style : ShapeStyle, Background : View {
+    public var shape: Content
+    public var style: Style
+    public var strokeStyle: StrokeStyle
+    public var isAntialiased: Bool
+    public var background: Background
 
-    nonisolated public init(shape: Content, style: Style, strokeStyle: StrokeStyle, isAntialiased: Bool, background: Background) {
+    public init(shape: Content, style: Style, strokeStyle: StrokeStyle, isAntialiased: Bool, background: Background) {
         self.shape = shape
         self.style = style
         self.strokeStyle = strokeStyle
         self.isAntialiased = isAntialiased
-        _background = UncheckedSendableBox(background)
+        self.background = background
     }
+}
+
+extension StrokeBorderShapeView : View {
 }
 
 extension StrokeBorderShapeView : SkipUIBridging {
@@ -914,6 +898,6 @@ extension StrokeBorderShapeView : SkipUIBridging {
         // If this view is produced by another shape view, it will be captured in `background`. Maybe the official SwiftUI
         // implementation applies it as a background, but we instead need to build on its shape in order to support e.g.
         // fill + stroke or multiple strokes
-        return ((_background.wrappedValue as? any ShapeView)?.Java_shape ?? shape.Java_shape).strokeBorder(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.ForegroundStyle(), lineWidth: strokeStyle.lineWidth, bridgedLineCap: Int(strokeStyle.lineCap.rawValue), bridgedLineJoin: Int(strokeStyle.lineJoin.rawValue), miterLmit: strokeStyle.miterLimit, dash: strokeStyle.dash, dashPhase: strokeStyle.dashPhase, antialiased: isAntialiased)
+        return ((background as? any ShapeView)?.Java_shape ?? shape.Java_shape).strokeBorder(style.Java_view as? any SkipUI.ShapeStyle ?? SkipUI.ForegroundStyle(), lineWidth: strokeStyle.lineWidth, bridgedLineCap: Int(strokeStyle.lineCap.rawValue), bridgedLineJoin: Int(strokeStyle.lineJoin.rawValue), miterLmit: strokeStyle.miterLimit, dash: strokeStyle.dash, dashPhase: strokeStyle.dashPhase, antialiased: isAntialiased)
     }
 }

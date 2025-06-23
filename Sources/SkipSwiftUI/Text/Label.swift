@@ -2,55 +2,57 @@
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
 import SkipUI
 
-@MainActor @preconcurrency public struct Label<Title, Icon> : View where Title : View, Icon : View {
-    private let title: UncheckedSendableBox<Title>
-    private let icon: UncheckedSendableBox<Icon>
+public struct Label<Title, Icon> where Title : View, Icon : View {
+    private let title: Title
+    private let icon: Icon
 
-    nonisolated public init(@ViewBuilder title: () -> Title, @ViewBuilder icon: () -> Icon) {
-        self.title = UncheckedSendableBox(title())
-        self.icon = UncheckedSendableBox(icon())
+    public init(@ViewBuilder title: () -> Title, @ViewBuilder icon: () -> Icon) {
+        self.title = title()
+        self.icon = icon()
     }
+}
 
+extension Label : View {
     public typealias Body = Never
 }
 
 extension Label : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        return SkipUI.Label(bridgedTitle: title.wrappedValue.Java_viewOrEmpty, bridgedImage: icon.wrappedValue.Java_viewOrEmpty)
+        return SkipUI.Label(bridgedTitle: title.Java_viewOrEmpty, bridgedImage: icon.Java_viewOrEmpty)
     }
 }
 
 extension Label where Title == Text, Icon == Image {
-    nonisolated public init(_ titleKey: LocalizedStringKey, image name: String) {
-        self.title = UncheckedSendableBox(Text(titleKey))
-        self.icon = UncheckedSendableBox(Image(name, bundle: .main))
+    public init(_ titleKey: LocalizedStringKey, image name: String) {
+        self.title = Text(titleKey)
+        self.icon = Image(name, bundle: .main)
     }
 
-    nonisolated public init(_ titleKey: LocalizedStringKey, systemImage name: String) {
-        self.title = UncheckedSendableBox(Text(titleKey))
-        self.icon = UncheckedSendableBox(Image(systemName: name))
+    public init(_ titleKey: LocalizedStringKey, systemImage name: String) {
+        self.title = Text(titleKey)
+        self.icon = Image(systemName: name)
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, image name: String) where S : StringProtocol {
-        self.title = UncheckedSendableBox(Text(title))
-        self.icon = UncheckedSendableBox(Image(name, bundle: .main))
+    @_disfavoredOverload public init<S>(_ title: S, image name: String) where S : StringProtocol {
+        self.title = Text(title)
+        self.icon = Image(name, bundle: .main)
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, systemImage name: String) where S : StringProtocol {
-        self.title = UncheckedSendableBox(Text(title))
-        self.icon = UncheckedSendableBox(Image(systemName: name))
+    @_disfavoredOverload public init<S>(_ title: S, systemImage name: String) where S : StringProtocol {
+        self.title = Text(title)
+        self.icon = Image(systemName: name)
     }
 }
 
 //extension Label where Title == Text, Icon == Image {
-//    nonisolated public init(_ titleKey: LocalizedStringKey, image resource: ImageResource)
+//    public init(_ titleKey: LocalizedStringKey, image resource: ImageResource)
 //
-//    nonisolated public init<S>(_ title: S, image resource: ImageResource) where S : StringProtocol
+//    public init<S>(_ title: S, image resource: ImageResource) where S : StringProtocol
 //}
 
 extension Label where Title == LabelStyleConfiguration.Title, Icon == LabelStyleConfiguration.Icon {
     @available(*, unavailable)
-    nonisolated public init(_ configuration: LabelStyleConfiguration) {
+    public init(_ configuration: LabelStyleConfiguration) {
         fatalError()
     }
 }
@@ -71,8 +73,8 @@ extension LabelStyle {
     }
 }
 
-@MainActor @preconcurrency public struct DefaultLabelStyle : LabelStyle {
-    @MainActor @preconcurrency public init() {
+public struct DefaultLabelStyle : LabelStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: DefaultLabelStyle.Configuration) -> some View {
@@ -88,8 +90,8 @@ extension LabelStyle where Self == DefaultLabelStyle {
     }
 }
 
-@MainActor @preconcurrency public struct IconOnlyLabelStyle : LabelStyle {
-    @MainActor @preconcurrency public init() {
+public struct IconOnlyLabelStyle : LabelStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: IconOnlyLabelStyle.Configuration) -> some View {
@@ -105,8 +107,8 @@ extension LabelStyle where Self == IconOnlyLabelStyle {
     }
 }
 
-@MainActor @preconcurrency public struct TitleAndIconLabelStyle : LabelStyle {
-    @MainActor @preconcurrency public init() {
+public struct TitleAndIconLabelStyle : LabelStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: TitleAndIconLabelStyle.Configuration) -> some View {
@@ -122,8 +124,8 @@ extension LabelStyle where Self == TitleAndIconLabelStyle {
     }
 }
 
-@MainActor @preconcurrency public struct TitleOnlyLabelStyle : LabelStyle {
-    @MainActor @preconcurrency public init() {
+public struct TitleOnlyLabelStyle : LabelStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: TitleOnlyLabelStyle.Configuration) -> some View {
@@ -140,11 +142,11 @@ extension LabelStyle where Self == TitleOnlyLabelStyle {
 }
 
 public struct LabelStyleConfiguration {
-    @MainActor @preconcurrency public struct Title : View {
+    public struct Title : View {
         public typealias Body = Never
     }
 
-    @MainActor @preconcurrency public struct Icon : View {
+    public struct Icon : View {
         public typealias Body = Never
     }
 

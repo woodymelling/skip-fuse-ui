@@ -1,73 +1,74 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
-import SkipBridge
 import SkipUI
 
-@MainActor @preconcurrency public struct Picker<Label, SelectionValue, Content> : View where Label : View, SelectionValue : Hashable, Content : View {
-    private let selection: UncheckedSendableBox<Binding<SelectionValue>>
-    private let content: UncheckedSendableBox<Content>
-    private let label: UncheckedSendableBox<Label>
+public struct Picker<Label, SelectionValue, Content> where Label : View, SelectionValue : Hashable, Content : View {
+    private let selection: Binding<SelectionValue>
+    private let content: Content
+    private let label: Label
+}
 
+extension Picker : View {
     public typealias Body = Never
 }
 
 extension Picker : SkipUIBridging {
     public var Java_view: any SkipUI.View {
-        let getSelection: () -> SwiftHashable = { Java_swiftHashable(for: selection.wrappedValue.wrappedValue) }
-        let setSelection: (SwiftHashable) -> Void = { selection.wrappedValue.wrappedValue = $0.base as! SelectionValue }
-        return SkipUI.Picker(getSelection: getSelection, setSelection: setSelection, bridgedContent: content.wrappedValue.Java_viewOrEmpty, bridgedLabel: label.wrappedValue.Java_viewOrEmpty)
+        let getSelection: () -> SwiftHashable = { Java_swiftHashable(for: selection.wrappedValue) }
+        let setSelection: (SwiftHashable) -> Void = { selection.wrappedValue = $0.base as! SelectionValue }
+        return SkipUI.Picker(getSelection: getSelection, setSelection: setSelection, bridgedContent: content.Java_viewOrEmpty, bridgedLabel: label.Java_viewOrEmpty)
     }
 }
 
 extension Picker {
     @available(*, unavailable)
-    nonisolated public init<C>(sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) where C : RandomAccessCollection {
+    public init<C>(sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) where C : RandomAccessCollection {
         fatalError()
     }
 
-    nonisolated public init(selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
-        self.selection = UncheckedSendableBox(selection)
-        self.content = UncheckedSendableBox(content())
-        self.label = UncheckedSendableBox(label())
+    public init(selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
+        self.selection = selection
+        self.content = content()
+        self.label = label()
     }
 }
 
 extension Picker where Label == Text {
-    nonisolated public init(_ titleKey: LocalizedStringKey, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) {
+    public init(_ titleKey: LocalizedStringKey, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) {
         self.init(selection: selection, content: content, label: { Text(titleKey) })
     }
 
     @available(*, unavailable)
-    nonisolated public init<C>(_ titleKey: LocalizedStringKey, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection {
+    public init<C>(_ titleKey: LocalizedStringKey, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection {
         fatalError()
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) where S : StringProtocol {
         self.init(selection: selection, content: content, label: { Text(title) })
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<C, S>(_ title: S, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, S : StringProtocol {
+    @_disfavoredOverload public init<C, S>(_ title: S, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, S : StringProtocol {
         fatalError()
     }
 }
 
 extension Picker where Label == SkipSwiftUI.Label<Text, Image> {
-    nonisolated public init(_ titleKey: LocalizedStringKey, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) {
+    public init(_ titleKey: LocalizedStringKey, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) {
         self.init(selection: selection, content: content, label: { SkipSwiftUI.Label(titleKey, systemImage: systemImage) })
     }
 
     @available(*, unavailable)
-    nonisolated public init<C>(_ titleKey: LocalizedStringKey, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, C.Element == Binding<SelectionValue> {
+    public init<C>(_ titleKey: LocalizedStringKey, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, C.Element == Binding<SelectionValue> {
         fatalError()
     }
 
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) where S : StringProtocol {
         self.init(selection: selection, content: content, label: { SkipSwiftUI.Label(title, systemImage: systemImage) })
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<C, S>(_ title: S, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, S : StringProtocol, C.Element == Binding<SelectionValue> {
+    @_disfavoredOverload public init<C, S>(_ title: S, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content) where C : RandomAccessCollection, S : StringProtocol, C.Element == Binding<SelectionValue> {
         fatalError()
     }
 }
@@ -84,56 +85,56 @@ extension Picker where Label == SkipSwiftUI.Label<Text, Image> {
 
 extension Picker {
     @available(*, unavailable)
-    nonisolated public init(selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label, @ViewBuilder currentValueLabel: () -> some View) {
+    public init(selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label, @ViewBuilder currentValueLabel: () -> some View) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<C>(sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection {
+    public init<C>(sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection {
         fatalError()
     }
 }
 
 extension Picker where Label == Text {
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) {
+    public init(_ titleKey: LocalizedStringKey, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<C>(_ titleKey: LocalizedStringKey, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection {
+    public init<C>(_ titleKey: LocalizedStringKey, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection {
         fatalError()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<C, S>(_ title: S, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection, S : StringProtocol {
+    @_disfavoredOverload public init<C, S>(_ title: S, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection, S : StringProtocol {
         fatalError()
     }
 }
 
 extension Picker where Label == SkipSwiftUI.Label<Text, Image> {
     @available(*, unavailable)
-    nonisolated public init(_ titleKey: LocalizedStringKey, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) {
+    public init(_ titleKey: LocalizedStringKey, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) {
         fatalError()
     }
 
     @available(*, unavailable)
-    nonisolated public init<C>(_ titleKey: LocalizedStringKey, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection, C.Element == Binding<SelectionValue> {
+    public init<C>(_ titleKey: LocalizedStringKey, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection, C.Element == Binding<SelectionValue> {
         fatalError()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<S>(_ title: S, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where S : StringProtocol {
+    @_disfavoredOverload public init<S>(_ title: S, systemImage: String, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where S : StringProtocol {
         fatalError()
     }
 
     @available(*, unavailable)
-    @_disfavoredOverload nonisolated public init<C, S>(_ title: S, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection, S : StringProtocol, C.Element == Binding<SelectionValue> {
+    @_disfavoredOverload public init<C, S>(_ title: S, systemImage: String, sources: C, selection: KeyPath<C.Element, Binding<SelectionValue>>, @ViewBuilder content: () -> Content, @ViewBuilder currentValueLabel: () -> some View) where C : RandomAccessCollection, S : StringProtocol, C.Element == Binding<SelectionValue> {
         fatalError()
     }
 }
@@ -149,7 +150,7 @@ extension Picker where Label == SkipSwiftUI.Label<Text, Image> {
 //}
 
 extension Picker {
-    nonisolated public init(selection: Binding<SelectionValue>, label: Label, @ViewBuilder content: () -> Content) {
+    public init(selection: Binding<SelectionValue>, label: Label, @ViewBuilder content: () -> Content) {
         self.init(selection: selection, content: content, label: { label })
     }
 }

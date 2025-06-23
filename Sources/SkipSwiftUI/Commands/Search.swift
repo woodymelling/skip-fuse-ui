@@ -73,17 +73,17 @@ public struct SearchSuggestionsPlacement : Equatable, Sendable {
 
 public struct SearchUnavailableContent {
     @available(*, unavailable)
-    @MainActor @preconcurrency public struct Label : View {
+    public struct Label : View {
         public typealias Body = Never
     }
 
     @available(*, unavailable)
-    @MainActor @preconcurrency public struct Description : View {
+    public struct Description : View {
         public typealias Body = Never
     }
 
     @available(*, unavailable)
-    @MainActor @preconcurrency public struct Actions : View {
+    public struct Actions : View {
         public typealias Body = Never
     }
 }

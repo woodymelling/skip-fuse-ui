@@ -1,15 +1,16 @@
 // Copyright 2025 Skip
 // SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
-import SkipBridge
 import SkipUI
 
-@MainActor @preconcurrency public struct Form<Content> : View where Content : View {
+public struct Form<Content> where Content : View {
     private let content: UncheckedSendableBox<Content>
 
-    nonisolated public init(@ViewBuilder content: () -> Content) {
+    public init(@ViewBuilder content: () -> Content) {
         self.content = UncheckedSendableBox(content())
     }
+}
 
+extension Form : View {
     public typealias Body = Never
 }
 
@@ -38,8 +39,8 @@ extension Form where Content == FormStyleConfiguration.Content {
     typealias Configuration = FormStyleConfiguration
 }
 
-@MainActor @preconcurrency public struct ColumnsFormStyle : FormStyle {
-    @MainActor @preconcurrency public init() {
+public struct ColumnsFormStyle : FormStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: ColumnsFormStyle.Configuration) -> some View {
@@ -54,8 +55,8 @@ extension FormStyle where Self == ColumnsFormStyle {
     }
 }
 
-@MainActor @preconcurrency public struct GroupedFormStyle : FormStyle {
-    @MainActor @preconcurrency public init() {
+public struct GroupedFormStyle : FormStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: ColumnsFormStyle.Configuration) -> some View {
@@ -70,8 +71,8 @@ extension FormStyle where Self == GroupedFormStyle {
     }
 }
 
-@MainActor @preconcurrency public struct AutomaticFormStyle : FormStyle {
-    @MainActor @preconcurrency public init() {
+public struct AutomaticFormStyle : FormStyle {
+    public init() {
     }
 
     @MainActor @preconcurrency public func makeBody(configuration: ColumnsFormStyle.Configuration) -> some View {
@@ -86,7 +87,7 @@ extension FormStyle where Self == AutomaticFormStyle {
 }
 
 public struct FormStyleConfiguration {
-    @MainActor @preconcurrency public struct Content : View {
+    public struct Content : View {
         public typealias Body = Never
     }
 
