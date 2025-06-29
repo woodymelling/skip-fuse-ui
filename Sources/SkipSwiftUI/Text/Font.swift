@@ -42,6 +42,8 @@ struct FontSpec: Hashable, Sendable {
             SkipUI.Font.custom(name, size: size, bridgedRelativeTo: relativeToStyle.rawValue)
         case .customFixedSize(let name, let size):
             SkipUI.Font.custom(name, fixedSize: size)
+        case .java(let javaFont):
+            javaFont
         }
         if isItalic {
             font = font.italic()
@@ -62,12 +64,13 @@ struct FontSpec: Hashable, Sendable {
     }
 }
 
-enum FontType : Hashable, Sendable {
+enum FontType : Hashable, @unchecked Sendable {
     case system(Font.TextStyle, Font.Design?, Font.Weight?)
     case systemSize(CGFloat, Font.Design?, Font.Weight?)
     case customSize(String, CGFloat)
     case customRelativeSize(String, CGFloat, Font.TextStyle)
     case customFixedSize(String, CGFloat)
+    case java(SkipUI.Font)
 }
 
 extension Font {

@@ -49,6 +49,10 @@ extension EnvironmentValues {
     /// Convert a builtin environment value from Compose.
     static func builtin(key: String, bridgedValue: Any?) -> Any? {
         switch key {
+        case "autocorrectionDisabled":
+            return bridgedValue as? Bool == true
+        case "backgroundStyle":
+            return JavaBackedView((bridgedValue as? JConvertible)?.toJavaObject(options: [])).map { AnyShapeStyle($0) }
         case "colorScheme":
             let rawValue = bridgedValue as? Int
             return rawValue == nil ? ColorScheme.light : ColorScheme(rawValue: rawValue!) ?? .light
@@ -56,11 +60,26 @@ extension EnvironmentValues {
             let action = (bridgedValue as? SkipUI.DismissAction)?.action ?? { }
             let actionBox = UncheckedSendableBox(action)
             return DismissAction(action: { actionBox.wrappedValue() })
+        case "font":
+            if let font = bridgedValue as? SkipUI.Font {
+                return Font(spec: FontSpec(.java(font)))
+            } else {
+                return nil
+            }
+        case "horizontalSizeClass":
+            let rawValue = bridgedValue as? Int
+            return rawValue == nil ? nil : UserInterfaceSizeClass(rawValue: rawValue!) ?? .regular
+        case "isEnabled":
+            return bridgedValue as? Bool != false
         case "isSearching":
             return bridgedValue as? Bool == true
         case "layoutDirection":
             let rawValue = bridgedValue as? Int
             return rawValue == nil ? LayoutDirection.leftToRight : LayoutDirection(rawValue: rawValue!) ?? .leftToRight
+        case "lineLimit":
+            return bridgedValue as? Int
+        case "locale":
+            return bridgedValue as? Locale ?? Locale.current
         case "openURL":
             let javaAction = bridgedValue as? SkipUI.OpenURLAction
             let javaHandler = javaAction?.handler ?? { _ in SkipUI.OpenURLAction.Result(rawValue: OpenURLAction.Result.systemAction.identifier) }
@@ -86,6 +105,12 @@ extension EnvironmentValues {
         case "scenePhase":
             let rawValue = bridgedValue as? Int
             return rawValue == nil ? ScenePhase.active : ScenePhase(rawValue: rawValue!) ?? .active
+        case "timeZone":
+            let identifier = bridgedValue as? String
+            return identifier == nil ? TimeZone.current : TimeZone(identifier: identifier!) ?? .current
+        case "verticalSizeClass":
+            let rawValue = bridgedValue as? Int
+            return rawValue == nil ? nil : UserInterfaceSizeClass(rawValue: rawValue!) ?? .regular
         default:
             return nil
         }
@@ -94,6 +119,10 @@ extension EnvironmentValues {
     /// Convert a builtin environment value to Compose.
     static func bridgeBuiltin(key: String, value: Any?) -> Any? {
         switch key {
+        case "autocorrectionDisabled":
+            return value as? Bool == true
+        case "backgroundStyle":
+            return (value as? any ShapeStyle)?.Java_view
         case "colorScheme":
             return (value as? ColorScheme)?.rawValue
         case "dismiss":
@@ -105,10 +134,20 @@ extension EnvironmentValues {
             #else
             return SkipUI.DismissAction(action: action)
             #endif
+        case "font":
+            return (value as? Font)?.spec.Java_font
+        case "horizontalSizeClass":
+            return (value as? UserInterfaceSizeClass)?.rawValue
+        case "isEnabled":
+            return value as? Bool != false
         case "isSearching":
             return value as? Bool == true
         case "layoutDirection":
             return ((value as? LayoutDirection) ?? .leftToRight).rawValue
+        case "lineLimit":
+            return value as? Int
+        case "locale":
+            return value as? Locale ?? Locale.current
         case "openURL":
             guard let openURLAction = value as? OpenURLAction else {
                 return nil
@@ -146,6 +185,10 @@ extension EnvironmentValues {
             return SkipUI.RefreshAction(bridgedAction: bridgedAction)
         case "scenePhase":
             return (value as? ScenePhase ?? .active).rawValue
+        case "timeZone":
+            return (value as? TimeZone ?? TimeZone.current).identifier
+        case "verticalSizeClass":
+            return (value as? UserInterfaceSizeClass)?.rawValue
         default:
             return nil
         }
@@ -154,13 +197,22 @@ extension EnvironmentValues {
     nonisolated(unsafe) private static var keys: [AnyHashable: String] = {
         var keys: [AnyHashable: String] = [:]
         // Initialize builtins
+        keys[\EnvironmentValues.autocorrectionDisabled] = "autocorrectionDisabled"
+        keys[\EnvironmentValues.backgroundStyle] = "backgroundStyle"
         keys[\EnvironmentValues.colorScheme] = "colorScheme"
         keys[\EnvironmentValues.dismiss] = "dismiss"
+        keys[\EnvironmentValues.font] = "font"
+        keys[\EnvironmentValues.horizontalSizeClass] = "horizontalSizeClass"
+        keys[\EnvironmentValues.isEnabled] = "isEnabled"
         keys[\EnvironmentValues.isSearching] = "isSearching"
         keys[\EnvironmentValues.layoutDirection] = "layoutDirection"
+        keys[\EnvironmentValues.lineLimit] = "lineLimit"
+        keys[\EnvironmentValues.locale] = "locale"
         keys[\EnvironmentValues.openURL] = "openURL"
         keys[\EnvironmentValues.refresh] = "refresh"
         keys[\EnvironmentValues.scenePhase] = "scenePhase"
+        keys[\EnvironmentValues.timeZone] = "timeZone"
+        keys[\EnvironmentValues.verticalSizeClass] = "verticalSizeClass"
         return keys
     }()
 
@@ -218,6 +270,12 @@ extension View {
 // TODO: Bridge supported keys to SkipUI
 
 extension EnvironmentValues {
+    public var autocorrectionDisabled: Bool {
+        fatalError("Read via @Environment property wrapper")
+    }
+}
+
+extension EnvironmentValues {
     public var layoutDirection: LayoutDirection {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
@@ -225,7 +283,6 @@ extension EnvironmentValues {
 }
 
 extension EnvironmentValues {
-    @available(*, unavailable)
     public var isEnabled: Bool {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
@@ -326,7 +383,6 @@ extension EnvironmentValues {
 }
 
 extension EnvironmentValues {
-    @available(*, unavailable)
     public var lineLimit: Int? {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
@@ -342,8 +398,7 @@ extension EnvironmentValues {
 }
 
 extension EnvironmentValues {
-    @available(*, unavailable)
-    public var backgroundStyle: Any? /* AnyShapeStyle? */ {
+    public var backgroundStyle: AnyShapeStyle? {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
     }
@@ -418,8 +473,7 @@ extension EnvironmentValues {
 }
 
 extension EnvironmentValues {
-    @available(*, unavailable)
-    public var font: Any? /* Font? */ {
+    public var font: Font? {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
     }
@@ -452,7 +506,6 @@ extension EnvironmentValues {
         set { fatalError("Set via dedicated View modifier") }
     }
 
-    @available(*, unavailable)
     public var locale: Locale {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
@@ -464,22 +517,17 @@ extension EnvironmentValues {
         set { fatalError("Set via dedicated View modifier") }
     }
 
-    @available(*, unavailable)
     public var timeZone: TimeZone {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
     }
 
-    @available(*, unavailable)
-    public var horizontalSizeClass: Any? /* UserInterfaceSizeClass? */ {
-        get { fatalError("Read via @Environment property wrapper") }
-        set { fatalError("Set via dedicated View modifier") }
+    public var horizontalSizeClass: UserInterfaceSizeClass? {
+        fatalError("Read via @Environment property wrapper")
     }
 
-    @available(*, unavailable)
-    public var verticalSizeClass: Any? /* UserInterfaceSizeClass? */ {
-        get { fatalError("Read via @Environment property wrapper") }
-        set { fatalError("Set via dedicated View modifier") }
+    public var verticalSizeClass: UserInterfaceSizeClass? {
+        fatalError("Read via @Environment property wrapper")
     }
 }
 

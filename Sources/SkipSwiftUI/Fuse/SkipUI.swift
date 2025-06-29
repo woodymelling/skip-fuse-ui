@@ -47,7 +47,7 @@ public struct JavaBackedView : SkipUI.View, JObjectConvertible, SkipUIBridging, 
     }
 }
 
-extension JavaBackedView : View {
+extension JavaBackedView : View, ShapeStyle {
     public typealias Body = Never
 }
 
