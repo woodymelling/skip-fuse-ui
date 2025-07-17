@@ -117,7 +117,7 @@ public struct DatePickerComponents : OptionSet, Sendable {
         self.rawValue = rawValue
     }
 
-    public static let hourAndMinute =  DatePickerComponents(rawValue: 0 << 1) // For bridging
+    public static let hourAndMinute =  DatePickerComponents(rawValue: 1 << 0) // For bridging
     public static let date = DatePickerComponents(rawValue: 1 << 1) // For bridging
 }
 
