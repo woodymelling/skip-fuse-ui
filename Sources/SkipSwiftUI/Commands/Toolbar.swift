@@ -692,9 +692,12 @@ extension View {
         }
     }
 
-    @available(*, unavailable)
-    nonisolated public func toolbarTitleMenu<C>(@ViewBuilder content: () -> C) -> some View where C : View {
-        stubView()
+    nonisolated public func toolbarTitleMenu<C>(@ViewBuilder content: @escaping () -> C) -> some View where C: View {
+        let content = content()
+        return ModifierView(target: self) {
+            let javaContent = (content as? SkipUIBridging)?.Java_view ?? SkipUI.EmptyView()
+            return $0.Java_viewOrEmpty.toolbarTitleMenu(id: "", bridgedContent: javaContent)
+        }
     }
 
     nonisolated public func toolbarTitleDisplayMode(_ mode: ToolbarTitleDisplayMode) -> some View {
