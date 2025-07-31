@@ -229,6 +229,15 @@ extension View {
 }
 
 extension View {
+    /// Android-only modifier to opt in to previous Skip layout behavior.
+    nonisolated public func layoutImplementationVersion(_ version: Int) -> some View {
+        return ModifierView(target: self) {
+            $0.Java_viewOrEmpty.layoutImplementationVersion(version)
+        }
+    }
+}
+
+extension View {
     @inlinable nonisolated public func offset(_ offset: CGSize) -> some View {
         return self.offset(x: offset.width, y: offset.height)
     }

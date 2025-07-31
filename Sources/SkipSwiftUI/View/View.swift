@@ -43,7 +43,7 @@ extension Never : View {
     public typealias Body = Never
 }
 
-extension Never : SkipUIBridging {
+extension Never : SkipUIBridging, @retroactive JObjectProtocol, @retroactive JConvertible {
     public var Java_view: any SkipUI.View {
         return SkipUI.EmptyView()
     }
