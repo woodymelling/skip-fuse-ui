@@ -511,7 +511,6 @@ extension EnvironmentValues {
         set { fatalError("Set via dedicated View modifier") }
     }
 
-    @available(*, unavailable)
     public var calendar: Calendar {
         get { fatalError("Read via @Environment property wrapper") }
         set { fatalError("Set via dedicated View modifier") }
